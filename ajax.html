@@ -1,0 +1,429 @@
+<head>
+        <meta charset="utf-8">
+        <!--link rel="stylesheet" type="text/css" href="/ajax.css" /-->
+
+        <!--link rel="stylesheet/less" type="text/css" href="/notes.css" /-->
+        <!--script type="text/javascript" src="/less.min.js"></script-->
+        <script type="text/javascript" src="/ajax.js"></script>
+        <!--script type="text/javascript" src="/lang_de.js"></script>
+        <script type="text/javascript" src="/lang_ru.js"></script-->
+<style>
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_loader5 */
+
+
+/* Center the loader */
+
+#loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        width: 150px;
+        height: 150px;
+        margin: -75px 0 0 -75px;
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+        0% {
+                -webkit-transform: rotate(0deg);
+        }
+        100% {
+                -webkit-transform: rotate(360deg);
+        }
+}
+
+@keyframes spin {
+        0% {
+                transform: rotate(0deg);
+        }
+        100% {
+                transform: rotate(360deg);
+        }
+}
+
+
+/* Add animation to "page content" */
+
+.animate-bottom {
+        position: relative;
+        -webkit-animation-name: animatebottom;
+        -webkit-animation-duration: 1s;
+        animation-name: animatebottom;
+        animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+        from {
+                bottom: -100px;
+                opacity: 0
+        }
+        to {
+                bottom: 0px;
+                opacity: 1
+        }
+}
+
+@keyframes animatebottom {
+        from {
+                bottom: -100px;
+                opacity: 0
+        }
+        to {
+                bottom: 0;
+                opacity: 1
+        }
+}
+
+</style>
+</head>
+
+<body onload="InterfaceInit();">
+        <div id="loader"></div>
+        <!-- HTML Formatter: https://serblog.ru/demo/format-html/ -->
+        <script type="text/javascript">
+                function ShowLoader(flag) {
+                        if (flag)
+                                document.getElementById("loader").style.display = "inline";
+                        else
+                                document.getElementById("loader").style.display = "none";
+                }
+                ShowLoader(true);
+        </script>
+        <script type="text/javascript">
+                var baseURL = 'handler.php';
+                var CurrentCategory = 0;
+                var AJAXRequests = new Array();
+                var FunctionsEnum = new Array(15000); // JSON c перечнем функций.
+                var RootCategoryEnum = null; // JSON c перечнем категорий.
+                var LoadedRootCategoryEnum = null; // Флаг загруженности категории в перечне.
+
+                function LoadScript(src){
+                        var script = document.createElement('script');
+                        script.src = src;
+                        script.async = false;
+                        document.head.appendChild(script);
+                }
+
+                function InterfaceInit(){
+                // For synchronous loading of scripts (Arduino has a limit of simultaneous connections)
+                LoadScript('lang_de.js');
+                LoadScript('lang_ru.js');
+                document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeend",`<link rel="stylesheet" href="ajax.css" />`);
+                LoadRootCategoryEnum();
+                }
+
+                function decimalToHex(d, padding) {
+                        var hex = Number(d).toString(16);
+                        padding = typeof(padding) === "undefined" || padding === null ? padding = 2 : padding;
+                        while (hex.length < padding) {
+                                hex = "0" + hex;
+                        }
+                        return hex;
+                }
+
+                function preparemaindiv() {
+                        if (document.getElementById("LeftMenuTableCell") == null || document.getElementById("RightMenuTableCell") == null) {
+                                var outtext = `<div class="divTable" style="display: table; width: 100%;">
+<div class="divTableBody" style="display: table-row-group;">
+<div class="divTableRow" style="display: table-row;">
+<div class="divTableCell" id="LeftMenuTableCell" style="display: table-cell;"></div>
+<div class="divTableCell" id="RightMenuTableCell" style="display: table-cell;"></div>
+</div>
+</div>
+</div>`;
+                                document.getElementById("printResult").innerHTML = outtext;
+                        }
+                }
+
+                function preparefunctiondiv(count) {
+                        if (document.getElementById("RightMenuTableCell") == null)
+                                preparemaindiv();
+                        var outtext = `<div class="divTable" style="display: table; width: 100%;">
+<div class="divTableBody" style="display: table-row-group;">
+<div class="divTableRow" style="display: table-row;">`;
+                        for (var i = 0; i < count; i++)
+                                outtext += `<div class="divTableCell" id="RightMenuTableCell${i}" style="display: table-cell;"></div>`;
+                        outtext += `</div>
+</div>
+</div>`;
+                        document.getElementById("RightMenuTableCell").innerHTML = outtext;
+                }
+
+                function rootlistshow(jsontext, command) {
+                        preparemaindiv();
+                        if (jsontext != null && RootCategoryEnum == null) {
+                                var i = 0;
+                                for (var k in jsontext) {
+                                        i++;
+                                }
+                                RootCategoryEnum = new Array(i);
+                                i = 0;
+                                for (var k in jsontext) {
+                                        RootCategoryEnum[i++] = jsontext[k];
+                                }
+                                LoadedRootCategoryEnum = new Array(i);
+                        }
+                        var outtext = "<table><tbody>";
+                        for (var i = 0; i < RootCategoryEnum.length; i++) {
+                                var temp;
+                                var outtt = "if (typeof ENUM_CAT_" + decimalToHex(i, 2) + "_TEXT === 'undefined') temp = RootCategoryEnum[i].name; else temp = ENUM_CAT_" + decimalToHex(i, 2) + "_TEXT;";
+                                eval(outtt);
+                                outtext += `<tr><td><a href="#" onclick="LoadCategoryEnum(${i});">` + i + ". " + temp + "</a></td><td>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</td></tr>";
+                        }
+                        outtext += "</tbody></table>";
+                        document.getElementById("LeftMenuTableCell").innerHTML = outtext;
+                        preparefunctiondiv(RootCategoryEnum.length);
+                }
+
+                function catlistshow(jsontext, command) {
+                        preparemaindiv();
+                        var res = command.split("=");
+                        if (res[0] == "JK" && res[1] >= 0) {
+                                LoadedRootCategoryEnum[res[1]] = 1;
+                                if (jsontext != null) {
+                                        document.getElementById("RightMenuTableCell" + res[1]).innerHTML = "";
+                                        var outtext = "<table><tbody>";
+                                        for (var k in jsontext) {
+                                                FunctionsEnum[k] = 1;
+                                                var temp;
+                                                var outtt = "if (typeof STR" + k + "_TEXT === 'undefined') temp = jsontext[k].name; else temp = STR" + k + "_TEXT;";
+                                                eval(outtt);
+                                                var dataType = jsontext[k].dataType;
+                                                outtext += "<tr><td>" + k + ". " + temp + "</td><td>" + dataType + " - " + "</td><td>";
+                                                switch (dataType) {
+                                                        case 0:
+                                                                outtext += `<input id="input${k}" type="text" onChange="gameIsChanged('input${k}', ${dataType});">`;
+                                                                break;
+                                                        case 1:
+                                                        case 2:
+                                                                outtext += `<select id="select${k}" onChange="gameIsChanged('select${k}', ${dataType});">`
+                                                                for (var j in jsontext[k].possibleValues) {
+                                                                        outtext += `<option value="${jsontext[k].possibleValues[j].enumValue}">${jsontext[k].possibleValues[j].desc}</option>`
+                                                                }
+                                                                outtext += `</select>`
+                                                                break;
+                                                        default:
+                                                                break;
+                                                }
+                                                outtext += "</td></tr>";
+                                        }
+                                        outtext += "</tbody></table>";
+                                        if (document.getElementById("LeftMenuTableCell").innerHTML == "") LoadRootCategoryEnum();
+                                        document.getElementById("RightMenuTableCell" + res[1]).innerHTML = outtext;
+                                }
+                                document.getElementById("LeftMenuTableCell").style.display = "none";
+                                document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+                                CurrentCategory = res[1];
+                                document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "table-cell";
+                                var j = 0;
+                                var cmdlist = "";
+                                for (var i = RootCategoryEnum[res[1]].min; i <= RootCategoryEnum[res[1]].max; i++) {
+                                        if (FunctionsEnum[i] == 1) {
+                                                j++;
+                                                cmdlist += i;
+                                                if (j == 10) {
+                                                        loadValues(cmdlist);
+                                                        cmdlist = "";
+                                                        j = 0;
+                                                } else
+                                                        cmdlist += ",";
+                                        }
+                                }
+                                if (j > 0) loadValues(cmdlist);
+                        } else {
+                                note({
+                                        content: "Ошибка: попытка загрузить несуществующую категорию!",
+                                        type: "error",
+                                        time: 5
+                                });
+                                return;
+                        }
+                }
+
+                function gameIsChanged(controlid, dataType) {
+                        var elem = document.getElementById(controlid);
+                        switch (dataType) {
+                                case 0:
+                                        note({
+                                                content: "Изменён параметр " + controlid + " на значение " + elem.value,
+                                                type: "info",
+                                                time: 3
+                                        });
+                                        break;
+                                case 1:
+                                        for (var i = 0; i < elem.options.length; i++) {
+                                                if (elem.options[i].selected == true) {
+                                                        note({
+                                                                content: "Изменён параметр " + controlid + " на значение " + elem.options[i].value,
+                                                                type: "info",
+                                                                time: 3
+                                                        });
+                                                }
+                                        }
+                                        break;
+                                case 2:
+                                        var sel = document.getElementById("select" + k);
+                                default:
+                                        break;
+                        }
+                }
+
+                function insertvaluesincatlistshow(jsontext, command) {
+                        for (var k in jsontext) {
+                                switch (jsontext[k].dataType) {
+                                        case 0:
+                                                document.getElementById("input" + k).value = jsontext[k].value;
+                                                break;
+                                        case 1:
+                                                var sel = document.getElementById("select" + k);
+                                                for (var i = 0; i < sel.options.length; i++) {
+                                                        if (sel.options[i].value == jsontext[k].value) sel.options[i].selected = true;
+                                                }
+                                                break;
+                                        case 2:
+                                                var sel = document.getElementById("select" + k);
+                                                for (var i = 0; i < sel.options.length; i++) {
+                                                        if (sel.options[i].value & jsontext[k].value) sel.options[i].selected = true;
+                                                }
+                                                break;
+                                        default:
+                                                break;
+                                }
+                        }
+                }
+
+                function loadValues(functionsenum) {
+                        loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesincatlistshow);
+                }
+
+
+                function loadAjax(url, cmdvar, showvar) {
+                        AJAXRequests.push({
+                                command: cmdvar,
+                                show: showvar
+                        });
+                        if (AJAXRequests.length > 1) {
+                                //      note({ content: "Запрос AJAX поставлен в очередь", type: "success", time: 3 });
+                                return;
+                        }
+                        loadAjaxInt(url);
+                }
+
+                function loadAjaxInt(url) {
+                        if (AJAXRequests.length == 0) {
+                                //      note({ content: "Очередь AJAX-запросов пуста", type: "info", time: 3 });
+                                return;
+                        }
+                        var request;
+                        if (window.XMLHttpRequest) {
+                                request = new XMLHttpRequest();
+                        } else if (window.ActiveXObject) {
+                                request = new ActiveXObject("Microsoft.XMLHTTP");
+                        } else {
+                                return;
+                        }
+                        request.onreadystatechange = function() {
+                                switch (request.readyState) {
+                                        case 1:
+                                                ShowLoader(true);
+                                                break;
+                                        case 4:
+                                                {
+                                                        if (request.status == 200) {
+                                                                <!-- print_console("<br/><em>4: Обмен завершен.</em>"); -->
+                                                                var loadeddata;
+                                                                try {
+                                                                        loadeddata = JSON.parse(request.responseText);
+                                                                        AJAXRequests[0].show(loadeddata, AJAXRequests[0].command);
+                                                                } catch (e) {
+                                                                        note({
+                                                                                content: "Ошибка: не удалось разобрать ответ от сервера!",
+                                                                                type: "error",
+                                                                                time: 5
+                                                                        });
+                                                                        console.log(e.message);
+                                                                        console.log(e.name);
+                                                                        console.log(e.fileName);
+                                                                        console.log(e.lineNumber);
+                                                                        console.log(e.columnNumber);
+                                                                        console.log(e.stack);
+                                                                }
+                                                        } else if (request.status == 404) {
+                                                                note({
+                                                                        content: "Ошибка: запрашиваемый скрипт не найден!",
+                                                                        type: "error",
+                                                                        time: 5
+                                                                });
+                                                        } else
+                                                                note({
+                                                                        content: "Ошибка обработки AJAX-запроса",
+                                                                        type: "error",
+                                                                        time: 5
+                                                                });
+                                                        ShowLoader(false);
+                                                        AJAXRequests.shift();
+                                                        loadAjaxInt(url);
+                                                        break;
+                                                }
+                                }
+                        }
+                        request.open('POST', url, true);
+                        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        request.send("urri=" + AJAXRequests[0].command);
+                }
+
+                function SendForm() {
+                        var form = document.forms.formx;
+                        var data = form.elements.urri.value;
+                        loadAjax(baseURL, data, catlistshow);
+                }
+
+                function LoadCategoryEnum(catnum) {
+                        //HideUnhide();
+                        if (LoadedRootCategoryEnum[catnum] != 1) {
+                                loadAjax(baseURL, 'JK=' + catnum, catlistshow);
+                        } else
+                                catlistshow(null, 'JK=' + catnum);
+                }
+
+                function LoadRootCategoryEnum() {
+                        if (RootCategoryEnum == null) {
+                                loadAjax(baseURL, 'JK=ALL', rootlistshow);
+                        } else
+                                rootlistshow(null, null);
+                }
+
+                function HideUnhide() {
+                        if (document.getElementById("LeftMenuTableCell").style.display != "none") {
+                                //document.getElementById("LeftMenuTableCell").style.display = "none";
+                                //document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "table-cell";
+                        } else {
+                                document.getElementById("LeftMenuTableCell").style.display = "table-cell";
+                                document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+                        }
+                }
+        </script>
+
+        <!--<form method="POST" id="formx" action="javascript:void(null);">
+<legend>Request</legend>
+<label for="urri">Request command:</label><input id="urri" name="urri" value="JK=38" type="text">
+<input value="Send" type="submit" onclick="SendForm()">
+</form>
+<input value="Back" type="button" onclick="HideUnhide()">
+
+<a href="#" onclick="startAjax('http://192.168.67.4/LKJBHksdgfrleneaslkrwklh/JK=38');">Запустить php скрипт</a-->
+        <!-- <a href="#" onclick="loadAjax(baseURL, 'JK=38', catlistshow);">Запустить php скрипт</a>
+-->
+        <input value="Back" type="button" onclick="HideUnhide()">
+        <br/>
+        <div id="printResult">
+                Данные загружаются...
+        </div>
+</body>
