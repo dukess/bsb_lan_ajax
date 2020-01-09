@@ -1,429 +1,661 @@
 <head>
-        <meta charset="utf-8">
-        <!--link rel="stylesheet" type="text/css" href="/ajax.css" /-->
+	<meta charset="utf-8">
+	<!--link rel="stylesheet" type="text/css" href="/ajax.css" /-->
 
-        <!--link rel="stylesheet/less" type="text/css" href="/notes.css" /-->
-        <!--script type="text/javascript" src="/less.min.js"></script-->
-        <script type="text/javascript" src="/ajax.js"></script>
-        <!--script type="text/javascript" src="/lang_de.js"></script>
-        <script type="text/javascript" src="/lang_ru.js"></script-->
-<style>
-/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_loader5 */
+	<!--link rel="stylesheet/less" type="text/css" href="/notes.css" />
+        <script type="text/javascript" src="/less.min.js"></script>
+        <script type="text/javascript" src="ajax.js"></script-->
 
-
-/* Center the loader */
-
-#loader {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        z-index: 1;
-        width: 150px;
-        height: 150px;
-        margin: -75px 0 0 -75px;
-        border: 16px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 16px solid #3498db;
-        width: 120px;
-        height: 120px;
-        -webkit-animation: spin 2s linear infinite;
-        animation: spin 2s linear infinite;
-}
-
-@-webkit-keyframes spin {
-        0% {
-                -webkit-transform: rotate(0deg);
-        }
-        100% {
-                -webkit-transform: rotate(360deg);
-        }
-}
-
-@keyframes spin {
-        0% {
-                transform: rotate(0deg);
-        }
-        100% {
-                transform: rotate(360deg);
-        }
-}
-
-
-/* Add animation to "page content" */
-
-.animate-bottom {
-        position: relative;
-        -webkit-animation-name: animatebottom;
-        -webkit-animation-duration: 1s;
-        animation-name: animatebottom;
-        animation-duration: 1s
-}
-
-@-webkit-keyframes animatebottom {
-        from {
-                bottom: -100px;
-                opacity: 0
-        }
-        to {
-                bottom: 0px;
-                opacity: 1
-        }
-}
-
-@keyframes animatebottom {
-        from {
-                bottom: -100px;
-                opacity: 0
-        }
-        to {
-                bottom: 0;
-                opacity: 1
-        }
-}
-
-</style>
+	<style>
+		/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_loader5 */
+		/* Center the loader */
+		
+		#loader {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			z-index: 1;
+			width: 150px;
+			height: 150px;
+			margin: -75px 0 0 -75px;
+			border: 16px solid #f3f3f3;
+			border-radius: 50%;
+			border-top: 16px solid #3498db;
+			width: 120px;
+			height: 120px;
+			-webkit-animation: spin 2s linear infinite;
+			animation: spin 2s linear infinite;
+		}
+		
+		@-webkit-keyframes spin {
+			0% {
+				-webkit-transform: rotate(0deg);
+			}
+			100% {
+				-webkit-transform: rotate(360deg);
+			}
+		}
+		
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+		/* Add animation to "page content" */
+		
+		.animate-bottom {
+			position: relative;
+			-webkit-animation-name: animatebottom;
+			-webkit-animation-duration: 1s;
+			animation-name: animatebottom;
+			animation-duration: 1s
+		}
+		
+		@-webkit-keyframes animatebottom {
+			from {
+				bottom: -100px;
+				opacity: 0
+			}
+			to {
+				bottom: 0px;
+				opacity: 1
+			}
+		}
+		
+		@keyframes animatebottom {
+			from {
+				bottom: -100px;
+				opacity: 0
+			}
+			to {
+				bottom: 0;
+				opacity: 1
+			}
+		}
+	</style>
+	<title>BSB-LAN Web AJAX</title>
 </head>
 
 <body onload="InterfaceInit();">
-        <div id="loader"></div>
-        <!-- HTML Formatter: https://serblog.ru/demo/format-html/ -->
-        <script type="text/javascript">
-                function ShowLoader(flag) {
-                        if (flag)
-                                document.getElementById("loader").style.display = "inline";
-                        else
-                                document.getElementById("loader").style.display = "none";
-                }
-                ShowLoader(true);
-        </script>
-        <script type="text/javascript">
-                var baseURL = 'handler.php';
-                var CurrentCategory = 0;
-                var AJAXRequests = new Array();
-                var FunctionsEnum = new Array(15000); // JSON c перечнем функций.
-                var RootCategoryEnum = null; // JSON c перечнем категорий.
-                var LoadedRootCategoryEnum = null; // Флаг загруженности категории в перечне.
+	<div id="loader"></div>
+	<!-- HTML Formatter: https://serblog.ru/demo/format-html/ -->
+	<script type="text/javascript">
+		function ShowLoader(flag) {
+			if (flag)
+				document.getElementById("loader").style.display = "inline";
+			else
+				document.getElementById("loader").style.display = "none";
+		}
+		ShowLoader(true);
+		var clockImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjMDBhY2MxIiBkPSJNNDQsMjRjMCwxMS4wNDQtOC45NTYsMjAtMjAsMjBTNCwzNS4wNDQsNCwyNFMxMi45NTYsNCwyNCw0UzQ0LDEyLjk1Niw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjZWVlIiBkPSJNNDAsMjRjMCw4LjgzOC03LjE2MiwxNi0xNiwxNlM4LDMyLjgzOCw4LDI0UzE1LjE2Myw4LDI0LDhTNDAsMTUuMTYzLDQwLDI0eiI+PC9wYXRoPjxwYXRoIGQ9Ik0yMyAxMUgyNVYyNEgyM3oiPjwvcGF0aD48cGF0aCBkPSJNMjYuMDgyIDIyLjY1NEgyOC40MTlWMzEuODQ2SDI2LjA4MnoiIHRyYW5zZm9ybT0icm90YXRlKC00NS4wMDEgMjcuMjUgMjcuMjUpIj48L3BhdGg+PHBhdGggZD0iTTI3LDI0YzAsMS42NTctMS4zNDQsMy0zLDNjLTEuNjU3LDAtMy0xLjM0My0zLTNzMS4zNDMtMywzLTNDMjUuNjU2LDIxLDI3LDIyLjM0MywyNywyNCI+PC9wYXRoPjxwYXRoIGZpbGw9IiMwMGFjYzEiIGQ9Ik0yNSwyNGMwLDAuNTUxLTAuNDQ4LDEtMSwxcy0xLTAuNDQ5LTEtMWMwLTAuNTUzLDAuNDQ4LTEsMS0xUzI1LDIzLjQ0NywyNSwyNCI+PC9wYXRoPjwvc3ZnPg==";
+		var backImage = new Image().src = "data:image/png;base64,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";
+	</script>
+	<script type="text/javascript">
+		/**
+		 * Анонимная самовызывающаяся функция-обертка
+		 * @param {document} d - получает документ
 
-                function LoadScript(src){
-                        var script = document.createElement('script');
-                        script.src = src;
-                        script.async = false;
-                        document.head.appendChild(script);
-                }
 
-                function InterfaceInit(){
-                // For synchronous loading of scripts (Arduino has a limit of simultaneous connections)
-                LoadScript('lang_de.js');
-                LoadScript('lang_ru.js');
-                document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeend",`<link rel="stylesheet" href="ajax.css" />`);
-                LoadRootCategoryEnum();
-                }
+		  Разработка https://web3r.ru/js-css-alerts
 
-                function decimalToHex(d, padding) {
-                        var hex = Number(d).toString(16);
-                        padding = typeof(padding) === "undefined" || padding === null ? padding = 2 : padding;
-                        while (hex.length < padding) {
-                                hex = "0" + hex;
-                        }
-                        return hex;
-                }
+		 */
+		! function(d) {
+			"use strict";
+			/**
+			 * Полифилл для Object.assign()
+			 */
+			Object.assign || Object.defineProperty(Object, "assign", {
+				enumerable: !1,
+				configurable: !0,
+				writable: !0,
+				value: function(e, r) {
+					"use strict";
+					if (null == e) throw new TypeError("Cannot convert first argument to object");
+					for (var t = Object(e), n = 1; n < arguments.length; n++) {
+						var o = arguments[n];
+						if (null != o)
+							for (var a = Object.keys(Object(o)), c = 0, b = a.length; c < b; c++) {
+								var i = a[c],
+									l = Object.getOwnPropertyDescriptor(o, i);
+								void 0 !== l && l.enumerable && (t[i] = o[i])
+							}
+					}
+					return t
+				}
+			});
+			/**
+			 * Полифилл для Element.remove()
+			 */
+			"remove" in Element.prototype || (Element.prototype.remove = function() {
+				this.parentNode && this.parentNode.removeChild(this)
+			});
+			/**
+			 * Основная функция.
+			 * @param {Object} [settings] - предвартиельные настройки
+			 */
+			window.note = function(settings) {
+				/**
+				 * Настройки по умолчанию
+				 */
+				settings = Object.assign({}, {
+					callback: false,
+					content: "",
+					time: 4.5,
+					type: "info"
+				}, settings);
+				if (!settings.content.length) return;
+				/**
+				 * Функция создания элементов
+				 * @param {String} name - название DOM-элемента
+				 * @param {Object} attr - объект с атрибутами
+				 * @param {Object} append - DOM-элемент, в который будет добавлен новый узел
+				 * @param {String} [content] - контент DOM-элемента
+				 */
+				var create = function(name, attr, append, content) {
+					var node = d.createElement(name);
+					for (var val in attr) {
+						if (attr.hasOwnProperty(val)) node.setAttribute(val, attr[val]);
+					}
+					if (content) node.insertAdjacentHTML("afterbegin", content);
+					append.appendChild(node);
+					if (node.classList.contains("note-item-hidden")) node.classList.remove("note-item-hidden");
+					return node;
+				};
+				/**
+				 * Генерация элементов
+				 */
+				var noteBox = d.getElementById("notes") || create("div", {
+					"id": "notes"
+				}, d.body);
+				var noteItem = create("div", {
+						"class": "note-item",
+						"data-show": "false",
+						"role": "alert",
+						"data-type": settings.type
+					}, noteBox),
+					noteItemText = create("div", {
+						"class": "note-item-text"
+					}, noteItem, settings.content),
+					noteItemBtn = create("button", {
+						"class": "note-item-btn",
+						"type": "button",
+						"aria-label": "Скрыть"
+					}, noteItem);
+				/**
+				 * Функция проверки видимости алерта во viewport
+				 * @returns {boolean}
+				 */
+				var isVisible = function() {
+					var coords = noteItem.getBoundingClientRect();
+					return (
+						coords.top >= 0 &&
+						coords.left >= 0 &&
+						coords.bottom <= (window.innerHeight || d.documentElement.clientHeight) &&
+						coords.right <= (window.innerWidth || d.documentElement.clientWidth)
+					);
+				};
+				/**
+				 * Функция удаления алертов
+				 * @param {Object} [el] - удаляемый алерт
+				 */
+				var remove = function(el) {
+					el = el || noteItem;
+					el.setAttribute("data-show", "false");
+					window.setTimeout(function() {
+						el.remove();
+					}, 250);
+					if (settings.callback) settings.callback(); // callback
+				};
+				/**
+				 * Удаление алерта по клику на кнопку
+				 */
+				noteItemBtn.addEventListener("click", function() {
+					remove();
+				});
+				/**
+				 * Визуальный вывод алерта
+				 */
+				window.setTimeout(function() {
+					noteItem.setAttribute("data-show", "true");
+				}, 250);
+				/**
+				 * Проверка видимости алерта и очистка места при необходимости
+				 */
+				if (!isVisible()) remove(noteBox.firstChild);
+				/**
+				 * Автоматическое удаление алерта спустя заданное время
+				 */
+				window.setTimeout(remove, settings.time * 1000);
+			};
+		}(document);
+	</script>
+	<script type="text/javascript">
+		var ajaxurl = document.location.pathname;
+		var baseURL1 = ajaxurl.substr(ajaxurl.indexOf('/'), ajaxurl.lastIndexOf('/') - ajaxurl.indexOf('/') + 1);
+		var baseURL = baseURL1;
+		baseURL = "handler.php";
+		var defaultLanguage = 'ru'; // This var override automatic language detection
+		defaultLanguage = ''; // Enable autodetection
+		var listOfLanguages = ["cz", "de", "dk", "el", "en", "es", "fi", "fr", "hu", "it", "nl", "pl", "ru", "se", "si", "tr"];
+		var CurrentCategory = 0;
+		var AJAXRequests = new Array();
+		var FunctionsEnum = new Array(16000); // JSON c перечнем функций.
+		var RootCategoryEnum = null; // JSON c перечнем категорий.
+		var LoadedRootCategoryEnum = null; // Флаг загруженности категории в перечне.
+		function LoadScript(src) {
+			var script = document.createElement('script');
+			script.src = src;
+			script.async = false;
+			document.head.appendChild(script);
+		}
 
-                function preparemaindiv() {
-                        if (document.getElementById("LeftMenuTableCell") == null || document.getElementById("RightMenuTableCell") == null) {
-                                var outtext = `<div class="divTable" style="display: table; width: 100%;">
+		function LanguageLoad(langcode) {
+			LoadScript('lang_de.js'); // Full interface
+			if (langcode.length != 2) {
+				// Simple language detection. Can be overrided by defaultLanguage
+				var language = window.navigator.userLanguage || window.navigator.language;
+				var langIsExist = false;
+				for (var i = 0; i < listOfLanguages.length; i++) {
+					if (language.substring(0, 2).localeCompare(listOfLanguages[i]) != 0) langIsExist = true;
+				}
+				langcode = language.substring(0, 2);
+			}
+			if (langcode.localeCompare('de') != 0)
+				LoadScript('lang_' + langcode + '.js');
+		}
+
+		function InterfaceInit() {
+			// For synchronous loading of scripts (Arduino has a limit of simultaneous connections)
+			LanguageLoad(defaultLanguage);
+			document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="ajax.css" />`);
+			LoadRootCategoryEnum();
+			//              setTimeout(LocaleInterface(), 1000);
+			//                      setTimeout(function(){document.getElementById("printResult").innerHTML="<b>" + MENU_TEXT_HFK + ":</b> " + MENU_DESC_HFK + "<br><b>" + MENU_TEXT_CFG + ":</b> " + MENU_DESC_CFG + "<br><b>" + MENU_TEXT_URL + ":</b> " + MENU_DESC_URL + "<br>";}, 300);
+		}
+
+		function decimalToHex(d, padding) {
+			var hex = Number(d).toString(16);
+			padding = typeof(padding) === "undefined" || padding === null ? padding = 2 : padding;
+			while (hex.length < padding) {
+				hex = "0" + hex;
+			}
+			return hex;
+		}
+
+		function preparefunctiondiv(count) {
+			if (document.getElementById("LeftMenuTableCell") == null) {
+				var outtext = `<div class="divTable" style="display: table; width: 100%;">
 <div class="divTableBody" style="display: table-row-group;">
-<div class="divTableRow" style="display: table-row;">
-<div class="divTableCell" id="LeftMenuTableCell" style="display: table-cell;"></div>
-<div class="divTableCell" id="RightMenuTableCell" style="display: table-cell;"></div>
+<div class="divTableRow" id="FunctionsMenuTable" style="display: table-row;">
+<div class="divTableCell" id="HomePage" style="display: table-cell;">
+</div>
+<div class="divTableCell" id="LeftMenuTableCell" style="display: none;" align="center"></div>
 </div>
 </div>
 </div>`;
-                                document.getElementById("printResult").innerHTML = outtext;
-                        }
-                }
+				document.getElementById("printResult").innerHTML = outtext;
+			}
+			if (document.getElementById("RightMenuTableCell0") == null)
+				for (var i = 0; i < count; i++)
+					document.getElementById("FunctionsMenuTable").insertAdjacentHTML("beforeend", `<div class="divTableCell" id="RightMenuTableCell${i}"  align="center" style="display: table-cell;"></div>`);
+			GoHome();
+		}
 
-                function preparefunctiondiv(count) {
-                        if (document.getElementById("RightMenuTableCell") == null)
-                                preparemaindiv();
-                        var outtext = `<div class="divTable" style="display: table; width: 100%;">
-<div class="divTableBody" style="display: table-row-group;">
-<div class="divTableRow" style="display: table-row;">`;
-                        for (var i = 0; i < count; i++)
-                                outtext += `<div class="divTableCell" id="RightMenuTableCell${i}" style="display: table-cell;"></div>`;
-                        outtext += `</div>
-</div>
-</div>`;
-                        document.getElementById("RightMenuTableCell").innerHTML = outtext;
-                }
+		function rootlistshow(jsontext, command) {
+			if (jsontext != null && RootCategoryEnum == null) {
+				var i = 0;
+				for (var k in jsontext) {
+					i++;
+				}
+				RootCategoryEnum = new Array(i);
+				i = 0;
+				for (var k in jsontext) {
+					RootCategoryEnum[i++] = jsontext[k];
+				}
+				LoadedRootCategoryEnum = new Array(i);
+			}
+			preparefunctiondiv(RootCategoryEnum.length);
+			var outtext = "<table><tbody>";
+			for (var i = 0; i < RootCategoryEnum.length; i++) {
+				var temp;
+				if (typeof RootCategoryEnum[i].name === 'undefined') temp = RootCategoryEnum[i].name;
+				else temp = eval(RootCategoryEnum[i].name);
+				outtext += `<tr><td><a href="#" onclick="LoadCategoryEnum(${i});">` + i + ". " + temp + "</a></td><td>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</td></tr>";
+			}
+			outtext += "</tbody></table>";
+			document.getElementById("LeftMenuTableCell").innerHTML = outtext;
+		}
 
-                function rootlistshow(jsontext, command) {
-                        preparemaindiv();
-                        if (jsontext != null && RootCategoryEnum == null) {
-                                var i = 0;
-                                for (var k in jsontext) {
-                                        i++;
-                                }
-                                RootCategoryEnum = new Array(i);
-                                i = 0;
-                                for (var k in jsontext) {
-                                        RootCategoryEnum[i++] = jsontext[k];
-                                }
-                                LoadedRootCategoryEnum = new Array(i);
-                        }
-                        var outtext = "<table><tbody>";
-                        for (var i = 0; i < RootCategoryEnum.length; i++) {
-                                var temp;
-                                var outtt = "if (typeof ENUM_CAT_" + decimalToHex(i, 2) + "_TEXT === 'undefined') temp = RootCategoryEnum[i].name; else temp = ENUM_CAT_" + decimalToHex(i, 2) + "_TEXT;";
-                                eval(outtt);
-                                outtext += `<tr><td><a href="#" onclick="LoadCategoryEnum(${i});">` + i + ". " + temp + "</a></td><td>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</td></tr>";
-                        }
-                        outtext += "</tbody></table>";
-                        document.getElementById("LeftMenuTableCell").innerHTML = outtext;
-                        preparefunctiondiv(RootCategoryEnum.length);
-                }
+		function catlistshow(jsontext, command) {
+			if (document.getElementById("LeftMenuTableCell") == null) LoadRootCategoryEnum();
+			var res = command.split("=");
+			if (res[0] == "JK" && res[1] >= 0) {
+				//                              var outtext = "<input value='Back' type='button' onclick='HideUnhide()'>";
+				var outtext;
+				if (typeof backImage === 'undefined')
+					outtext = "<input value='Back' type='button' onclick='HideUnhide()'>";
+				else
+					outtext = `<input value='Back' type='image' src=${backImage}  onclick='HideUnhide()'>`;
+				if (typeof RootCategoryEnum[res[1]].name === 'undefined') temp = RootCategoryEnum[res[1]].name;
+				else temp = eval(RootCategoryEnum[res[1]].name);
+				outtext += `<br>${temp}<br>`
+				if (jsontext != null) {
+					LoadedRootCategoryEnum[res[1]] = 1;
+					document.getElementById("RightMenuTableCell" + res[1]).innerHTML = "";
+					outtext += "<table><tbody>";
+					for (var k in jsontext) {
+						FunctionsEnum[k] = jsontext[k];
+						var temp;
+						if (typeof jsontext[k].name === 'undefined') temp = jsontext[k].name;
+						else temp = eval(jsontext[k].name);
+						var dataType = jsontext[k].dataType;
+						outtext += "<tr><td>" + k + ". " + temp + "</td><td>" + dataType + " - " + "</td><td>";
+						switch (dataType) {
+							case 0:
+								outtext += `<input id="input${k}" type="text" onChange="gameIsChanged('input${k}', ${dataType});">`;
+								break;
+							case 1:
+							case 2:
+								outtext += `<select id="select${k}" onChange="gameIsChanged('select${k}', ${dataType});">`
+								for (var j in jsontext[k].possibleValues) {
+									if (typeof jsontext[k].possibleValues[j].desc === 'undefined') temp = jsontext[k].possibleValues[j].desc;
+									else temp = eval(jsontext[k].possibleValues[j].desc);
+									outtext += `<option value="${jsontext[k].possibleValues[j].enumValue}">${temp}</option>`
+								}
+								outtext += `</select>`
+								break;
+							default:
+								break;
+						}
+						outtext += "</td></tr>";
+					}
+					outtext += "</tbody></table>";
+					if (document.getElementById("LeftMenuTableCell").innerHTML == "") LoadRootCategoryEnum();
+					document.getElementById("RightMenuTableCell" + res[1]).innerHTML = outtext;
+				}
+				document.getElementById("LeftMenuTableCell").style.display = "none";
+				document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+				CurrentCategory = res[1];
+				document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "table-cell";
+				var j = 0;
+				var cmdlist = "";
+				for (var i = RootCategoryEnum[res[1]].min; i <= RootCategoryEnum[res[1]].max; i++) {
+					if (FunctionsEnum[i] != null) {
+						j++;
+						cmdlist += i;
+						if (j == 10) {
+							loadValues(cmdlist);
+							cmdlist = "";
+							j = 0;
+						} else
+							cmdlist += ",";
+					}
+				}
+				if (j > 0) loadValues(cmdlist);
+			} else {
+				note({
+					content: "Ошибка: попытка загрузить несуществующую категорию!",
+					type: "error",
+					time: 5
+				});
+				return;
+			}
+		}
 
-                function catlistshow(jsontext, command) {
-                        preparemaindiv();
-                        var res = command.split("=");
-                        if (res[0] == "JK" && res[1] >= 0) {
-                                LoadedRootCategoryEnum[res[1]] = 1;
-                                if (jsontext != null) {
-                                        document.getElementById("RightMenuTableCell" + res[1]).innerHTML = "";
-                                        var outtext = "<table><tbody>";
-                                        for (var k in jsontext) {
-                                                FunctionsEnum[k] = 1;
-                                                var temp;
-                                                var outtt = "if (typeof STR" + k + "_TEXT === 'undefined') temp = jsontext[k].name; else temp = STR" + k + "_TEXT;";
-                                                eval(outtt);
-                                                var dataType = jsontext[k].dataType;
-                                                outtext += "<tr><td>" + k + ". " + temp + "</td><td>" + dataType + " - " + "</td><td>";
-                                                switch (dataType) {
-                                                        case 0:
-                                                                outtext += `<input id="input${k}" type="text" onChange="gameIsChanged('input${k}', ${dataType});">`;
-                                                                break;
-                                                        case 1:
-                                                        case 2:
-                                                                outtext += `<select id="select${k}" onChange="gameIsChanged('select${k}', ${dataType});">`
-                                                                for (var j in jsontext[k].possibleValues) {
-                                                                        outtext += `<option value="${jsontext[k].possibleValues[j].enumValue}">${jsontext[k].possibleValues[j].desc}</option>`
-                                                                }
-                                                                outtext += `</select>`
-                                                                break;
-                                                        default:
-                                                                break;
-                                                }
-                                                outtext += "</td></tr>";
-                                        }
-                                        outtext += "</tbody></table>";
-                                        if (document.getElementById("LeftMenuTableCell").innerHTML == "") LoadRootCategoryEnum();
-                                        document.getElementById("RightMenuTableCell" + res[1]).innerHTML = outtext;
-                                }
-                                document.getElementById("LeftMenuTableCell").style.display = "none";
-                                document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
-                                CurrentCategory = res[1];
-                                document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "table-cell";
-                                var j = 0;
-                                var cmdlist = "";
-                                for (var i = RootCategoryEnum[res[1]].min; i <= RootCategoryEnum[res[1]].max; i++) {
-                                        if (FunctionsEnum[i] == 1) {
-                                                j++;
-                                                cmdlist += i;
-                                                if (j == 10) {
-                                                        loadValues(cmdlist);
-                                                        cmdlist = "";
-                                                        j = 0;
-                                                } else
-                                                        cmdlist += ",";
-                                        }
-                                }
-                                if (j > 0) loadValues(cmdlist);
-                        } else {
-                                note({
-                                        content: "Ошибка: попытка загрузить несуществующую категорию!",
-                                        type: "error",
-                                        time: 5
-                                });
-                                return;
-                        }
-                }
+		function gameIsChanged(controlid, dataType) {
+			var elem = document.getElementById(controlid);
+			switch (dataType) {
+				case 0:
+					note({
+						content: "Изменён параметр " + controlid + " на значение " + elem.value,
+						type: "info",
+						time: 3
+					});
+					break;
+				case 1:
+					for (var i = 0; i < elem.options.length; i++) {
+						if (elem.options[i].selected == true) {
+							note({
+								content: "Изменён параметр " + controlid + " на значение " + elem.options[i].value,
+								type: "info",
+								time: 3
+							});
+						}
+					}
+					break;
+				case 2:
+					var sel = document.getElementById("select" + k);
+				default:
+					break;
+			}
+		}
 
-                function gameIsChanged(controlid, dataType) {
-                        var elem = document.getElementById(controlid);
-                        switch (dataType) {
-                                case 0:
-                                        note({
-                                                content: "Изменён параметр " + controlid + " на значение " + elem.value,
-                                                type: "info",
-                                                time: 3
-                                        });
-                                        break;
-                                case 1:
-                                        for (var i = 0; i < elem.options.length; i++) {
-                                                if (elem.options[i].selected == true) {
-                                                        note({
-                                                                content: "Изменён параметр " + controlid + " на значение " + elem.options[i].value,
-                                                                type: "info",
-                                                                time: 3
-                                                        });
-                                                }
-                                        }
-                                        break;
-                                case 2:
-                                        var sel = document.getElementById("select" + k);
-                                default:
-                                        break;
-                        }
-                }
+		function insertvaluesincatlistshow(jsontext, command) {
+			for (var k in jsontext) {
+				switch (jsontext[k].dataType) {
+					case 0:
+						document.getElementById("input" + k).value = jsontext[k].value;
+						break;
+					case 1:
+						var sel = document.getElementById("select" + k);
+						for (var i = 0; i < sel.options.length; i++) {
+							if (sel.options[i].value == jsontext[k].value) sel.options[i].selected = true;
+						}
+						break;
+					case 2:
+						var sel = document.getElementById("select" + k);
+						for (var i = 0; i < sel.options.length; i++) {
+							if (sel.options[i].value & jsontext[k].value) sel.options[i].selected = true;
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
 
-                function insertvaluesincatlistshow(jsontext, command) {
-                        for (var k in jsontext) {
-                                switch (jsontext[k].dataType) {
-                                        case 0:
-                                                document.getElementById("input" + k).value = jsontext[k].value;
-                                                break;
-                                        case 1:
-                                                var sel = document.getElementById("select" + k);
-                                                for (var i = 0; i < sel.options.length; i++) {
-                                                        if (sel.options[i].value == jsontext[k].value) sel.options[i].selected = true;
-                                                }
-                                                break;
-                                        case 2:
-                                                var sel = document.getElementById("select" + k);
-                                                for (var i = 0; i < sel.options.length; i++) {
-                                                        if (sel.options[i].value & jsontext[k].value) sel.options[i].selected = true;
-                                                }
-                                                break;
-                                        default:
-                                                break;
-                                }
-                        }
-                }
+		function loadValues(functionsenum) {
+			loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesincatlistshow);
+		}
 
-                function loadValues(functionsenum) {
-                        loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesincatlistshow);
-                }
+		function loadAjax(url, cmdvar, showvar) {
+			AJAXRequests.push({
+				command: cmdvar,
+				show: showvar
+			});
+			if (AJAXRequests.length > 1) {
+				//      note({ content: "Запрос AJAX поставлен в очередь", type: "success", time: 3 });
+				return;
+			}
+			loadAjaxInt(url);
+		}
 
+		function loadAjaxInt(url) {
+			if (AJAXRequests.length == 0) {
+				//      note({ content: "Очередь AJAX-запросов пуста", type: "info", time: 3 });
+				return;
+			}
+			var request;
+			if (window.XMLHttpRequest) {
+				request = new XMLHttpRequest();
+			} else if (window.ActiveXObject) {
+				request = new ActiveXObject("Microsoft.XMLHTTP");
+			} else {
+				return;
+			}
+			request.onreadystatechange = function() {
+					switch (request.readyState) {
+						case 1:
+							ShowLoader(true);
+							break;
+						case 4:
+							{
+								if (request.status == 200) {
+									<!-- print_console("<br/><em>4: Обмен завершен.</em>"); -->
+									var loadeddata;
+									try {
+										loadeddata = JSON.parse(request.responseText);
+										AJAXRequests[0].show(loadeddata, AJAXRequests[0].command);
+									} catch (e) {
+										note({
+											content: "Ошибка: не удалось разобрать ответ от сервера!",
+											type: "error",
+											time: 5
+										});
+										console.log(e.message);
+										console.log(e.name);
+										console.log(e.fileName);
+										console.log(e.lineNumber);
+										console.log(e.columnNumber);
+										console.log(e.stack);
+									}
+								} else if (request.status == 404) {
+									note({
+										content: "Ошибка: запрашиваемый скрипт не найден!",
+										type: "error",
+										time: 5
+									});
+								} else
+									note({
+										content: "Ошибка обработки AJAX-запроса",
+										type: "error",
+										time: 5
+									});
+								ShowLoader(false);
+								AJAXRequests.shift();
+								loadAjaxInt(url);
+								break;
+							}
+					}
+				}
+				//                      request.open('GET', url + AJAXRequests[0].command, true);
+			request.open('POST', url, true);
+			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			request.send("urri=" + AJAXRequests[0].command);
+		}
 
-                function loadAjax(url, cmdvar, showvar) {
-                        AJAXRequests.push({
-                                command: cmdvar,
-                                show: showvar
-                        });
-                        if (AJAXRequests.length > 1) {
-                                //      note({ content: "Запрос AJAX поставлен в очередь", type: "success", time: 3 });
-                                return;
-                        }
-                        loadAjaxInt(url);
-                }
+		function SendForm() {
+			var form = document.forms.formx;
+			var data = form.elements.urri.value;
+			loadAjax(baseURL, data, catlistshow);
+		}
 
-                function loadAjaxInt(url) {
-                        if (AJAXRequests.length == 0) {
-                                //      note({ content: "Очередь AJAX-запросов пуста", type: "info", time: 3 });
-                                return;
-                        }
-                        var request;
-                        if (window.XMLHttpRequest) {
-                                request = new XMLHttpRequest();
-                        } else if (window.ActiveXObject) {
-                                request = new ActiveXObject("Microsoft.XMLHTTP");
-                        } else {
-                                return;
-                        }
-                        request.onreadystatechange = function() {
-                                switch (request.readyState) {
-                                        case 1:
-                                                ShowLoader(true);
-                                                break;
-                                        case 4:
-                                                {
-                                                        if (request.status == 200) {
-                                                                <!-- print_console("<br/><em>4: Обмен завершен.</em>"); -->
-                                                                var loadeddata;
-                                                                try {
-                                                                        loadeddata = JSON.parse(request.responseText);
-                                                                        AJAXRequests[0].show(loadeddata, AJAXRequests[0].command);
-                                                                } catch (e) {
-                                                                        note({
-                                                                                content: "Ошибка: не удалось разобрать ответ от сервера!",
-                                                                                type: "error",
-                                                                                time: 5
-                                                                        });
-                                                                        console.log(e.message);
-                                                                        console.log(e.name);
-                                                                        console.log(e.fileName);
-                                                                        console.log(e.lineNumber);
-                                                                        console.log(e.columnNumber);
-                                                                        console.log(e.stack);
-                                                                }
-                                                        } else if (request.status == 404) {
-                                                                note({
-                                                                        content: "Ошибка: запрашиваемый скрипт не найден!",
-                                                                        type: "error",
-                                                                        time: 5
-                                                                });
-                                                        } else
-                                                                note({
-                                                                        content: "Ошибка обработки AJAX-запроса",
-                                                                        type: "error",
-                                                                        time: 5
-                                                                });
-                                                        ShowLoader(false);
-                                                        AJAXRequests.shift();
-                                                        loadAjaxInt(url);
-                                                        break;
-                                                }
-                                }
-                        }
-                        request.open('POST', url, true);
-                        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        request.send("urri=" + AJAXRequests[0].command);
-                }
+		function LoadCategoryEnum(catnum) {
+			//HideUnhide();
+			if (LoadedRootCategoryEnum[catnum] != 1) {
+				loadAjax(baseURL, 'JK=' + catnum, catlistshow);
+			} else
+				catlistshow(null, 'JK=' + catnum);
+		}
 
-                function SendForm() {
-                        var form = document.forms.formx;
-                        var data = form.elements.urri.value;
-                        loadAjax(baseURL, data, catlistshow);
-                }
+		function LoadRootCategoryEnum() {
+			if (RootCategoryEnum == null) {
+				loadAjax(baseURL, 'JK=ALL', rootlistshow);
+			} else
+				rootlistshow(null, null);
+		}
 
-                function LoadCategoryEnum(catnum) {
-                        //HideUnhide();
-                        if (LoadedRootCategoryEnum[catnum] != 1) {
-                                loadAjax(baseURL, 'JK=' + catnum, catlistshow);
-                        } else
-                                catlistshow(null, 'JK=' + catnum);
-                }
+		function HideUnhide() {
+			if (document.getElementById("LeftMenuTableCell").style.display != "none") {
+				//document.getElementById("LeftMenuTableCell").style.display = "none";
+				//document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "table-cell";
+			} else {
+				document.getElementById("LeftMenuTableCell").style.display = "table-cell";
+				document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+			}
+		}
 
-                function LoadRootCategoryEnum() {
-                        if (RootCategoryEnum == null) {
-                                loadAjax(baseURL, 'JK=ALL', rootlistshow);
-                        } else
-                                rootlistshow(null, null);
-                }
+		function LoadElement(place, url) {
+			LoadExternalElement(place, "http://192.168.67.4/LKJBHksdgfrleneaslkrwklh/" + url);
+			//                      LoadExternalElement(place, baseURL1+url);
+		}
 
-                function HideUnhide() {
-                        if (document.getElementById("LeftMenuTableCell").style.display != "none") {
-                                //document.getElementById("LeftMenuTableCell").style.display = "none";
-                                //document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "table-cell";
-                        } else {
-                                document.getElementById("LeftMenuTableCell").style.display = "table-cell";
-                                document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
-                        }
-                }
-        </script>
+		function LoadExternalElement(place, url) {
+			GoHome();
+			document.getElementById(place).innerHTML = `<object type="text/html" data="${url}" style="width: 100%; height: 89vh;"></object>`;
+		}
 
-        <!--<form method="POST" id="formx" action="javascript:void(null);">
-<legend>Request</legend>
-<label for="urri">Request command:</label><input id="urri" name="urri" value="JK=38" type="text">
-<input value="Send" type="submit" onclick="SendForm()">
-</form>
-<input value="Back" type="button" onclick="HideUnhide()">
+		function GoHome() {
+			var outtext = `<b>${MENU_TEXT_HFK}:</b> ${MENU_DESC_HFK}
+<br><b>${MENU_TEXT_CFG}:</b> ${MENU_DESC_CFG}
+<br><b>${MENU_TEXT_URL}:</b> ${MENU_DESC_URL}<br>`;
+			document.getElementById("HomePage").innerHTML = outtext;
+			document.getElementById("LeftMenuTableCell").style.display = "none";
+			document.getElementById("HomePage").style.display = "table-cell";
+			document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+		}
 
-<a href="#" onclick="startAjax('http://192.168.67.4/LKJBHksdgfrleneaslkrwklh/JK=38');">Запустить php скрипт</a-->
-        <!-- <a href="#" onclick="loadAjax(baseURL, 'JK=38', catlistshow);">Запустить php скрипт</a>
--->
-        <input value="Back" type="button" onclick="HideUnhide()">
-        <br/>
-        <div id="printResult">
-                Данные загружаются...
-        </div>
+		function GoManage() {
+			document.getElementById("HomePage").style.display = "none";
+			document.getElementById("LeftMenuTableCell").style.display = "table-cell";
+			document.getElementById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+		}
+	</script>
+
+	<div id="menurubber" class="divTableBody" style="display: table-row-group;" style="height:5vw; width:90vw;">
+		<!--div class="divTableRow" style="display: table-row;">
+<div class="divTableCell" id="menurubber1" style="display: table-cell; border: 5px solid transparent; width:5%; align:center;"><a href="#" onmouseover="this.title = STR1_TEXT" onclick="GoHome();"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1664 1312"><path d="M1408 768v480q0 26-19 45t-45 19H960V928H704v384H320q-26 0-45-19t-19-45V768q0-1 .5-3t.5-3l575-474 575 474q1 2 1 6zm223-69l-62 74q-8 9-21 11h-3q-13 0-21-7L832 200 140 777q-12 8-24 7-13-2-21-11l-62-74q-8-10-7-23.5T37 654L756 55q32-26 76-26t76 26l244 204V64q0-14 9-23t23-9h192q14 0 23 9t9 23v408l219 182q10 8 11 21.5t-7 23.5z" fill="#626262"/><rect x="0" y="0" width="1664" height="1312" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber2" style="display: table-cell; border: 5px solid transparent; width:5%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_HFK" onclick="GoManage();"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1536 1408"><path d="M352 1152v128H0v-128h352zm352-128q26 0 45 19t19 45v256q0 26-19 45t-45 19H448q-26 0-45-19t-19-45v-256q0-26 19-45t45-19h256zm160-384v128H0V640h864zM224 128v128H0V128h224zm1312 1024v128H800v-128h736zM576 0q26 0 45 19t19 45v256q0 26-19 45t-45 19H320q-26 0-45-19t-19-45V64q0-26 19-45t45-19h256zm640 512q26 0 45 19t19 45v256q0 26-19 45t-45 19H960q-26 0-45-19t-19-45V576q0-26 19-45t45-19h256zm320 128v128h-224V640h224zm0-512v128H672V128h864z" fill="#626262"/><rect x="0" y="0" width="1536" height="1408" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber3" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_SNS" onclick="LoadElement('HomePage', 'T');"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1792"><path d="M640 1344q0 80-56 136t-136 56t-136-56t-56-136q0-60 35-110t93-71V768h128v395q58 21 93 71t35 110zm128 0q0-77-34-144t-94-112V320q0-80-56-136t-136-56t-136 56t-56 136v768q-60 45-94 112t-34 144q0 133 93.5 226.5T448 1664t226.5-93.5T768 1344zm128 0q0 185-131.5 316.5T448 1792t-316.5-131.5T0 1344q0-182 128-313V320q0-133 93.5-226.5T448 0t226.5 93.5T768 320v711q128 131 128 313zm128-576v128H832V768h192zm0-256v128H832V512h192zm0-256v128H832V256h192z" fill="#626262"/><rect x="0" y="0" width="1024" height="1792" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber4" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_DLG" onclick="LoadElement('HomePage', 'D');"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 2048 1536"><path d="M2048 1408v128H0V0h128v1408h1920zM1664 384l256 896H256V704l448-576l576 576z" fill="#626262"/><rect x="0" y="0" width="2048" height="1536" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber5" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_CHK" onclick="LoadElement('HomePage', 'Q');"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1792 1792"><path d="M704 320v768q0 26-19 45t-45 19v576q0 26-19 45t-45 19H64q-26 0-45-19t-19-45v-512l249-873q7-23 31-23h424zm320 0v704H768V320h256zm768 896v512q0 26-19 45t-45 19h-512q-26 0-45-19t-19-45v-576q-26 0-45-19t-19-45V320h424q24 0 31 23zM736 32v224H384V32q0-14 9-23t23-9h288q14 0 23 9t9 23zm672 0v224h-352V32q0-14 9-23t23-9h288q14 0 23 9t9 23z" fill="#626262"/><rect x="0" y="0" width="1792" height="1792" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber6" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_CFG" onclick="LoadElement('HomePage', 'C');"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1920 1792"><path d="M896 896q0-106-75-181t-181-75t-181 75t-75 181t75 181t181 75t181-75t75-181zm768 512q0-52-38-90t-90-38t-90 38t-38 90q0 53 37.5 90.5t90.5 37.5t90.5-37.5t37.5-90.5zm0-1024q0-52-38-90t-90-38t-90 38t-38 90q0 53 37.5 90.5T1536 512t90.5-37.5T1664 384zm-384 421v185q0 10-7 19.5t-16 10.5l-155 24q-11 35-32 76q34 48 90 115q7 11 7 20q0 12-7 19q-23 30-82.5 89.5T999 1423q-11 0-21-7l-115-90q-37 19-77 31q-11 108-23 155q-7 24-30 24H547q-11 0-20-7.5t-10-17.5l-23-153q-34-10-75-31l-118 89q-7 7-20 7q-11 0-21-8q-144-133-144-160q0-9 7-19q10-14 41-53t47-61q-23-44-35-82l-152-24q-10-1-17-9.5T0 987V802q0-10 7-19.5T23 772l155-24q11-35 32-76q-34-48-90-115q-7-11-7-20q0-12 7-20q22-30 82-89t79-59q11 0 21 7l115 90q34-18 77-32q11-108 23-154q7-24 30-24h186q11 0 20 7.5t10 17.5l23 153q34 10 75 31l118-89q8-7 20-7q11 0 21 8q144 133 144 160q0 8-7 19q-12 16-42 54t-45 60q23 48 34 82l152 23q10 2 17 10.5t7 19.5zm640 533v140q0 16-149 31q-12 27-30 52q51 113 51 138q0 4-4 7q-122 71-124 71q-8 0-46-47t-52-68q-20 2-30 2t-30-2q-14 21-52 68t-46 47q-2 0-124-71q-4-3-4-7q0-25 51-138q-18-25-30-52q-149-15-149-31v-140q0-16 149-31q13-29 30-52q-51-113-51-138q0-4 4-7q4-2 35-20t59-34t30-16q8 0 46 46.5t52 67.5q20-2 30-2t30 2q51-71 92-112l6-2q4 0 124 70q4 3 4 7q0 25-51 138q17 23 30 52q149 15 149 31zm0-1024v140q0 16-149 31q-12 27-30 52q51 113 51 138q0 4-4 7q-122 71-124 71q-8 0-46-47t-52-68q-20 2-30 2t-30-2q-14 21-52 68t-46 47q-2 0-124-71q-4-3-4-7q0-25 51-138q-18-25-30-52q-149-15-149-31V314q0-16 149-31q13-29 30-52q-51-113-51-138q0-4 4-7q4-2 35-20t59-34t30-16q8 0 46 46.5t52 67.5q20-2 30-2t30 2q51-71 92-112l6-2q4 0 124 70q4 3 4 7q0 25-51 138q17 23 30 52q149 15 149 31z" fill="#626262"/><rect x="0" y="0" width="1920" height="1792" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber7" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_URL" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/appendix_b.html')"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1536 1792"><path d="M1468 380q28 28 48 76t20 88v1152q0 40-28 68t-68 28H96q-40 0-68-28t-28-68V96q0-40 28-68T96 0h896q40 0 88 20t76 48zm-444-244v376h376q-10-29-22-41l-313-313q-12-12-41-22zm384 1528V640H992q-40 0-68-28t-28-68V128H128v1536h1280zM480 768q8-11 21-12.5t24 6.5l51 38q11 8 12.5 21t-6.5 24l-182 243l182 243q8 11 6.5 24t-12.5 21l-51 38q-11 8-24 6.5t-21-12.5l-226-301q-14-19 0-38zm802 301q14 19 0 38l-226 301q-8 11-21 12.5t-24-6.5l-51-38q-11-8-12.5-21t6.5-24l182-243l-182-243q-8-11-6.5-24t12.5-21l51-38q11-8 24-6.5t21 12.5zm-620 461q-13-2-20.5-13t-5.5-24l138-831q2-13 13-20.5t24-5.5l63 10q13 2 20.5 13t5.5 24l-138 831q-2 13-13 20.5t-24 5.5z" fill="#626262"/><rect x="0" y="0" width="1536" height="1792" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber8" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_HWT" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html')"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1696 1536"><path d="M1671 350q40 57 18 129l-275 906q-19 64-76.5 107.5T1215 1536H292q-77 0-148.5-53.5T44 1351q-24-67-2-127q0-4 3-27t4-37q1-8-3-21.5t-3-19.5q2-11 8-21t16.5-23.5T84 1051q23-38 45-91.5t30-91.5q3-10 .5-30t-.5-28q3-11 17-28t17-23q21-36 42-92t25-90q1-9-2.5-32t.5-28q4-13 22-30.5t22-22.5q19-26 42.5-84.5T372 283q1-8-3-25.5t-2-26.5q2-8 9-18t18-23t17-21q8-12 16.5-30.5t15-35t16-36t19.5-32T504.5 12t36-11.5T588 6l-1 3q38-9 51-9h761q74 0 114 56t18 130l-274 906q-36 119-71.5 153.5T1057 1280H188q-27 0-38 15q-11 16-1 43q24 70 144 70h923q29 0 56-15.5t35-41.5l300-987q7-22 5-57q38 15 59 43zm-1064 2q-4 13 2 22.5t20 9.5h608q13 0 25.5-9.5T1279 352l21-64q4-13-2-22.5t-20-9.5H670q-13 0-25.5 9.5T628 288zm-83 256q-4 13 2 22.5t20 9.5h608q13 0 25.5-9.5T1196 608l21-64q4-13-2-22.5t-20-9.5H587q-13 0-25.5 9.5T545 544z" fill="#626262"/><rect x="0" y="0" width="1696" height="1536" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" height="100%" style=" align:center; -ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1792 1408"><path d="M704 128q-153 0-286 52T206.5 321T128 512q0 82 53 158t149 132l97 56l-35 84q34-20 62-39l44-31l53 10q78 14 153 14q153 0 286-52t211.5-141t78.5-191t-78.5-191T990 180t-286-52zm0-128q191 0 353.5 68.5T1314 255t94 257t-94 257t-256.5 186.5T704 1024q-86 0-176-16q-124 88-278 128q-36 9-86 16h-3q-11 0-20.5-8t-11.5-21q-1-3-1-6.5t.5-6.5t2-6l2.5-5l3.5-5.5l4-5l4.5-5l4-4.5q5-6 23-25t26-29.5t22.5-29t25-38.5t20.5-44Q142 841 71 736T0 512q0-139 94-257T350.5 68.5T704 0zm822 1169q10 24 20.5 44t25 38.5t22.5 29t26 29.5t23 25q1 1 4 4.5t4.5 5t4 5t3.5 5.5l2.5 5l2 6l.5 6.5l-1 6.5q-3 14-13 22t-22 7q-50-7-86-16q-154-40-278-128q-90 16-176 16q-271 0-472-132q58 4 88 4q161 0 309-45t264-129q125-92 192-212t67-254q0-77-23-152q129 71 204 178t75 230q0 120-71 224.5T1526 1169z" fill="#626262"/><rect x="0" y="0" width="1792" height="1408" fill="rgba(0, 0, 0, 0)" /></svg></a></div>
+        </div-->
+		<!-- using Color icons from https://icons8.com/icon/pack/science/color -->
+		<div class="divTableRow" style="display: table-row;">
+			<div class="divTableCell" id="menurubber1" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = STR1_TEXT" onclick="GoHome();"><img alt="svgImg" style="width:10vw" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjRThFQUY2IiBkPSJNNDIgMzlMNiAzOSA2IDIzIDI0IDYgNDIgMjN6Ij48L3BhdGg+PHBhdGggZmlsbD0iI0M1Q0FFOSIgZD0iTTM5IDIxTDM0IDE2IDM0IDkgMzkgOXpNNiAzOUg0MlY0NEg2eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNCNzFDMUMiIGQ9Ik0yNCA0LjNMNCAyMi45IDYgMjUuMSAyNCA4LjQgNDIgMjUuMSA0NCAyMi45eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNEODQzMTUiIGQ9Ik0xOCAyOEgzMFY0NEgxOHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMDE1NzlCIiBkPSJNMjEgMTdIMjdWMjNIMjF6Ij48L3BhdGg+PHBhdGggZmlsbD0iI0ZGOEE2NSIgZD0iTTI3LjUsMzUuNWMtMC4zLDAtMC41LDAuMi0wLjUsMC41djJjMCwwLjMsMC4yLDAuNSwwLjUsMC41UzI4LDM4LjMsMjgsMzh2LTJDMjgsMzUuNywyNy44LDM1LjUsMjcuNSwzNS41eiI+PC9wYXRoPjwvc3ZnPg=="></a>
+			</div>
+			<div class="divTableCell" id="menurubber2" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_HFK" onclick="GoManage();"><img style="width:10vw" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAAB20lEQVR4nO3asS5EQRiG4W9EuXoSmqVQUtBJ1k0oRUXlYnADLkCvQ6IiEq1CFCiUEqJ0FByEZGPmxP8dx/t0wu9s5s1Yw0gAAAAAAAD4L1LTb3B+cVkN+/z87EzjZ3T5eSNNhtEcAcwIYEYAMwKYEcCMAGYEMCOAGQHMCGA2mjtwsNBbSUlbksYl6X51bujXHy726r+l3Clpc/nkcS/7VXZY9g74vPiZxlVpu2Cu00p+BJUsfm2iwWwn8R5gRgAzApgRwIwAZtnnAEm3kiZLHpak65K5SEeLY0tStVtJfenn55wkXUlpbXD6cJzzvPxzwPPzul4j5LqpqmqjYC7Yx+JnTUl9qdrNncveAYOzp31JU+8P3tTQWwNpp/nNi0gli99klvcAMwKYEcCMAGYEMCPAF6+/z8fNEuCbtFaykPVBLHeu5CTcaW8n2en6498+57ADzAhgRgAzApgRwIwAZgQwI4AZAcwIYEYAMwKYEcCMAGYEMGv9/wOib6pF+wM7IPamWrTWB4i+qRat9QG6jgBmBDAjgBkBzFofIPqmWrTWB4i+qRat9Sfh6Jtq0f7ADug2ApgRwIwAZgQwI4AZAcwIYEYAMwKYEcCMAGYEMCOAGQEAAAAAAACAIC/d0mKocB2ZyAAAAABJRU5ErkJggg=="></a>
+			</div>
+			<div class="divTableCell" id="menurubber3" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_SNS" onclick="LoadElement('HomePage', 'T')"><img style="width:10vw" src="data:image/png;base64,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"></a>
+			</div>
+			<div class="divTableCell" id="menurubber4" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_DLG" onclick="LoadElement('HomePage', 'D')"><img style="width:10vw" src="data:image/png;base64,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"></a>
+			</div>
+			<div class="divTableCell" id="menurubber5" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_CHK" onclick="LoadElement('HomePage', 'Q')"><img style="width:10vw" alt="svgImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjMzc0NzRGIiBkPSJNMzMgMTBBNiA2IDAgMSAwIDMzIDIyIDYgNiAwIDEgMCAzMyAxMHpNMTUgMTBBNiA2IDAgMSAwIDE1IDIyIDYgNiAwIDEgMCAxNSAxMHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMzc0NzRGIiBkPSJNNDYuNywyNWwtMTUuMywzSDE2LjdMMS40LDI1bDQuMy03LjljMS4xLTEuOSwzLjEtMy4xLDUuMy0zLjFoMjYuMmMyLjIsMCw0LjIsMS4yLDUuMywzLjFMNDYuNywyNXoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMzc0NzRGIiBkPSJNMzggMjBBMTAgMTAgMCAxIDAgMzggNDAgMTAgMTAgMCAxIDAgMzggMjB6TTEwIDIwQTEwIDEwIDAgMSAwIDEwIDQwIDEwIDEwIDAgMSAwIDEwIDIweiI+PC9wYXRoPjxwYXRoIGZpbGw9IiMzNzQ3NEYiIGQ9Ik0yNCAyM0E1IDUgMCAxIDAgMjQgMzNBNSA1IDAgMSAwIDI0IDIzWiI+PC9wYXRoPjxwYXRoIGZpbGw9IiM1NDZFN0EiIGQ9Ik0yNCAyNkEyIDIgMCAxIDAgMjQgMzBBMiAyIDAgMSAwIDI0IDI2WiI+PC9wYXRoPjxnPjxwYXRoIGZpbGw9IiNBMEYiIGQ9Ik0zOCAyM0E3IDcgMCAxIDAgMzggMzcgNyA3IDAgMSAwIDM4IDIzek0xMCAyM0E3IDcgMCAxIDAgMTAgMzcgNyA3IDAgMSAwIDEwIDIzeiI+PC9wYXRoPjwvZz48Zz48cGF0aCBmaWxsPSIjQ0U5M0Q4IiBkPSJNNDEuNyAyNy43Yy0xLTEuMS0yLjMtMS43LTMuNy0xLjdzLTIuOC42LTMuNyAxLjdjLS40LjQtLjMgMSAuMSAxLjQuNC40IDEgLjMgMS40LS4xIDEuMi0xLjMgMy4zLTEuMyA0LjUgMCAuMi4yLjUuMy43LjMuMiAwIC41LS4xLjctLjNDNDIuMSAyOC43IDQyLjEgMjguMSA0MS43IDI3Ljd6TTEwIDI2Yy0xLjQgMC0yLjguNi0zLjcgMS43LS40LjQtLjMgMSAuMSAxLjQuNC40IDEgLjMgMS40LS4xIDEuMi0xLjMgMy4zLTEuMyA0LjUgMCAuMi4yLjUuMy43LjMuMiAwIC41LS4xLjctLjMuNC0uNC40LTEgLjEtMS40QzEyLjggMjYuNiAxMS40IDI2IDEwIDI2eiI+PC9wYXRoPjwvZz48L3N2Zz4="></a>
+			</div>
+			<div class="divTableCell" id="menurubber6" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_CFG" onclick="LoadElement('HomePage', 'C')"><img style="width:10vw" src="data:image/png;base64,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"></a>
+			</div>
+			<div class="divTableCell" id="menurubber7" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_URL" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/appendix_b.html')"><img style="width:10vw" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAAFbklEQVR4nO2cS28bVRTH//akdhzb1I0fzTuRQtOqVZdteAoWbKnUj8A3YAcfAXb9Bl0hsYsIdAWLIlFKUlghAqREauIkWH7lZSd+1J4uWseZ63E8zjzO8cz97W6iGV2f38zxvefMGJBIJBKJRCLxIj6zJ3iwWlWtmIhj+PD153eCX1JPo4WfegKOo+KLB8+qX1FPo4X3BACsJHhGwK2rwkdlIsEzAhYSCksJnhEA8JTgKQEAPwmeEwDwkuBJAQAfCZ4VAPCQ4GkBAL0EzwsAaCVIAW+gkiAFnIFCghQg4LQEKUAHJyVIAV1wSoIUcA5OSJACemC3BCnAAHZKkAIM0k2C2fNKAX2gK8EkQ5aejTFLf9Wpp6CLvAOIkQKIkQKIcdV3wMFxHd/+nMb8eBg3pqKYjI/AZ/rZP3tx1R2wlT3GfrmOP/7bxzeP0/h+9X/qKfXEZQJONONULEg0E+O4SkC6UNaMp5MhopkYxzUC9kp1HJRfno4DQ36MxYYJZ2QM1whI548146lECIqf+TcwXCRgK6sVMJMaIZpJf7hHQE4QkOCf/wGXCNgr1XB0os3/V6/wz/+ASwSIV/90IgQ/9x3YG9gJKBzV+j5GXP9Pp8KWndtuWAnYyJTx8KcXePxnrq/jtoQV0GyqM/8/Wcvj4Y8vsL5TMjVHq2EjYCNTxtLTHTQaKlb+LRqWUDyqoXQm/wcvKUhd1u6An6zl8ctaAY2miuWVXVYSWAhY3ylh6dfXwW/x+/M9QylDzP9TQv4vHNXw9J/i6ZibBHIBG5kylld30Wi2g6/4fbi3OIF4NNDz+M2cmH606/94NID7701CUdpSOEkgFaB35beCvzAZ6Xm8qgLb4vpfp/4zPxbG/Xc7JXz32y7+Th+a+ATmIROwvlPC8or+lW8k+ABQLNVQqjROx8GAguRl/QqonoSmquKH1QypBBIBVgQfADaz2urnTI/1P0cJjguwKvgAkM5p1/8zyd71H24SHBVgZfBVFUiL+d9gAY6TBMcEWBl8AMgfVlGutvP/cEBB8i3jHTAuEhwRYHXwAb30E+q7Ac9Bgu0C7Ag+0Fl+mEnq1396QS3BVgF2BV9VgS2dO+CiUEqwVYCi+Dp+k0tVgUazaeq8+cMqTqrt+k8ooCDRR/7Xo9FQAeG3v3w+QPHbmyRsPbtdV1bH1Z8y9wCWXXeqEWz/DrBDwlZO2IAZWP93gzL4gEOrICslqCqQzlc0f7to/qcOPuDgPsAqCbkDbf4fCSqIR/vP/xyCDzi8E7ZCglj/n032n/+5BB8gqAWZlSDW/6d12o/nwSn4AFE19KISXtf/xfW/8Q0Yt+ADhP2AbhIePct07VRl9yuo1Nv1n5GggtFI764ZcH7njSr4AHFHrFunqlu7cFO4+mdTYUP5/2zDvwWH4AMMesLzY2HcuzuheZC2JUFsync8fmhg+Vk4qplqe9oNuQAAWJiMdDTO37kR1zTlm6qK7YJ4B/TegMWjAXx4K3E65hR8gIkAQJuO3r+ZwAc345r/Z/erqNba+T8yrOCKwfy/eH0UH99Osgs+wOwlvfmxMD77ZE73cRQx//dbfl68Poq3JyKGHnVxEjZ3QItuAUoL9R+9xw8vem5K2AnQo6mq2M6buwO4MhACMsUKqvV2DyESGkIscolwRtYxEALSwtU/NyCvHxlhIAR0vn4kBTiGXv6flneAc2SKFdRetvN/dGQIsbA78j8wAALE/u+cS1Y/LdgLyB5UNeNB+PmBfmC1E9bj07vjuHMthvWdEp7vlgbmBWyjsBfg8wHjoyGMj4bw0e0k9XQsh30KcjtSADFSADFSADFSADFSADFSADFSADFSgEQikUgkEomEgFfza/65Jc5AtwAAAABJRU5ErkJggg=="></a>
+			</div>
+			<div class="divTableCell" id="menurubber8" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_HWT" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html')"><img style="width:10vw" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAAFf0lEQVR4nO3dzW9UVRgG8Oe9n9MyLUOHjwrV2lhNjEhLisBCkaU7CW5MDGGFC9ckGjaslf+AJTGamJjIzkQTiG6IoaGlYBPB1A+gH9PpTNvpTHvvued1Ma0RaKX3zLSHwvtbNJ1775nz3vvcc+Z2FqeAEEIIIYQQQgghhBBCPA+okcajg9cGOl/quc4MBusIRIocJwJzCcA8MWpMqIAwC6YSEaaY9TSIiqxpmpjva88by+fzc006n1SKxWK7o1QPE+0jh3eCOU/k7GTGbhDvAGM7MbJMaAHQBkKONQfM7DnkBCA4E3+NHXp94OigaQ1eQ2eg8TEAEIFATgggBPM2ADsAgFfi5foPZgAggAEiBghwtEJparII4jEQjZHm3zVhWJM3lM/nfyMi3UiJzOwUi8XXHFb9DqOPHXoFzD1g6oFWeTgAgZdrJHC9yOXX/zmH5W1EBKKH7tszAIwDMB4Bt29fyTq1lvud3T3tpu+xDjNgXCXi7ymIv92+/cWZ9TSanf27gyP/A2Z6D4TjADo2qsCJP8cqnsK+V48eNRrFjmnHTrX1IwAbefEBoAOEkwy6qKNgvFSYvFQqPehe6+BS6UF3qTB5SUfBOIMugnASG3jxl2WVjw9NGxsHAOIzxm3NBABOQbm3SoXx44/uLBXGj0O5twCcWj5283B9KjZhFMDo4LUBAAOmnTYoy0xfP7qRmb4CkLVQDwAMLF+T1Nb8EB7p6+O19umrP8N59x2T/pqCiDp//OZLfmSbrXIAAPrqT9dH+vrW3P/m8PCqBaYfAZkQzpG3Ujd71jlHjgCZTPp2m9XRM8/wxkwdAB17O3Unzws6ln5aTh/Ay2s+BT73TK6N+WOoaAoJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwDIJwLKGliyrVRcweOUHOA6B3PpbEQDX9eB4HhzXgeu6cF0frufBCwJ4fgDP9+D7AfwwRJBpges1tnKaqUQpRIs1xEtLiOMIKlZQcQQVRUiUQpLESJIEOtHQSiFJ1MpKZuBEQWtGx55OtGwzXyXH+Mx1kqBcmKr/rhnQ8b/7VByv1Wz1InwfYaYVQSaDsLUVrdk2tGSzCFtaG16GhpmxVKuiVqmgWpnHUrWKaHERS4vV1HWupjxdQJhpgeO6Ru2NAyhPF6CTxLT5Q1QcQ8WzWJiffWi753toy3WgrWMnduzaA89fX7kqVigVJjE/M4358gxUrJpS52pWbsSOzheM2hsFUK1UUFuoGHWYRv1CTqFUmMK9O6PI7e7Evp5eBGsslxMtLuL+2F2Upybqo3KT1KoLqC1UjKai1AHoJMFssZC6o0ZpzZiZGEe5MIXeAwcf2z9fLuHuzRtNG5VprUxFaaV+Cmrm1GNCJwn+GB15bPvYr7es17XymZhG6hHQfu78hq9VuZrzd+4g0utbwzXjujjf27vBFTXHlvk7YE+w/pUod/n+BlbSXFsmgP729Y+7gymOtW3LBHA4l8PeMHzicXvDEIdzuU2oqDm2TAAeEU53df1vCHvDEKe7uuBaXkM0DTvfARhq9zx80t2NX8pl3Jibw2QUAQA6wxD9bW04nMttqYsPNPj/AzbDSH//BTCfNWlLwOf7h4c/a3ZNzfTUT0H7h4Y+BfOFtO0Y+OKN4eFzG1FTMz31I2DFzf7+E1QP4kkP+HeZ6OyBoaHLm1FXo7ZMAABwfWDAD5LkBDG/j/rq7V3Lu+4BGHSYv6v5/uVDg4ONf80phBBCCCGEEEIIIYQQoon+AWd34AmTDxj3AAAAAElFTkSuQmCC"></a>
+			</div>
+			<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;">
+				<a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img style="width:10vw" src="data:image/png;base64,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"></a>
+			</div>
+
+		</div>
+		<!--div class="divTableRow" style="display: table-row;">
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAAE30lEQVR4nO2cz48URRTHv69nukdWDMEDWQhRUclGLySY7MVAWJY/wKj8ARq5eDHe3KgxISEc9OKBcNCDVwL8A8oP3c0GQoIekANkkWhQ90CWGMjoONDlYR1Yemequ6pf/ejhfY7bU9sv9fr1+0x19QCCIAiCIAiCIAiCIAiCIAiCIIw7FDoAG9QPnZ0AjgK0f/UP6iwU5mimtxQ2MnMalwB1vvMyEroEqM2PH6E7yNV005KQhA7AmBaOr598AFCbkeAbpZp1UTUqAWo+ewsKBzQfeR0L2ZveAmKgMVeLuooMtzs/A9hZ8tGbyHuv0gz+8RFXXZpTAbezD1E++QCwA0n2getwuGhEBajFjVtwv38dwKaKQ+6CWlO0t/uny7g4aEYF9PtHUH3yAeAZ5A8OuwqHk+grQC2ku5AnlwG0DIfmSPJp2tO/7CIuLuKvAJV8AfPJB4AEefJl7FoadQIqaGcZ0WtptFeHgXaWEbWWxlsB1bWzjKi1NMoKsNDOMqLV0jgrwFw7y4hWS6OrgBraWUaUWhpfBdhrZxlRamlUCWDQzjKi09JorgZG7SwjKi2NpwL4tLOMqLQ0igow0c5Pjk/ht+UNQ4+9tL2Lzw5dr3LKaLQ0jgow0M4sVaOPtfOqZ4xGS4MnQC2ku0B4p+rndZOcppUTABDeVQvpa9UHuCF4Aky1M9NMskEFAJFoadAE2Gin7irXJWcEwbU0WALUVWRQdNR0XNbW9ABNfxgdCH2uzuMp84E8hKsAS+3U9gCzW9CAoFoaJAFqceMWgOZsxup7gEUFAADoYzU/sdVycC3CVECN1U7mHjAgmJZ6T4CpdhbR3edTmx4wIJCW+q+AmqudWctJBQCBtNRrAjhWO7W3ILsmvBbvWuotAbbaWYTxi9hwPGupvwpgWu101gMe4VVLvSSgjnYW0V3lNXvAGvxpqZ8KYHzIrrvKWW5Bq3jTUucJqKudRdhWQ8vwpKXuK4D5Ibv+eQBLDxjgRUudJsDFQ3bdeg9fD3iIcy11lgAu7SziXEOLONZSdxXg6CG7LgGsPeARTrXUSQI4tbMI+/OASrjTUjcVwL+38yG6HpDyNuG1ONNS9gRwa2eRtJ2DhnhJu6WQkLMEONNSdsVS853vHG8vDMki9vb2EIEt06wV4GFvZ2jYtZStAjzu7QwN695Svgrwt7czNKxaylIBDl4pKuWX35/GjVsbQLS6J3THtq6vUwOMe0vbHNGg3z8C8jP5//YTHDv5PH669vjpdk/9hfcP/upiOWIYAy09VPcf1b4FudbOIqfPTa6bfAD48domnD436SsMNi2t3wPcvVI0lAtXnh157OKVIb/j5A6W1dJaCQihnfe6o0O+2/V2HQyoraXWCXC12lnGc5N/Wx1zRs3VUvsKCKSdb88uo5Ws/yKakMLBA8u+wwFqaqnV/SuEdq7l5h8TOPHtNizdmgABeHF7F2/sW8YrL9wLEQ5QQ0vtEvB95ysQ3rMZO7YofE37esZaapwAh2+yNx2rN/HNe0CefAqZ/GEkeJB8ZD7InFmLMU8G9P9PKRsQ/iW9JxzzBCiccRDHeEA4azrEJgFzAN0xHjf20Ar6yngjgnECaKa3hFxNQ+EUQCum48cPWgHRSdxX0zTbuxE6GkEQBEEQBEEQBEEQBEEQBEEQ4uM/MIe63w4xoWMAAAAASUVORK5CYII="></a></div>
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img src="data:image/png;base64,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"></a></div>
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img alt="svgImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjMjE5NmYzIiBkPSJNNDQsMjRjMCwxMS4wNDUtOC45NTUsMjAtMjAsMjBTNCwzNS4wNDUsNCwyNFMxMi45NTUsNCwyNCw0UzQ0LDEyLjk1NSw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjIgMjJoNHYxMWgtNFYyMnpNMjYuNSAxNi41YzAgMS4zNzktMS4xMjEgMi41LTIuNSAyLjVzLTIuNS0xLjEyMS0yLjUtMi41UzIyLjYyMSAxNCAyNCAxNCAyNi41IDE1LjEyMSAyNi41IDE2LjV6Ij48L3BhdGg+PC9zdmc+"></a></div>
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAANXklEQVR4nO2ce3gV9ZnHP+/MOTkhQaBdd0G5la7Lo5VVn4JariGAZaXSqDW4q0UC+FD1QWwXIvhIcEzwAontCitdUUq4bF0T5aaVOyFy0bZU8SmrrJcWWFbF1aVAQs45ycy7f4TYmOvMnDlJnqfn8+ec33s57/fMzO/8bpAiRYoUKVKkSJEiRYoUKVKkSJHiLwXxY/TsoUPh3mdjL4D2RHVZzrhRr4qIBp1cMrnPeqb7+bqa76qhwwzVKxXpC4ASRjip6MeGyiFCsm+1Nfc9SM738yzAs4cOhXufi76Iyi2NLr8vIiuMqrTnJk8edj7A/AJnWsHSkYLkAxOB9PbaK7wUOdXjjpUrf1SbjHw8C7Bp94FyhNta+fhzYKWpsmLy+BH/k1hqwXKX9dRgw3Z+Doxza6OqLwwKnb/Lsqy6ZOXlXYCKg1tQndxOM1uUrWoYT9+cPXyXz9wCI6+g+MfA40A3tzYCa6uODpxRXj7FTl5mYHg1UOVpF81MFW5CnZ0b9+yf4iOvQMjNLTPzCoqfAX6Gh+KjrBpoVk9PdvHB50t4057974Bc5bL5F2EJD/le9nWf+onlF8uyjD/WZawXkX/yZqn/VlqUf1+yXrpN8XwHACAs99D6r2qpW+krTgIcdzILPRdfZHlHFh98CpBWc3Yd8JlrA9XJG3cfmOonlh/yCkquVWWBR7OflhbOfaAjiw8+BZg0aVIMeN6LjQjLN1VW9vcTzzv6JGC6bi4Ulxblz+3o4oPfRxAgdfoM4KVv3FOd0CpV9fXecUueVXI5HrqaCEWlhfkPJi+jtvEtQM53R30s8JIXG1Fu2Lz3wEy/MV3FsJ2bvLSvNSIlQcXOtaw0rza+BQBQHDdd0iZG8tTmXW+67UH5QK710tp0aoYGETVvUbGV4XTP9WqXkAA3jxv9a1GZQv0/YLf0UMPeu7li/7BEYreGig7w0t5AchKNmbeo2EJ5RGC4V9uEBADIGT+i3KnlSkU2eDD7mqrs3LLrgKdfqytU3P/hqm8/fcaDSy7yG66h+PW+1POPKmEBAG6dOPKzW8aN+MGFu+ELl2a9HIMdSRDhTx7b99CI+YCfQF8pfj39vPoIRIAGcsaPKA9LeAiwxaVJL8dgx8bdB68LKgeB//Nqo+jDM63iIV5sWig+Cr1zc8vcd38JWACA72Vf9+nN40bmXLgbTrsw6SWiOzbt2Xd9EPEd+MiHWbpts2WqVfw3bhq3VHwAgZDXwIEL0EDO+BHljmmMBHUzBtQTjO1BiCDwtk/TQaatb7R3J7RW/AvEvQ7gJU0AgFuzhr9nipENfOKieU8wtm+p2P+dRGKKKYcTsP6mbfPbvIXFBXday3o0/bSd4oO33mB9RK8Gfnil4uDltuoe4BIXzc86Dv9w64SRb/iJlZtbZmZefvwskOHHvnEeAqUom+OhyKGwE/vndooPsKO0KH+ilyBJvQMamJw94qig2cDHLpr3MAzduWHPwSw/scrLp9goR/3YNs1DYY4Ku8N27IyL4qPC77wG6RABAHLGjfovQcfhSgTJNHB+tbFi31g/sVTEjdCBIyobvdp0mABQL4LjOC7vBMkUlVc379qf7SXGrFnPhgW9zGeKifBBadHcQ16NOlQAgFsnjH7/ggguJu0lU422RdDVf17ZcP/9yyLx3mfKgMuDyNULIjzhZzi7wwWAehFM03QpAhlqyKtbdh/4yhCzvmA8os9LnDg1ut44fnjN1YPP9YptA7k5OVm3ydHwpz3W+zHsFAEAJmd95wMVYxRwzEXzDEd4ZeOeg+MBdJ28xhnHok7DKFDlDBjMB0dMwx6bxJRbRKFOIM/vuqFOEwDgluzhx7T+f8IxF80zBN0SXX/x76jWG5t+2K3mfHhW3xcDz7E9DOTR1UX5v/Zv38nckj38mK2MBflje22HninKiFR9/u3WPr9W3uGiUFWg+bWJsmp10bzFibjodAEAfjB+5HFbNbstEa469y/0O7WtTT9iO0y/9OXA82sxFqz9Rqj6ngD8dB1e2bl/gGNKhcI3G1+/smoFl3387658OGkm954oIm6Hk5IjEEVZVLp4XkkQk/hd4g5oYPINo04YtmbTaETzqqqfcdkn7oqPKRh9Tcb1a/eRvELVyFHV2Yo+D/KfgNOOTRxlnaHONaWL84uDWkHRpe6ABjZVVvbHDlUMrSr8236fbAc3X9UUGBCGdOFcPIOH3vgJ1bXNJ8dE9KnVhQ/Oa3p91vwne8bCxvUiMgShDyp/LThxBz5DOByJObtWLllwJojv95V8gnYYFLVlmXtDp6uzvBa/gYOfXsNzR5ou4pbS0qK5Mzpj/U9rdKlHUAP6cmhzIsUHGNHnMMN6H2l86eXqowPu7krFhy4ogG4ILeDzuu8nUvwG7v7WRvpmngLYXm1W39ERq5290qUeQaoIa6SGqEbabdxO8Rs4Hbsoesa++IpBNx49FlCagdK1BDhEmLeJ097v1GXxG3GEcCxLRnifsE82XeoRJMOoJcN4v81G3osPMITayE490N3VpHtH0qUEyM0tM/P/sOA3Z9J6ttzAX/Eb+DZ1tft0d/rARHIMmi7zCMq1rLRMu/t60FzDcLi7TznXh97CsC/8P0qs+I05iehEGRN/N1FHQdAlBLj//mWRc72i/9F0LD/TrGHGpeVcHXoXs68ZRPEvoF/gmDdJds2bATn0TacLMHVecabZTTeC3NBam4gZZ3z/N7lx4D66h2uCCh0FuUeyomuCcuiHThVg1vwne8Yj5msoI9y0zwzXcOfgVxl+yTtBprGSzNhsGeZps0lgdJoAM62fft12nK2oel4XOuqSt5h2xRZCRkD7p4W9EJ4iY6r+NxiHXkJ3AnnW0j7Y7AD5e78+Luv538y+ej0906qDSusEYtwhY2oOBOXQDR3eDb3LenIAtryeSPEBPjzT31n73m0PAH8IKLUBqLNXK9MtLfOwwS9BOlSAqQuLBxm2uRf4uwRdqSL3zpmzchmm6zllN4RAH6FPZJfu7tY3IJ9t0mECTF245ApT2A8MStiZMn9N0byVADKq5gR1TABOJez3z/7HEnKO6N40z3u+vNIh74BpBSVDQbcJXJywM+HR0sJ8q+llrQgPwzD2AL63G7UcT9eREb9HhpGUY3iSLsCMh0tGOYb+Cmi23NszIstLC+fNae1j3ZuejehWoP3RVG+8C/qPkhX/fcB+k/sIyltYPNY2dCtBFF9ZU3+UQOvI2GgF6AzcTWJ64Vsgb2hl+oyA/SZPgOkLl96EsFWgewDuNnwjVO1qNkuy4r9ECWzzdSMyQVdpZeQlraBXUE6T8giavmjp7aqyDghibciOi/4U+f7y5XNibg20DJM+kW0oEwKI3xzhI8S5XUbXet4P0NxVwEwvKP6hA6v9bFhrgQN2DRPXleR7/relB/k6tZHf0mSNUYBEQWdKVvyXiTgJ9BE0feHSexXWBFJ8kd8YMedGP8UHqJ/9cm4DAhu9a0I6yHp9PZKfiJPABMhbWDxfRVYE41N/79TGJ/1i6fxziXiRrNq3UZqtAQoQQVmilWl3+HeQMCp5i0qeQJmfuC9Q+NC2Q2PWP/4TNzsr3fmsjGwCEj4Tog1qgKslK/aBV8OEBLAsyzhuZ/xckVmJ+GlA4aSYdaNLrYeOBeHvS7/7+BpO5DDg6SAPj+yQrJinHZKQgAC5lpWWWdd9LaK3+/XxVfSUY5pj1lpz256U9+v99fQsVHfj5SQtrxjONTK61tNkha/n9X3WM90z7czXgys+pw3MickqPoCMiVaCFCfLPwBqeH4X+BLgfN35FUAgZzsoVOEYk35RNDfQaa4WcaIFoMmbB1Y8n/ziWYBpBSVDEX7Y5HIUlR/X2aFLHcfsh7JIwc10VdRQckofm9shk+OSTR2OTAUS6l21geclL97766Iz0WbvjodKF89rfHxZ0bSCEgF9tA1PtQhTVhfl7/GcQwJIduxDrUyfDZqMyfizXg083wGijG96LWSHX2h6TR1jVRtuHCCvtDD/Fa/xg0CyomtBEvoH2wqeZ+f8vAOadeXi4jS7k9LCta31sFSU+0qL8pNRAPc40R8BnvvtbSNuD6r6Ej8CNFs6a4jdbJi2rs5o+XhKZf7qxfnP+ogbKJJNFY5xF+7eVW74nHh0k+c8vBrkFZQcAb2y8bX6F64UNTx2DLHvVmFh0zEhER5bXZi/0GvMZKKVaQtAngjA1T2SFfP8w/JxB+j2plcEQoI+ahj2ScOwTyJYTYuv8K9drfgAjIkvASlL0MsWxsSe82PoWQDHtJ8GXI/NQ/2e2kFmta+TCZONCEpmdDqI37H9t3Bid4q0u8uyRTwLsNZacEIU98VUeXGgWT3TsixfCXYEMozzmNFs4DWPpq8Rj42TbHxvz/c9FjStoGSWoMtofQK8RpXH1iye93hX2xjXGnqIMNVp80Eeos0jz+Q0ooWMji3z+8v/0lMixtMffqo/hs5W1QkIgwAHkY9EnW226axaay04kYj/zkIru/UHnYnqbQiDqZ9ajYO8A84GaiPPyYRzbg+oTZEIWoYZ5CR8ihQpUqRIkSJFihQpUqRIkSJFJ/L/uh2ehw4a7FAAAAAASUVORK5CYII="></a></div>
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img src="data:image/png;base64,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"></a></div>
+        </div-->
+		<!--div class="divTableRow" style="display: table-row;">
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img src="data:image/png;base64,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"></a></div>
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')"><img alt="svgImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjMDBhY2MxIiBkPSJNNDQsMjRjMCwxMS4wNDQtOC45NTYsMjAtMjAsMjBTNCwzNS4wNDQsNCwyNFMxMi45NTYsNCwyNCw0UzQ0LDEyLjk1Niw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjZWVlIiBkPSJNNDAsMjRjMCw4LjgzOC03LjE2MiwxNi0xNiwxNlM4LDMyLjgzOCw4LDI0UzE1LjE2Myw4LDI0LDhTNDAsMTUuMTYzLDQwLDI0eiI+PC9wYXRoPjxwYXRoIGQ9Ik0yMyAxMUgyNVYyNEgyM3oiPjwvcGF0aD48cGF0aCBkPSJNMjYuMDgyIDIyLjY1NEgyOC40MTlWMzEuODQ2SDI2LjA4MnoiIHRyYW5zZm9ybT0icm90YXRlKC00NS4wMDEgMjcuMjUgMjcuMjUpIj48L3BhdGg+PHBhdGggZD0iTTI3LDI0YzAsMS42NTctMS4zNDQsMy0zLDNjLTEuNjU3LDAtMy0xLjM0My0zLTNzMS4zNDMtMywzLTNDMjUuNjU2LDIxLDI3LDIyLjM0MywyNywyNCI+PC9wYXRoPjxwYXRoIGZpbGw9IiMwMGFjYzEiIGQ9Ik0yNSwyNGMwLDAuNTUxLTAuNDQ4LDEtMSwxcy0xLTAuNDQ5LTEtMWMwLTAuNTUzLDAuNDQ4LTEsMS0xUzI1LDIzLjQ0NywyNSwyNCI+PC9wYXRoPjwvc3ZnPg=="></a></div>
+<div class="divTableCell" id="menurubber9" style="display: table-cell; border: 5px solid transparent; width:10%; align:center;"><a href="#" onmouseover="this.title = MENU_TEXT_FAQ" onclick="LoadExternalElement('HomePage', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')">
+</a></div>
+        </div-->
+	</div>
+	<br>
+	<div id="printResult">
+		Данные загружаются...
+	</div>
+	<script>
+	</script>
 </body>
