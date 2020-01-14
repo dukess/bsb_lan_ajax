@@ -13,8 +13,12 @@ while ( $line = <IN> ) {
     if ( !( $line =~ /^\/\// ) ) {
         if ( $line =~ /#define (.*?) / ) {
             $stringname = $1;
+            $stringname1 = $1;
+#            $stringname1 =~ s/_TEXT/_TXT/; # Save ~3 kB
+#            $stringname1 =~ s/_TEXT//; # Save ~14 kB
             print OUT "#undef $stringname\n";
-            print OUT1 "#define $stringname \"$stringname\"\n";
+            print OUT1 "#define $stringname \"$stringname1\"\n";
+#            print OUT1 "#define $stringname \"\"\n";
         }
         else {
             print OUT "$line";
@@ -45,7 +49,7 @@ foreach $file (@files) {
             if ( !( $line =~ /^\/\// ) ) {
                 if ( $line =~ /#define (.*?) \"(.*?)\"/ ) {
                     $stringname = $1;
-                    print OUT "var $stringname = \"$2\";\n";
+                    print OUT "UIStrings[\"$stringname\"] = \"$2\";\n";
                 }
                 else {
                     print OUT "$line";
