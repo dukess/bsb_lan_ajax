@@ -7,7 +7,7 @@ Goals:
 - Easy for customization, expansion.
 
 Fails:
-- *First* run will be slower because SD card and network inteeface throughput is low (50~70kB/s for Mega and LAN 5100).
+- *First* run will be slower because SD card and network interface throughput is low (50~70kB/s for Mega and LAN 5100).
 
 How to install/run.
 - Patch BSB_lan.ino by patch.
