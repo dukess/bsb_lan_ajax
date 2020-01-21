@@ -1,13 +1,14 @@
 # AJAX web interface for <A HREF="https://github.com/fredlcore/bsb_lan/">BSB_lan</A> project
 
 ## Benefits:
-- Save flash memory for future functions (more than 39kB for German language and more than 150 kB for multi-byte alphabets). You do not need Arduino Due now.
+- Saving flash memory for future features and functions (more than 39kB for German language and more than 150 kB for multi-byte alphabets). You do not need Arduino Due now.
 - Modern interface (Oh, yeah)
 - More comfort expirience on mobile device.
-- Easy for customization, expansion.
+- Easy for customization and expansion.
 
 ## Disadvantages:
 - *First* run will be slower because SD card and network interface throughput is low (50~70kB/s for Mega and LAN 5100).
+- Need more RAM.
 
 ## Requirements
 - Hardware: same as for BSB_lan project. SD card needed.
@@ -23,7 +24,7 @@
 - Edit BSB_lan_config.h:
 1. add or uncomment this string #define WEBSERVER
 2. change LANG from DE to C
-- Build sketch and flash it to Arduino.
+- Build sketch and flash it into Arduino.
 - Copy ajax.html, languages.js, ajax.css to SD card.
 - Copy lang_*.js files to SD card.
 - Insert SD card into Arduino and start it.
@@ -31,8 +32,8 @@
    
 ## Features:
 ### Webserver:
-- Allowing content caching (Send Cache-Control, Last-Modified, Content-Length headers, HEAD request support)
-- Allow to send gzipped content (for throughput increasing)
+- Allowed to content caching (Send Cache-Control, Last-Modified, Content-Length headers, HEAD request support)
+- Allowed to send gzipped content (for throughput increasing)
 ### Interface:
 - Pure JavaScript (excl. D3 library for charts drawing).
 - Language autodetection.
