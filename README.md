@@ -31,12 +31,12 @@
    
 ## Features:
 ### Webserver:
-- Allow content caching (Send Cache-Control, Last-Modified, Content-Length headers, HEAD request support)
+- Allowing content caching (Send Cache-Control, Last-Modified, Content-Length headers, HEAD request support)
 - Allow to send gzipped content (for throughput increasing)
 ### Interface:
-- Pure JavaScript (excl. D3 library for data chart drawing).
+- Pure JavaScript (excl. D3 library for charts drawing).
 - Language autodetection.
 - Language switching on the fly.
-- Async data loading/updating.
+- Asynchronous data loading/updating.
 - Switching between categories without page reloading.
 - D3 library can be placed on SD card for standalone installations (ex. without connection to Internet).
