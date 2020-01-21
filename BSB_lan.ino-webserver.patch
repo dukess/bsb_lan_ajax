@@ -9,116 +9,6 @@
  #if defined(__SAM3X8E__)
    #include <SD.h>
  #else
-@@ -3840,6 +3840,109 @@
-   }
- }
-
-+#ifdef WEBSERVER
-+//https://forum.arduino.cc/index.php?topic=198103.15
-+//================================================================================
-+// Begin calcdayofweek( D, M, Y)
-+//================================================================================
-+
-+byte calcDayOfWeek( byte d, byte m, unsigned int y )                // Call routine using DD, MM, YY, it returns the dayoftheweek, where Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6, Sat=7
-+{
-+
-+  while (y >= 400) {
-+    y -= 400;
-+  }                                    // while (y >= 400) { y = y - 400; }cast out multiples of 400 from the entered year (step down in steps of 400?)
-+
-+  boolean leap = ((y & 3) == 0);                                    // do we have a leap-year?? if so, leap = 'true' (year can be divided by 4)
-+
-+  if ((y == 100) || (y == 200) || (y == 300)) leap = false;         // check if the year is a 'century', they are NO leapyears, but any multiple of '400' IS a leapyear
-+  if (d > 31 || d == 0) return 0;                                   // check for false dates, if so, exit in error, return '0'
-+
-+  byte w = 6;                                                       // temp weekday variable used to determine the weekday, starts at '6' because of .....????
-+  while (y >= 100) {
-+    y -= 100;
-+    w -= 2;
-+  }                             // while (y >= 100) {y = y - 100; w = w - 2; } step down the year, and step down weekday too. Weekday -2 for every 100 year?
-+
-+  w += (y + (y >> 2));                                              // w = w + (y + (y >> 2));
-+
-+  // correction for Jan. and Feb. of leap year
-+  if (leap && (m <= 2)) {
-+    w--;
-+  }                                    // if ( leap = 'true' && (m <= 2) ) { w = w - 1; }
-+
-+  // using substraction iso addition makes the while at end possible 1 iteration faster ???
-+  switch (m)                                                        // find weekday in the 12 month's
-+  {
-+    case 1:                                                     // if January
-+      w++;                                                        // weekday = weekday +1 ;
-+      break;
-+
-+    case 2:                                                     // if February
-+      if (d > (leap ? 29 : 28)) return 0;                         // ???? if leap AND date = 29 or 28, return 0; so exit in error, return '0'
-+      w += 4;                                                     // weekday = weekday + 4;
-+      break;
-+
-+    case 3:                                                     // if March
-+      w += 4;                                                     // weekday = weekday + 4;
-+      break;
-+
-+    case 5:                                                     // if May
-+      w += 2;                                                     // weekday = weekday +2;
-+      break;
-+
-+    case 7:                                                     // if July
-+      break;                                                      // do nothing
-+
-+    case 8:                                                     // if August
-+      w += 3;                                                     // weekday = weekday + 3;
-+      break;
-+
-+    case 10:                                                    // if October
-+      w++;                                                        // weekday = weekday + 1;
-+      break;
-+
-+    case 12:                                                    // if December
-+      w += 6;                                                     // weekday = weekday + 6;
-+      break;
-+
-+    default:                                                    // here when April, June, September, November
-+      if (d > 30) return 0;                                       // if date bigger than 30: impossible in these months, so exit with error, return '0'
-+      switch (m)                                                  // process these other months
-+      {
-+        case 4:                                               // if April
-+          break;                                                // do nothing
-+
-+        case 6:                                               // if June
-+          w += 5;                                               // weekday = weekday + 5;
-+          break;
-+
-+        case 9:                                               // if September
-+          w += 6;                                               // weekday = weekday + 6;
-+          break;
-+
-+        case 11:                                              // if November
-+          w += 4;                                               // weekday = weekday + 4;
-+          break;
-+
-+        default:                                              // no month's left to process, an answer must have been found before this point
-+          return 0;                                             // so exit in error, return '0'
-+      }
-+  }
-+
-+  w += d;                                                           // weekday = weekday + date;
-+
-+  // there are only 7 days in a week, so we "cast out" sevens
-+  while (w > 7) {
-+    w = ( w >> 3 ) + ( w & 7 );
-+  }                     // while (w > 7) { w = (w >> 3) + (w & 7); }
-+  return w;                                                         // end of routine, return the weekday, where Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6, Sat=7
-+}
-+//================================================================================
-+// End calcdayofweek( D, M, Y)
-+//================================================================================
-+#endif
-+
- #ifdef DHT_BUS
-
- /** *****************************************************************
 @@ -4824,12 +4927,12 @@
          }
          // Got an EOL character
@@ -235,15 +125,15 @@
 +              uint16_t lastWrtYr =  (FAT_YEAR(d.lastWriteDate));
 +              byte monthval = FAT_MONTH(d.lastWriteDate);
 +              byte dayval = FAT_DAY(d.lastWriteDate);
-+              switch (calcDayOfWeek(dayval, monthval, lastWrtYr))
++              switch (dayofweek((uint8_t)dayval, (uint8_t)monthval, lastWrtYr))
 +              {
-+                case 1: downame = F("Sun"); break;
-+                case 2: downame = F("Mon"); break;
-+                case 3: downame = F("Tue"); break;
-+                case 4: downame = F("Wed"); break;
-+                case 5: downame = F("Thu"); break;
-+                case 6: downame = F("Fri"); break;
-+                case 7: downame = F("Sat"); break;
++                case 1: downame = F("Mon"); break;
++                case 2: downame = F("Tue"); break;
++                case 3: downame = F("Wed"); break;
++                case 4: downame = F("Thu"); break;
++                case 5: downame = F("Fri"); break;
++                case 6: downame = F("Sat"); break;
++                case 7: downame = F("Sun"); break;
 +                default: downame = F("ERR"); break;
 +              }
 +
