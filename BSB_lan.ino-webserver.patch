@@ -1,54 +1,92 @@
---- BSB_lan.ino.orig    2020-01-21 11:28:42.249968745 +0300
-+++ BSB_lan.ino 2020-01-21 11:31:03.261974591 +0300
-@@ -460,7 +460,7 @@
+--- BSB_lan.ino.orig    2020-01-24 10:06:29.245574174 +0300
++++ BSB_lan.ino 2020-01-24 13:07:17.454023915 +0300
+@@ -462,7 +462,7 @@
  // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
  // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
 -#ifdef LOGGER
-+#if defined  LOGGER || defined  WEBSERVER
++#if defined LOGGER || defined WEBSERVER
  #if defined(__SAM3X8E__)
    #include <SD.h>
  #else
-@@ -4824,12 +4927,12 @@
+@@ -4581,7 +4581,7 @@
+               case 0x66: msg_cycle = 19; break;
+               case 0x7C: msg_cycle = 20; break;
+               default:
+-                 DebugOutput.print("Unknown request: ");
++                 DebugOutput.print(F("Unknown request: "));
+                 for (int c=0;c<9;c++) {
+                   if (msg[c]<16) DebugOutput.print("0");
+                   DebugOutput.print(msg[c], HEX);
+@@ -4725,7 +4725,7 @@
+                   break;
+                 case 0x00: break;
+                 default:
+-                  DebugOutput.print("Unknown telegram: ");
++                  DebugOutput.print(F("Unknown telegram: "));
+                   for (int c=0;c<9+pps_offset;c++) {
+                     if (msg[c]<16) DebugOutput.print("0");
+                     DebugOutput.print(msg[c], HEX);
+@@ -4826,12 +4826,16 @@
          }
          // Got an EOL character
          DebugOutput.println();
 -        // perform HTTP-Authentification by reading the remaining client data and look for credentials
 -#ifdef USER_PASS_B64
 
++        // perform HTTP-Authentification by reading the remaining client data and look for credentials
 +        // Parsing headers
          char linebuf[80];
          uint8_t charcount=0;
-         boolean authenticated=false;
-+        boolean gzipaccepted=false;
+-        boolean authenticated=false;
++        uint8_t httpflags = 0; //bit 0 - authenticated: 0 - no, 1 - yes
++                               //bit 1 - client browser accept gzip: 0 - no, 2 - yes
++                               //bit 2 - HEAD request received from client: 0 - no, 4 - yes
++                               //...
++                               //bit 7 - send HTML fragment only, without header and footer. For external webserver. 0 - full HTML, 128 - fragment
          memset(linebuf,0,sizeof(linebuf));
          boolean currentLineIsBlank = false;
          while (client.connected()) {
-@@ -4843,9 +4946,17 @@
+@@ -4845,9 +4849,21 @@
              if (c == '\n') {
                // you're starting a new line
                currentLineIsBlank = true;
 -              if (strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
-+              if (strstr(linebuf,F("Accept-encoding:")) != 0 && strstr(linebuf+16, F("gzip")) != 0) {
-+                gzipaccepted=true;
-+              }
-+#ifdef USER_PASS_B64
-+        // perform HTTP-Authentification by reading the remaining client data and look for credentials
-+              else if (strstr(linebuf,F("Authorization: Basic"))!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
-                 authenticated=true;
+-                authenticated=true;
++#ifdef WEBSERVER
++              //Execute only if flag not set because strstr more expensive than bitwise operation
++              if (httpflags ^ 2 && strstr(linebuf,"Accept-encoding") != 0 && strstr(linebuf+16, "gzip") != 0) {
++                httpflags |= 2;
                }
-+#else
-+                authenticated=true;
++#ifdef USER_PASS_B64
++             else
++#endif
++#endif
++#ifdef USER_PASS_B64
++              //Execute only if flag not set because strstr more expensive than bitwise operation
++              if (httpflags ^ 1 && strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
++                httpflags |= 1;
++              }
 +#endif
                memset(linebuf,0,sizeof(linebuf));
                charcount=0;
              } else if (c != '\r') {
-@@ -4867,13 +4978,17 @@
-           client.stop();
+@@ -4856,8 +4872,9 @@
+             }
+           }
+         }
++#ifdef USER_PASS_B64
+         // if no credentials found in HTTP header, send 401 Authorization Required
+-        if (!authenticated) {
++        if (httpflags ^ 1) {
+           client.println(F("HTTP/1.1 401 Authorization Required"));
+           client.println(F("WWW-Authenticate: Basic realm=\"Secure Area\""));
+           client.println(F("Content-Type: text/html"));
+@@ -4870,12 +4887,15 @@
          }
          // otherwise continue like normal
--#endif
-
+ #endif
+-
          // Flush any remaining bytes from the client buffer
  //        client.flush();
          // GET / HTTP/1.1 (anforderung website)
@@ -56,13 +94,12 @@
          String urlString = String(cLineBuffer);
 +#ifdef WEBSERVER
 +        // Check for HEAD request (for file caching)
-+        boolean isHeadRequest = false;
-+        if (urlString.substring(0, urlString.indexOf('/')).indexOf("HEAD") != -1 ) isHeadRequest = true;
++        if (urlString.substring(0, urlString.indexOf('/')).indexOf("HEAD") != -1 ) httpflags |= 4;
 +#endif
          urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
          DebugOutput.println(urlString);
          urlString.toCharArray(cLineBuffer, MaxArrayElement);
-@@ -4918,21 +5033,160 @@
+@@ -4920,21 +4940,161 @@
          }
          *p='/';
  #endif
@@ -88,14 +125,14 @@
 +        // You can add more MIME types here
 +
 +        if(mimetype)  {
-+          File dataFile = NULL;
-+          boolean gzippedfile = false;
-+          if (gzipaccepted) dataFile = SD.open(urlString + ".gz");
-+          if (dataFile) {
-+            gzippedfile = true;
-+          }
-+          else
++          File dataFile;
++          // client browser accept gzip
++          if (httpflags & 2) dataFile = SD.open(urlString + ".gz");
++          if (!dataFile) {
++            // reuse httpflags
++            bitClear(httpflags, 1); //can't use gzip because no gzipped file
 +            dataFile = SD.open(urlString);
++          }
 +          // if the file is available, read from it:
 +          if (dataFile) {
 +            DebugOutput.print(F("file opened from SD: ")); DebugOutput.println(urlString);
@@ -117,11 +154,16 @@
 +
 +            client.print(F("Content-Length: ")); client.println(dataFile.size());
 +            client.println(F("Cache-Control: max-age=84400, must-revalidate"));
-+            if(gzippedfile) client.println(F("Content-Encoding: gzip"));
++            if(httpflags & 2) client.println(F("Content-Encoding: gzip"));
 +            dir_t d;
 +            if (dataFile.dirEntry(&d)) {
 +              String monthname;
 +              String downame;
++              char outBuffer[50];
++              downame = F("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT");
++              uint8_t len = downame.length() + 1;
++              char outBufferFormat[len];
++              downame.toCharArray(outBufferFormat, len);
 +              uint16_t lastWrtYr =  (FAT_YEAR(d.lastWriteDate));
 +              byte monthval = FAT_MONTH(d.lastWriteDate);
 +              byte dayval = FAT_DAY(d.lastWriteDate);
@@ -153,18 +195,13 @@
 +                case 12: monthname = F("Dec"); break;
 +                default: monthname = F("ERR"); break;
 +              }
-+
-+              client.println("Last-Modified: " +
-+                             downame + ", " +
-+                             (dayval < 10 ? "0" : "") + dayval + " " +
-+                             monthname + " " +
-+                             lastWrtYr + " " +
-+                             (FAT_HOUR(d.lastWriteTime) < 10 ? "0" : "") + FAT_HOUR(d.lastWriteTime) +
-+                             (FAT_MINUTE(d.lastWriteTime) < 10 ? ":0" : ":") + FAT_MINUTE(d.lastWriteTime) +
-+                             (FAT_SECOND(d.lastWriteTime) < 10 ? ":0" : ":") + FAT_SECOND(d.lastWriteTime) + " GMT");
++            sprintf(outBuffer, outBufferFormat, downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
++            client.println(outBuffer);
 +            }
++
 +            client.println();
-+            if (!isHeadRequest) {
++            //HEAD request received
++            if (httpflags ^ 4) {
 +              int logbuflen = 512;
 +              byte loglineBuf[logbuflen];
 +              int chars_read = dataFile.read(&loglineBuf , logbuflen);
@@ -175,7 +212,7 @@
 +              if (chars_read > 0) client.write(loglineBuf, chars_read);
 +            }
 +
-+            DebugOutput.println(isHeadRequest?(String)"HEAD":(String)"GET" + " request received");
++            DebugOutput.println((httpflags |= 4)?(String)F("HEAD"):(String)F("GET") + F(" request received"));
 +
 +            dataFile.close();
 +          }
@@ -214,53 +251,68 @@
            break;
          }
 +
++#ifdef WEBSERVER
 +        //Send HTML pages without header and footer (For external interface)
-+        boolean needFullHTML = true;
 +        if(p[1]=='W'){
 +          p++;
-+          needFullHTML = false;
++          httpflags |= 128;
 +        }
++#endif
 +
          // setting verbosity level
          if(p[1]=='V'){
            p+=2;
-@@ -5169,7 +5423,7 @@
+@@ -5171,7 +5331,7 @@
          }
 
          if(p[1]=='Q') {
 -          webPrintHeader();
-+          if(needFullHTML) webPrintHeader();
++          if(httpflags ^ 128) webPrintHeader();
 
-           client.print(F(MENU_TEXT_QSC "...<BR>"));
-           if (bus_type == 0) {
-@@ -5347,7 +5601,7 @@
+           client.print(F(MENU_TEXT_VER ": "));
+           client.print(BSB_VERSION);
+@@ -5352,7 +5512,7 @@
 
            client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
-           bus.setBusType(bus_type, myAddr, destAddr);   // return to original destination address
+           bus.setBusType(bus.getBusType(), myAddr, destAddr);   // return to original destination address
 -          webPrintFooter();
-+          if(needFullHTML) webPrintFooter();
++          if(httpflags ^ 128) webPrintFooter();
            break;
          }
 
-@@ -5754,7 +6008,7 @@
+@@ -5717,6 +5877,7 @@
+               client.println(F(MENU_TEXT_DTF));
+             }
+             webPrintFooter();
++#if !defined WEBSERVER && !defined USEEXTERNALINTERFACE
+           } else if (p[2]=='G') {
+             webPrintHeader();
+             client.println(F("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>"));
+@@ -5754,12 +5915,13 @@
+             } else {
+               client.println(F(MENU_TEXT_DTO));
+             }
++#endif
+           }
+           break;
          }
  #endif
          if (p[1]=='C'){ // dump configuration
 -          webPrintHeader();
-+          if(needFullHTML) webPrintHeader();
++          if(httpflags ^ 128) webPrintHeader();
            client.println(F(MENU_TEXT_CFG "<BR><BR>"));
  //          client.println(F("BSB pins: "));
  //          client.println(bus);
-@@ -5916,7 +6170,7 @@
+@@ -5924,7 +6086,7 @@
            #endif
 
            client.println(F("<BR>"));
 -          webPrintFooter();
-+          if(needFullHTML) webPrintFooter();
++          if(httpflags ^ 128) webPrintFooter();
 
  #if defined(__AVR__)
            DebugOutput.println(F("EEPROM dump:"));
-@@ -7029,7 +7283,7 @@
+@@ -7016,7 +7178,7 @@
      }
    }
 
