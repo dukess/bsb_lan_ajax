@@ -8,7 +8,7 @@
 
 ## Disadvantages:
 - *First* run will be slower because SD card and network interface throughput is low (50~70kB/s for Mega and LAN 5100).
-- Need more RAM.
+- Need more RAM (~20MB per interface instance).
 
 ## Requirements
 - Hardware: same as for BSB_lan project. SD card needed.
@@ -34,10 +34,11 @@
 ### Webserver:
 - Allowed to content caching (Send Cache-Control, Last-Modified, Content-Length headers, HEAD request support)
 - Allowed to send gzipped content (for throughput increasing)
+- Save ~8 kB when define USEEXTERNALINTERFACE (disable /D and /DG command because /D is equal /datalog.txt and /DG copied to ajax.html)
 ### Interface:
 - Pure JavaScript (excl. D3 library for charts drawing).
 - Language autodetection.
 - Language switching on the fly.
 - Asynchronous data loading/updating.
 - Switching between categories without page reloading.
-- D3 library can be placed on SD card for standalone installations (ex. without connection to Internet).
+- D3 library can be placed on SD card for standalone installations (without connection to Internet).
