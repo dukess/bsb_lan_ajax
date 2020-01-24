@@ -61,5 +61,7 @@ foreach $file (@files) {
         }
         close IN;
         close OUT;
+        system ("gzip -9 -k -N ${file1[0]}.js");
+        if ( $? != 0 ) {print "Can't gzip file ${file1[0]}.js\n";}
     }
 }
