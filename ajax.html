@@ -544,7 +544,7 @@
     var warnAboutExitWithoutSaveInt = warnAboutExitWithoutSave; //internal version of warnAboutExitWithoutSave
     var CurrentCategory = null;
     var AJAXRequests = new Array();
-    var FunctionsEnum = new Array(16000); // JSON c перечнем функций.
+    var FunctionsEnum = null; // JSON c перечнем функций.
     var RootCategoryEnum = null; // JSON c перечнем категорий.
     var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
     var d3libraryloaded = false;
@@ -704,6 +704,7 @@
           RootCategoryEnum[i++] = jsontext[k];
         }
         FlagCategoryIsLoaded = new Array(i);
+        FunctionsEnum = new Array(RootCategoryEnum[i-1].max + 1); // plus param #0
       }
       if (gemById("RightMenuTableCell0") == null)
         for (var i = 0; i < RootCategoryEnum.length; i++)
