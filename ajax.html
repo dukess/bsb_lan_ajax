@@ -178,6 +178,7 @@
     var updateImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjZmY2ZjAyIiBkPSJNMzEgNy4wMDJsMTMgMS42ODZMMzMuMjk2IDE5IDMxIDcuMDAyek0xNyA0MUw0IDM5LjMxNCAxNC43MDQgMjkgMTcgNDF6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2ZmNmYwMCIgZD0iTTggMjRjMC04LjgzNyA3LjE2My0xNiAxNi0xNiAxLjAyNCAwIDIuMDIxLjEwNiAyLjk5Mi4yOWwuNjkzLTMuODY1QzI2LjUyNSA0LjExMiAyNS4yNjIgNC4wMDUgMjQgNC4wMDVjLTExLjA1MyAwLTIwIDguOTQ3LTIwIDIwIDAgNC44NDQgMS42ODYgOS40NzQgNC44NDQgMTMuMDUxbDMuMDM3LTIuNjI5QzkuNDY4IDMxLjYyNSA4IDI3Ljk4NyA4IDI0ek0zOS40NzMgMTEuMjY3bC0zLjE0MyAyLjUzN0MzOC42MjIgMTYuNTcyIDQwIDIwLjEyNSA0MCAyNGMwIDguODM3LTcuMTYzIDE2LTE2IDE2LTEuMDI5IDAtMi4wMzMtLjEwNi0zLjAwOC0uMjkybC0uNjc2IDMuNzcxYzEuMjYyLjIxIDIuNTI1LjMxNyAzLjY4NC4zMTcgMTEuMDUzIDAgMjAtOC45NDcgMjAtMjBDNDQgMTkuMzc1IDQyLjQyMSAxNC44NDggMzkuNDczIDExLjI2N3oiPjwvcGF0aD48L3N2Zz4=";
     //              var homeImage = new Image().src = ;
   </script>
+
   <script type="text/javascript">
     /**
     * Анонимная самовызывающаяся функция-обертка
@@ -354,7 +355,7 @@
         <div class="divTableMenuBody">
           <div class="divTableRow">
             <div class="divTableMenuCell">
-              <a href="#" id="menurubber3link" onclick="LoadConfigPage('WT')">
+              <a href="#" id="menurubber3link" onclick="LoadElement('HomePage', 'WT')">
                 <img id="menurubberimage3" src="data:image/png;base64,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"></a>
             </div>
           </div>
@@ -368,7 +369,8 @@
         <div class="divTableMenuBody">
           <div class="divTableRow">
             <div class="divTableMenuCell">
-              <a href="#" id="menurubber4link" onclick="LoadConfigPage('WD')">
+              <!--a href="#" id="menurubber4link" onclick="LoadElement('HomePage', 'WD')"-->
+              <a href="#" id="menurubber4link" onclick="DisplayChart()">
                 <img id="menurubberimage4" src="data:image/png;base64,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"></a>
             </div>
           </div>
@@ -382,7 +384,7 @@
         <div class="divTableMenuBody">
           <div class="divTableRow">
             <div class="divTableMenuCell">
-              <a href="#" id="menurubber5link" onclick="LoadConfigPage('WQ')">
+              <a href="#" id="menurubber5link" onclick="LoadElement('HomePage', 'WQ')">
                 <img id="menurubberimage5" alt="svgImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjMzc0NzRGIiBkPSJNMzMgMTBBNiA2IDAgMSAwIDMzIDIyIDYgNiAwIDEgMCAzMyAxMHpNMTUgMTBBNiA2IDAgMSAwIDE1IDIyIDYgNiAwIDEgMCAxNSAxMHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMzc0NzRGIiBkPSJNNDYuNywyNWwtMTUuMywzSDE2LjdMMS40LDI1bDQuMy03LjljMS4xLTEuOSwzLjEtMy4xLDUuMy0zLjFoMjYuMmMyLjIsMCw0LjIsMS4yLDUuMywzLjFMNDYuNywyNXoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMzc0NzRGIiBkPSJNMzggMjBBMTAgMTAgMCAxIDAgMzggNDAgMTAgMTAgMCAxIDAgMzggMjB6TTEwIDIwQTEwIDEwIDAgMSAwIDEwIDQwIDEwIDEwIDAgMSAwIDEwIDIweiI+PC9wYXRoPjxwYXRoIGZpbGw9IiMzNzQ3NEYiIGQ9Ik0yNCAyM0E1IDUgMCAxIDAgMjQgMzNBNSA1IDAgMSAwIDI0IDIzWiI+PC9wYXRoPjxwYXRoIGZpbGw9IiM1NDZFN0EiIGQ9Ik0yNCAyNkEyIDIgMCAxIDAgMjQgMzBBMiAyIDAgMSAwIDI0IDI2WiI+PC9wYXRoPjxnPjxwYXRoIGZpbGw9IiNBMEYiIGQ9Ik0zOCAyM0E3IDcgMCAxIDAgMzggMzcgNyA3IDAgMSAwIDM4IDIzek0xMCAyM0E3IDcgMCAxIDAgMTAgMzcgNyA3IDAgMSAwIDEwIDIzeiI+PC9wYXRoPjwvZz48Zz48cGF0aCBmaWxsPSIjQ0U5M0Q4IiBkPSJNNDEuNyAyNy43Yy0xLTEuMS0yLjMtMS43LTMuNy0xLjdzLTIuOC42LTMuNyAxLjdjLS40LjQtLjMgMSAuMSAxLjQuNC40IDEgLjMgMS40LS4xIDEuMi0xLjMgMy4zLTEuMyA0LjUgMCAuMi4yLjUuMy43LjMuMiAwIC41LS4xLjctLjNDNDIuMSAyOC43IDQyLjEgMjguMSA0MS43IDI3Ljd6TTEwIDI2Yy0xLjQgMC0yLjguNi0zLjcgMS43LS40LjQtLjMgMSAuMSAxLjQuNC40IDEgLjMgMS40LS4xIDEuMi0xLjMgMy4zLTEuMyA0LjUgMCAuMi4yLjUuMy43LjMuMiAwIC41LS4xLjctLjMuNC0uNC40LTEgLjEtMS40QzEyLjggMjYuNiAxMS40IDI2IDEwIDI2eiI+PC9wYXRoPjwvZz48L3N2Zz4="></a>
             </div>
           </div>
@@ -396,8 +398,7 @@
         <div class="divTableMenuBody">
           <div class="divTableRow">
             <div class="divTableMenuCell">
-              <!--a href="#" id="menurubber6link" onclick="LoadElement('HomePage', 'C')"-->
-              <a href="#" id="menurubber6link" onclick="LoadConfigPage('WC")">
+              <a href="#" id="menurubber6link" onclick="LoadElement('HomePage', 'WC")">
                 <img id="menurubberimage6" src="data:image/png;base64,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"></a>
             </div>
           </div>
@@ -463,7 +464,7 @@
           </div>
           <div class="divTableRow">
             <div class="divTableMenuTextCell">
-              <select style="font-size: 2vw;" id="selectLanguage" onChange="languageIsChanged('selectLanguage');"></select>
+              <select style="font-size: 1.5vw;" id="selectLanguage" onChange="languageIsChanged('selectLanguage');"></select>
             </div>
           </div>
         </div>
@@ -523,6 +524,7 @@
     </div>
   </div>
   <script type="text/javascript">
+// settings
     var externaldevelop = true; //true - develop on external web server (apache); false - on arduino web server
     var ajaxurl = document.location.pathname;
     var baseURL1 = ajaxurl.substr(ajaxurl.indexOf('/'), ajaxurl.lastIndexOf('/') - ajaxurl.indexOf('/') + 1);
@@ -532,16 +534,20 @@
       baseURL = "handler.php";
     var defaultLanguage = 'ru'; // This var overrides automatic language detection
     defaultLanguage = ''; // Enable autodetection
+    var textRegexp = /\b\w*_TEXT\w*\b/g; //regexp for text resources exctraction
     var JSONOptionsPerRequest = 10; //1 - 200. Less: more responsive (interactive), but slower. More: faster, but less responsive
+    var warnAboutExitWithoutSave = 3; //Warnings before return to root and discard changes
+
+// internal variables
     var UIStrings = {};
     var langList = {};
-    var warnAboutExitWithoutSave = 3; //Warnings before return to root and dascard changes
     var warnAboutExitWithoutSaveInt = warnAboutExitWithoutSave; //internal version of warnAboutExitWithoutSave
     var CurrentCategory = null;
     var AJAXRequests = new Array();
     var FunctionsEnum = new Array(16000); // JSON c перечнем функций.
     var RootCategoryEnum = null; // JSON c перечнем категорий.
     var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
+    var d3libraryloaded = false;
 
     gemById("backImage").src = backImage;
     gemById("updateImage").src = updateImage;
@@ -579,7 +585,7 @@
       if (langcode.localeCompare('de') != 0) {
         LoadScript('lang_de.js', null); // Full interface
         // If you like English more than German, you can uncomment line below
-        //                              LoadScript('lang_en.js', null); // Less than full interface
+        // LoadScript('lang_en.js', null); // Less than full interface
         LoadScript('lang_' + langcode + '.js', onLoadCallBack);
       } else
         LoadScript('lang_de.js', onLoadCallBack); // Full interface
@@ -663,6 +669,8 @@
 
     function StackChanges(id) {
       ListOfChanges[id] = true;
+      gemById("cancelImage").style.opacity = 1;
+      gemById("okImage").style.opacity = 1;
     }
 
     function ApplyChanges() {
@@ -670,6 +678,8 @@
         gameIsChanged(k);
         delete ListOfChanges[k];
       }
+      gemById("cancelImage").style.opacity = 0.33;
+      gemById("okImage").style.opacity = 0.33;
       ListOfChanges = new Object();
     }
 
@@ -711,13 +721,11 @@
     }
 
     function configpageshow(htmltext, command) {
-      var matchresult = htmltext.match(/\b\w*_TEXT\w*\b/g);
+      var matchresult = htmltext.match(textRegexp);
       if (matchresult != null) {
         for (var k in matchresult) {
           var temp;
-          if (typeof UIStrings[matchresult[k]] === 'undefined')
-           {}
-          else
+          if (typeof UIStrings[matchresult[k]] === 'string')
             htmltext = htmltext.replace(matchresult[k], UIStrings[matchresult[k]]);
         }
       }
@@ -745,17 +753,65 @@
               outtext += `<div class="divTableFuncListRow"><div class="divTableFuncListLeftCell" id="func${k}text"></div><div class="divTableFuncListLeftCell">${dataType}</div><div class="divTableFuncListLeftCell" id="func${k}value">`;
               var multiple = "multiple";
               switch (dataType) {
-                case 0:
-                  outtext += `<input id="control${k}" type="text" onChange="StackChanges(${k});" value="">`;
+                case 0: // number
+                  outtext += `<input id="control${k}" type="number" onChange="StackChanges(${k});" value="">`;
                   break;
-                case 1:
+                case 1: // enum
                   multiple = "";
-                case 2:
+                case 2: // multiple choices enum (bitwise flags)
                   outtext += `<select id="control${k}" onChange="StackChanges(${k});" ${multiple}>`;
                   for (var j in FunctionsEnum[k].possibleValues) {
                     outtext += `<option value="${FunctionsEnum[k].possibleValues[j].enumValue}"></option>`;
                   }
                   outtext += `</select>`;
+                  break;
+                case 3:  // weekday
+                  outtext += `<select id="control${k}" onChange="StackChanges(${k});">`;
+                  for (var j = 1; j <= 7; j++ ) {
+                    var temp;
+                    if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
+                      temp = UIStrings["STR_" + (499 + j) + "_TEXT"];
+                    else
+                      temp = "STR_" + (499 + j) + "_TEXT";
+                    outtext += `<option value="${j}">${temp}</option>`;
+                  }
+                  outtext += `</select>`;
+                  break;
+                case 4: //time
+                  outtext += `<input type="time" id="control${k}" onChange="StackChanges(${k});">`;
+                  break;
+                case 5: //date and time
+                  outtext += `<input type="date" id="control${k}-d" onChange="StackChanges(${k});"><input type="time" id="control${k}-t" onChange="StackChanges(${k});">`;
+                  break;
+                case 6: //day and month
+                  outtext += `<select id="control${k}-m" onChange="StackChanges(${k});">`;
+                  outtext += `<option value="0">--</option>`;
+                  for (var j = 1; j <= 31; j++ ) {
+                    outtext += `<option value="${j}">${j}</option>`;
+                  }
+                  outtext += `</select>`;
+                  outtext += `<select id="control${k}-m" onChange="StackChanges(${k});">`;
+                  outtext += `<option value="0">--</option>`;
+                  for (var j = 1; j <= 12; j++ ) {
+                    outtext += `<option value="${j}">${j}</option>`;
+                  }
+                  outtext += `</select>`;
+                  break;
+                case 7: //string
+                  outtext += `<input type="text" id="control${k}" onChange="StackChanges(${k});">`;
+                  break;
+                case 8: // weekday, time hh:mm
+                  outtext += `<select id="control${k}-d" onChange="StackChanges(${k});">`;
+                  for (var j = 1; j <= 7; j++ ) {
+                    var temp;
+                    if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
+                      temp = UIStrings["STR_" + (499 + j) + "_TEXT"];
+                    else
+                      temp = "STR_" + (499 + j) + "_TEXT";
+                    outtext += `<option value="${j}">${temp}</option>`;
+                  }
+                  outtext += `</select>`;
+                  outtext += `<input type="time" id="control${k}-t" onChange="StackChanges(${k});">`;
                   break;
                 default:
                   break;
@@ -779,11 +835,27 @@
               break;
             case 1:
             case 2:
+//slower, but recognize additional symbols in `desc` field
               for (var j in FunctionsEnum[k].possibleValues) {
-                if (typeof UIStrings[FunctionsEnum[k].possibleValues[j].desc] === 'undefined') temp = FunctionsEnum[k].possibleValues[j].desc;
-                else temp = UIStrings[FunctionsEnum[k].possibleValues[j].desc];
+                var matchresult = FunctionsEnum[k].possibleValues[j].desc.match(textRegexp);
+                temp = FunctionsEnum[k].possibleValues[j].desc;
+                if (matchresult != null) {
+                  if (typeof UIStrings[matchresult[0]] === 'string')
+                    temp = FunctionsEnum[k].possibleValues[j].desc.replace(matchresult[0], UIStrings[matchresult[0]]);
+                }
                 gemById("control" + k).options[j].text = temp;
               }
+// faster, but can't recognize strings with '?' symbols
+//              for (var j in FunctionsEnum[k].possibleValues) {
+//                if (typeof UIStrings[FunctionsEnum[k].possibleValues[j].desc] === 'undefined') temp = FunctionsEnum[k].possibleValues[j].desc;
+//                else {
+//                  temp = UIStrings[FunctionsEnum[k].possibleValues[j].desc];
+//                  }
+//                gemById("control" + k).options[j].text = temp;
+//              }
+
+              break;
+            case 4:
               break;
             default:
               break;
@@ -822,10 +894,14 @@
             }
             break;
           case 2:
+            var bitparam = parseInt(jsontext[k].value, 2);
+            bitparam = (bitparam << 8) + 255;
             for (var i = 0; i < sel.options.length; i++) {
-              if (sel.options[i].value & jsontext[k].value) sel.options[i].selected = true;
+              if ((parseInt(sel.options[i].value) & bitparam) == parseInt(sel.options[i].value)) sel.options[i].selected = true;
               else sel.options[i].selected = false;
             }
+            break;
+          case 4:
             break;
           default:
             break;
@@ -856,6 +932,8 @@
                 cmdlist += ",";
             }
           }
+          gemById("cancelImage").style.opacity = 0.33;
+          gemById("okImage").style.opacity = 0.33;
           break;
         case 1:
       // cancel changes. Partial update
@@ -871,6 +949,9 @@
                 cmdlist += ",";
             }
           }
+          gemById("cancelImage").style.opacity = 0.33;
+          gemById("okImage").style.opacity = 0.33;
+          break;
         case 2:
         //exclude changes
           for (var i = RootCategoryEnum[catnum].min; i <= RootCategoryEnum[catnum].max; i++) {
@@ -960,15 +1041,12 @@
               break;
             case 4:
               if (request.status == 200) {
-//                var loadeddata;
                   if(AJAXRequests[0].isajax) {
                 try {
-//                    loadeddata = JSON.parse(request.responseText);
-//                  AJAXRequests[0].show(loadeddata, AJAXRequests[0].command);
                   AJAXRequests[0].show(JSON.parse(request.responseText), AJAXRequests[0].command);
                 } catch (e) {
                   note({
-                    content: "Error: can't parse AJAX (answer)!",
+                    content: "Error: AJAX parsing failed.",
                     type: "error",
                     time: 5
                   });
@@ -989,7 +1067,7 @@
                 });
               } else
                 note({
-                  content: "Error: AJAX request",
+                  content: "Error: AJAX request failed.",
                   type: "error",
                   time: 5
                 });
@@ -1025,11 +1103,6 @@
         rootlistshow(null, null);
     }
 
-    function LoadConfigPage(command) {
-      ShowSelectedMode(1);
-        loadAjax(baseURL, command, configpageshow, false);
-    }
-
     function ShowSelectedMode(id){
       gemById("HomePage").style.display = (id==1)?"table-cell":"none";
       gemById("LeftMenuTableCell").style.display = (id==2)?"grid":"none";
@@ -1052,11 +1125,9 @@
       }
     }
 
-    function LoadElement(place, url) {
-    if(externaldevelop)
-      LoadExternalElement(place, "http://192.168.67.4/LKJBHksdgfrleneaslkrwklh/" + url);
-    else
-      LoadExternalElement(place, baseURL1+url);
+    function LoadElement(place, command) {
+      ShowSelectedMode(1);
+        loadAjax(baseURL, command, configpageshow, false);
     }
 
     function LoadExternalElement(place, url) {
@@ -1071,6 +1142,14 @@
 
     function GoManage() {
       ShowSelectedMode(2);
+    }
+
+    function DisplayChart() {
+      var displaychartclassname = "displaychart";
+      var outtext = `<A HREF='datalog.txt'>${UIStrings.MENU_TEXT_DTD}</A><div class="${displaychartclassname}" align=center></div>`;
+      gemById("HomePage").innerHTML = outtext;
+      ShowSelectedMode(1);
+      drawGraph("div." + displaychartclassname);
     }
   </script>
 
@@ -1110,12 +1189,21 @@ path {
 <!--script src="http://d3js.org/d3.v3.min.js"></script-->
 
 <script>
-function drawGraph(){
-// You can load the d3.js library from CDN
-// LoadScript("http://d3js.org/d3.v3.min.js");
-// or load it from Arduino web server
-LoadScript("d3.v3.min.js");
 
+function drawGraph(elementtype){
+  if(!d3libraryloaded)
+    {
+// You can load the d3.js library from CDN
+//    LoadScript("http://d3js.org/d3.v3.min.js", function() {drawGraphInt(elementtype);});
+// or load it from Arduino web server
+    LoadScript("d3.v3.min.js", function() {drawGraphInt(elementtype);});
+    d3libraryloaded = true;
+    }
+  else
+    drawGraphInt(elementtype);
+  }
+
+function drawGraphInt(elementtype){
 // Set the dimensions of the canvas / graph
 var margin = {top: 30, right: 20, bottom: 70, left: 50},
 width = 1000 - margin.left - margin.right,
@@ -1171,7 +1259,7 @@ dsv("datalog.txt", function(data) {
                 .entries(data);
 
 // Adds the svg canvas
-var svg = d3.select("div")
+var svg = d3.select(elementtype)
     .append("svg")
      .attr("width", width + margin.left + margin.right)
      .attr("height", height + margin.top + margin.bottom + dataNest.length/4 * 15)
