@@ -1,5 +1,5 @@
---- BSB_lan.ino.orig    2020-01-24 10:06:29.245574174 +0300
-+++ BSB_lan.ino 2020-01-24 13:07:17.454023915 +0300
+--- BSB_lan.ino.orig    2020-01-24 10:06:29.000000000 +0300
++++ BSB_lan.ino 2020-01-25 19:13:09.003323944 +0300
 @@ -462,7 +462,7 @@
  // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
  // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
@@ -55,18 +55,18 @@
 -                authenticated=true;
 +#ifdef WEBSERVER
 +              //Execute only if flag not set because strstr more expensive than bitwise operation
-+              if (httpflags ^ 2 && strstr(linebuf,"Accept-encoding") != 0 && strstr(linebuf+16, "gzip") != 0) {
++              if (!(httpflags & 2) && strstr(linebuf,"Accept-Encoding") != 0 && strstr(linebuf+16, "gzip") != 0) {
 +                httpflags |= 2;
-               }
++              }
 +#ifdef USER_PASS_B64
 +             else
 +#endif
 +#endif
 +#ifdef USER_PASS_B64
 +              //Execute only if flag not set because strstr more expensive than bitwise operation
-+              if (httpflags ^ 1 && strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
++              if (!(httpflags & 1) && strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
 +                httpflags |= 1;
-+              }
+               }
 +#endif
                memset(linebuf,0,sizeof(linebuf));
                charcount=0;
@@ -78,7 +78,7 @@
 +#ifdef USER_PASS_B64
          // if no credentials found in HTTP header, send 401 Authorization Required
 -        if (!authenticated) {
-+        if (httpflags ^ 1) {
++        if (!(httpflags & 1)) {
            client.println(F("HTTP/1.1 401 Authorization Required"));
            client.println(F("WWW-Authenticate: Basic realm=\"Secure Area\""));
            client.println(F("Content-Type: text/html"));
@@ -99,7 +99,7 @@
          urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
          DebugOutput.println(urlString);
          urlString.toCharArray(cLineBuffer, MaxArrayElement);
-@@ -4920,21 +4940,161 @@
+@@ -4920,21 +4940,165 @@
          }
          *p='/';
  #endif
@@ -127,7 +127,7 @@
 +        if(mimetype)  {
 +          File dataFile;
 +          // client browser accept gzip
-+          if (httpflags & 2) dataFile = SD.open(urlString + ".gz");
++          if ((httpflags & 2)) dataFile = SD.open(urlString + ".gz");
 +          if (!dataFile) {
 +            // reuse httpflags
 +            bitClear(httpflags, 1); //can't use gzip because no gzipped file
@@ -154,54 +154,58 @@
 +
 +            client.print(F("Content-Length: ")); client.println(dataFile.size());
 +            client.println(F("Cache-Control: max-age=84400, must-revalidate"));
-+            if(httpflags & 2) client.println(F("Content-Encoding: gzip"));
++            if((httpflags & 2)) client.println(F("Content-Encoding: gzip"));
 +            dir_t d;
 +            if (dataFile.dirEntry(&d)) {
-+              String monthname;
-+              String downame;
++              char monthname[4];
++              char downame[4];
 +              char outBuffer[50];
-+              downame = F("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT");
-+              uint8_t len = downame.length() + 1;
++              String getfarstrings;
++              getfarstrings = F("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT");
++              uint8_t len = getfarstrings.length() + 1;
 +              char outBufferFormat[len];
-+              downame.toCharArray(outBufferFormat, len);
++              getfarstrings.toCharArray(outBufferFormat, len);
 +              uint16_t lastWrtYr =  (FAT_YEAR(d.lastWriteDate));
 +              byte monthval = FAT_MONTH(d.lastWriteDate);
 +              byte dayval = FAT_DAY(d.lastWriteDate);
 +              switch (dayofweek((uint8_t)dayval, (uint8_t)monthval, lastWrtYr))
 +              {
-+                case 1: downame = F("Mon"); break;
-+                case 2: downame = F("Tue"); break;
-+                case 3: downame = F("Wed"); break;
-+                case 4: downame = F("Thu"); break;
-+                case 5: downame = F("Fri"); break;
-+                case 6: downame = F("Sat"); break;
-+                case 7: downame = F("Sun"); break;
-+                default: downame = F("ERR"); break;
++                case 1: getfarstrings = F("Mon"); break;
++                case 2: getfarstrings = F("Tue"); break;
++                case 3: getfarstrings = F("Wed"); break;
++                case 4: getfarstrings = F("Thu"); break;
++                case 5: getfarstrings = F("Fri"); break;
++                case 6: getfarstrings = F("Sat"); break;
++                case 7: getfarstrings = F("Sun"); break;
++                default: getfarstrings = F("ERR"); break;
 +              }
++              getfarstrings.toCharArray(downame, 4);
 +
 +              switch (monthval)
 +              {
-+                case 1: monthname = F("Jan"); break;
-+                case 2: monthname = F("Feb"); break;
-+                case 3: monthname = F("Mar"); break;
-+                case 4: monthname = F("Apr"); break;
-+                case 5: monthname = F("May"); break;
-+                case 6: monthname = F("Jun"); break;
-+                case 7: monthname = F("Jul"); break;
-+                case 8: monthname = F("Aug"); break;
-+                case 9: monthname = F("Sep"); break;
-+                case 10: monthname = F("Oct"); break;
-+                case 11: monthname = F("Nov"); break;
-+                case 12: monthname = F("Dec"); break;
-+                default: monthname = F("ERR"); break;
++                case 1: getfarstrings = F("Jan"); break;
++                case 2: getfarstrings = F("Feb"); break;
++                case 3: getfarstrings = F("Mar"); break;
++                case 4: getfarstrings = F("Apr"); break;
++                case 5: getfarstrings = F("May"); break;
++                case 6: getfarstrings = F("Jun"); break;
++                case 7: getfarstrings = F("Jul"); break;
++                case 8: getfarstrings = F("Aug"); break;
++                case 9: getfarstrings = F("Sep"); break;
++                case 10: getfarstrings = F("Oct"); break;
++                case 11: getfarstrings = F("Nov"); break;
++                case 12: getfarstrings = F("Dec"); break;
++                default: getfarstrings = F("ERR"); break;
 +              }
++              getfarstrings.toCharArray(monthname, 4);
++
 +            sprintf(outBuffer, outBufferFormat, downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
 +            client.println(outBuffer);
 +            }
 +
 +            client.println();
 +            //HEAD request received
-+            if (httpflags ^ 4) {
++            if (!(httpflags & 4)) {
 +              int logbuflen = 512;
 +              byte loglineBuf[logbuflen];
 +              int chars_read = dataFile.read(&loglineBuf , logbuflen);
@@ -212,7 +216,7 @@
 +              if (chars_read > 0) client.write(loglineBuf, chars_read);
 +            }
 +
-+            DebugOutput.println((httpflags |= 4)?(String)F("HEAD"):(String)F("GET") + F(" request received"));
++            DebugOutput.println(((httpflags & 4)?(String)F("HEAD"):(String)F("GET")) + F(" request received"));
 +
 +            dataFile.close();
 +          }
@@ -262,25 +266,25 @@
          // setting verbosity level
          if(p[1]=='V'){
            p+=2;
-@@ -5171,7 +5331,7 @@
+@@ -5171,7 +5335,7 @@
          }
 
          if(p[1]=='Q') {
 -          webPrintHeader();
-+          if(httpflags ^ 128) webPrintHeader();
++          if(!(httpflags & 128)) webPrintHeader();
 
            client.print(F(MENU_TEXT_VER ": "));
            client.print(BSB_VERSION);
-@@ -5352,7 +5512,7 @@
+@@ -5352,7 +5516,7 @@
 
            client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
            bus.setBusType(bus.getBusType(), myAddr, destAddr);   // return to original destination address
 -          webPrintFooter();
-+          if(httpflags ^ 128) webPrintFooter();
++          if(!(httpflags & 128)) webPrintFooter();
            break;
          }
 
-@@ -5717,6 +5877,7 @@
+@@ -5717,6 +5881,7 @@
                client.println(F(MENU_TEXT_DTF));
              }
              webPrintFooter();
@@ -288,7 +292,7 @@
            } else if (p[2]=='G') {
              webPrintHeader();
              client.println(F("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>"));
-@@ -5754,12 +5915,13 @@
+@@ -5754,12 +5919,13 @@
              } else {
                client.println(F(MENU_TEXT_DTO));
              }
@@ -299,20 +303,20 @@
  #endif
          if (p[1]=='C'){ // dump configuration
 -          webPrintHeader();
-+          if(httpflags ^ 128) webPrintHeader();
++          if(!(httpflags & 128)) webPrintHeader();
            client.println(F(MENU_TEXT_CFG "<BR><BR>"));
  //          client.println(F("BSB pins: "));
  //          client.println(bus);
-@@ -5924,7 +6086,7 @@
+@@ -5924,7 +6090,7 @@
            #endif
 
            client.println(F("<BR>"));
 -          webPrintFooter();
-+          if(httpflags ^ 128) webPrintFooter();
++          if(!(httpflags & 128)) webPrintFooter();
 
  #if defined(__AVR__)
            DebugOutput.println(F("EEPROM dump:"));
-@@ -7016,7 +7178,7 @@
+@@ -7016,7 +7182,7 @@
      }
    }
 
