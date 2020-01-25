@@ -1,10 +1,7 @@
 <head>
   <meta charset="utf-8">
-  <!--link rel="stylesheet" type="text/css" href="/ajax.css" /-->
-
   <!--link rel="stylesheet/less" type="text/css" href="/notes.css" />
-        <script type="text/javascript" src="/less.min.js"></script>
-        <script type="text/javascript" src="ajax.js"></script-->
+        <script type="text/javascript" src="/less.min.js"></script-->
 
   <style>
     /* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_loader5 */
@@ -524,7 +521,7 @@
   </div>
   <script type="text/javascript">
 // settings
-    var externaldevelop = true; //true - develop on external web server (apache); false - on arduino web server
+    var externaldevelop = true; //true - develop on external web server (apache); false - production on arduino web server
     var ajaxurl = document.location.pathname;
     var baseURL1 = ajaxurl.substr(ajaxurl.indexOf('/'), ajaxurl.lastIndexOf('/') - ajaxurl.indexOf('/') + 1);
     var baseURL = baseURL1;
@@ -534,7 +531,7 @@
     defaultLanguage = ''; // Enable autodetection
     var textRegexp = /\b\w*_TEXT\w*\b/g; //regexp for text resources exctraction
     var JSONOptionsPerRequest = 10; //1 - 200. Less: more responsive (interactive), but slower. More: faster, but less responsive
-    var warnAboutExitWithoutSave = 3; //Warnings before return to root and discard changes
+    var warnAboutExitWithoutSave = 3; //Warnings before exit from category and discard changes
     var onCacheCategoriesInRAM = false; //Freeing RAM after exit from category
 
 // internal variables
@@ -1120,6 +1117,8 @@
     }
 
     function ShowSelectedMode(id){
+//warnings about unsaved changes. dirty, because fragments will be loading anyway
+      if (id != 3 && Object.keys(ListOfChanges).length > 0) { ReturnToRoot(); return; }
       gemById("HomePage").style.display = (id==1)?"table-cell":"none";
       gemById("LeftMenuTableCell").style.display = (id==2)?"grid":"none";
       gemById("RightMenuTableCell").style.display = (id==3)?"table-cell":"none";
