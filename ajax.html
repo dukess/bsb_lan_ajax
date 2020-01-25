@@ -181,17 +181,17 @@
 
   <script type="text/javascript">
     /**
-    * Àíîíèìíàÿ ñàìîâûçûâàþùàÿñÿ ôóíêöèÿ-îáåðòêà
-    * @param {document} d - ïîëó÷àåò äîêóìåíò
+    * Анонимная самовызывающаяся функция-обертка
+    * @param {document} d - получает документ
 
 
-    Ðàçðàáîòêà https://web3r.ru/js-css-alerts
+    Разработка https://web3r.ru/js-css-alerts
 
         */
     ! function(d) {
       "use strict";
       /**
-       * Ïîëèôèëë äëÿ Object.assign()
+       * Полифилл для Object.assign()
        */
       Object.assign || Object.defineProperty(Object, "assign", {
         enumerable: !1,
@@ -213,18 +213,18 @@
         }
       });
       /**
-       * Ïîëèôèëë äëÿ Element.remove()
+       * Полифилл для Element.remove()
        */
       "remove" in Element.prototype || (Element.prototype.remove = function() {
         this.parentNode && this.parentNode.removeChild(this)
       });
       /**
-       * Îñíîâíàÿ ôóíêöèÿ.
-       * @param {Object} [settings] - ïðåäâàðòèåëüíûå íàñòðîéêè
+       * Основная функция.
+       * @param {Object} [settings] - предвартиельные настройки
        */
       window.note = function(settings) {
         /**
-         * Íàñòðîéêè ïî óìîë÷àíèþ
+         * Настройки по умолчанию
          */
         settings = Object.assign({}, {
           callback: false,
@@ -234,11 +234,11 @@
         }, settings);
         if (!settings.content.length) return;
         /**
-         * Ôóíêöèÿ ñîçäàíèÿ ýëåìåíòîâ
-         * @param {String} name - íàçâàíèå DOM-ýëåìåíòà
-         * @param {Object} attr - îáúåêò ñ àòðèáóòàìè
-         * @param {Object} append - DOM-ýëåìåíò, â êîòîðûé áóäåò äîáàâëåí íîâûé óçåë
-         * @param {String} [content] - êîíòåíò DOM-ýëåìåíòà
+         * Функция создания элементов
+         * @param {String} name - название DOM-элемента
+         * @param {Object} attr - объект с атрибутами
+         * @param {Object} append - DOM-элемент, в который будет добавлен новый узел
+         * @param {String} [content] - контент DOM-элемента
          */
         var create = function(name, attr, append, content) {
           var node = d.createElement(name);
@@ -251,7 +251,7 @@
           return node;
         };
         /**
-         * Ãåíåðàöèÿ ýëåìåíòîâ
+         * Генерация элементов
          */
         var noteBox = d.getElementById("notes") || create("div", {
           "id": "notes"
@@ -268,10 +268,10 @@
           noteItemBtn = create("button", {
             "class": "note-item-btn",
             "type": "button",
-            "aria-label": "Ñêðûòü"
+            "aria-label": "Скрыть"
           }, noteItem);
         /**
-         * Ôóíêöèÿ ïðîâåðêè âèäèìîñòè àëåðòà âî viewport
+         * Функция проверки видимости алерта во viewport
          * @returns {boolean}
          */
         var isVisible = function() {
@@ -284,8 +284,8 @@
           );
         };
         /**
-         * Ôóíêöèÿ óäàëåíèÿ àëåðòîâ
-         * @param {Object} [el] - óäàëÿåìûé àëåðò
+         * Функция удаления алертов
+         * @param {Object} [el] - удаляемый алерт
          */
         var remove = function(el) {
           el = el || noteItem;
@@ -296,23 +296,23 @@
           if (settings.callback) settings.callback(); // callback
         };
         /**
-         * Óäàëåíèå àëåðòà ïî êëèêó íà êíîïêó
+         * Удаление алерта по клику на кнопку
          */
         noteItemBtn.addEventListener("click", function() {
           remove();
         });
         /**
-         * Âèçóàëüíûé âûâîä àëåðòà
+         * Визуальный вывод алерта
          */
         window.setTimeout(function() {
           noteItem.setAttribute("data-show", "true");
         }, 250);
         /**
-         * Ïðîâåðêà âèäèìîñòè àëåðòà è î÷èñòêà ìåñòà ïðè íåîáõîäèìîñòè
+         * Проверка видимости алерта и очистка места при необходимости
          */
         if (!isVisible()) remove(noteBox.firstChild);
         /**
-         * Àâòîìàòè÷åñêîå óäàëåíèå àëåðòà ñïóñòÿ çàäàííîå âðåìÿ
+         * Автоматическое удаление алерта спустя заданное время
          */
         window.setTimeout(remove, settings.time * 1000);
       };
@@ -544,9 +544,9 @@
     var warnAboutExitWithoutSaveInt = warnAboutExitWithoutSave; //internal version of warnAboutExitWithoutSave
     var CurrentCategory = null;
     var AJAXRequests = new Array();
-    var FunctionsEnum = null; // JSON c ïåðå÷íåì ôóíêöèé.
-    var RootCategoryEnum = null; // JSON c ïåðå÷íåì êàòåãîðèé.
-    var FlagCategoryIsLoaded = null; // Ôëàã çàãðóæåííîñòè êàòåãîðèè â ïåðå÷íå.
+    var FunctionsEnum = null; // JSON c перечнем функций.
+    var RootCategoryEnum = null; // JSON c перечнем категорий.
+    var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
     var d3libraryloaded = false;
 
     gemById("backImage").src = backImage;
@@ -996,7 +996,7 @@
       switch (FunctionsEnum[funkid]["dataType"]) {
         case 0:
           note({
-            content: "Èçìåí¸í ïàðàìåòð " + funkid + " íà çíà÷åíèå " + elem.value,
+            content: "Изменён параметр " + funkid + " на значение " + elem.value,
             type: "info",
             time: 3
           });
@@ -1005,7 +1005,7 @@
           for (var i = 0; i < elem.options.length; i++) {
             if (elem.options[i].selected == true) {
               note({
-                content: "Èçìåí¸í ïàðàìåòð " + funkid + " íà çíà÷åíèå " + elem.options[i].value,
+                content: "Изменён параметр " + funkid + " на значение " + elem.options[i].value,
                 type: "info",
                 time: 3
               });
