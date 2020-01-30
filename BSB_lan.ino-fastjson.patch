@@ -1,5 +1,5 @@
---- BSB_lan.ino.orig    2020-01-28 17:26:15.598254930 +0300
-+++ BSB_lan.ino 2020-01-29 11:45:02.354973048 +0300
+--- BSB_lan.ino.dist    2020-01-28 17:26:15.598254930 +0300
++++ BSB_lan.ino 2020-01-30 19:28:25.959871236 +0300
 @@ -5404,14 +5404,12 @@
          }
 
@@ -18,7 +18,20 @@
            // Parse potential JSON payload
 
            char json_temp[11];
-@@ -5486,32 +5484,41 @@
+@@ -5478,40 +5476,45 @@
+               }
+
+               output = false;
++              buffer[0] = 0;
++              int buffershiftedbycolon = 0;
+               if (!been_here || (p[2]=='K' && isdigit(p[4]))) {
+                 been_here = true;
+               } else {
+-                client.println(F(","));
++//                client.println(F(","));
++                strcpy_P(buffer, PSTR(","));
++                buffershiftedbycolon = strlen(buffer);
+               }
                if (p[2]=='K' && !isdigit(p[4])) {
                  uint16_t x=2;
                  uint8_t cat=0;
@@ -47,18 +60,9 @@
 -                    }
 +                  char z;
 +                  strcpy_P(formatbuf, PSTR("\"%d\": { \"name\": \""));
-+                  sprintf(buffer, formatbuf, cat);
++                  sprintf(buffer + buffershiftedbycolon, formatbuf, cat);
++                  buffershiftedbycolon = 0;
 +                  char *outBufp = buffer + strlen(buffer);
-+// MUST ADD '\0' TO LAST STRING IN ENUM_CAT!!!!!!!!!!!!!!!!
-+/*                  do{
-+                    z = pgm_read_byte_far(pgm_get_far_address(ENUM_CAT)+x);
-+                    outBufp[0] = z;
-+                    outBufp++;
-+                    x++;
-+                  }while(z);
-+
-+                  outBufp--;
-+                  x--; */
 +                  strcpy_PF(outBufp, pgm_get_far_address(ENUM_CAT)+x);
 +                  uint16_t y = strlen(outBufp);
 +                  x += y;
@@ -73,8 +77,9 @@
 +                    client.print(buffer);
 +                    continue;
 +                  } else {
-+                    outBufp--;outBufp[0] = 0;//shift to last non-zero char ('\n') and clear it
-+                    outBufp--;outBufp[0] = 0;//shift to last non-zero char (',') and clear it
++                    y = strlen(outBufp);
++                    outBufp[--y] = 0;//shift to last non-zero char ('\n') and clear it
++                    outBufp[--y] = 0;//shift to last non-zero char (',') and clear it
 +                    client.print(buffer);
 +                    json_token = NULL;
 +                    break;
@@ -84,7 +89,7 @@
                  }
                  json_token = NULL;
                }
-@@ -5544,21 +5551,14 @@
+@@ -5544,21 +5547,15 @@
                  uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
                  uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
@@ -102,7 +107,8 @@
 -
 -                client.print(F("    \"name\": \""));
 +                strcpy_P(formatbuf, PSTR(",\n  \"%d\": {\n    \"name\": \""));
-+                sprintf(buffer, been_here2?formatbuf:(formatbuf + 2), json_parameter); //do not print ",\n" if it first field
++                sprintf(buffer + buffershiftedbycolon, been_here2?formatbuf:(formatbuf + 2), json_parameter); //do not print ",\n" if it first field
++                buffershiftedbycolon = 0;
 +                if (!been_here2 || p[2] == 'Q') been_here2=true;
 +
 +                char *bufferp = buffer + strlen(buffer);
@@ -113,7 +119,7 @@
 
                  uint8_t div_unit_len=0;
                  uint8_t div_data_type=0;
-@@ -5622,88 +5622,72 @@
+@@ -5622,88 +5619,66 @@
                      }
                    }
 
@@ -168,18 +174,12 @@
 -                      while (z != '\0') {
 -                        client.print(z);
 -                        x++;
-+                      char *outBufp = buffer;
-+                      char z;
-+                      do{
-                         z = pgm_read_byte_far(enumstr+x);
+-                        z = pgm_read_byte_far(enumstr+x);
 -                      }
 -                      client.print(F("\" }"));
-+                        outBufp[0] = z;
-+                        outBufp++;
-+                        x++;
-+                      }while(z);
-+                      outBufp--;
-+                      strcat_P(outBufp, PSTR("\" }"));
++                      strcpy_PF(buffer, pgm_get_far_address(enumstr)+x);
++                      x += strlen(buffer);
++                      strcat_P(buffer, PSTR("\" }"));
 +                      client.print(buffer);
                        x++;
                      }
@@ -208,10 +208,6 @@
 -                DebugOutput.print(json_value_string);
 -                DebugOutput.print(F(" with type "));
 -                DebugOutput.println(json_type);
-+                strcpy_P(formatbuf, PSTR("Setting parameter %s to %s with type %s\n"));
-+                sprintf(buffer, formatbuf, json_parameter, json_value_string, json_type);
-+                DebugOutput.print(buffer);
-+
                  int status = set(json_parameter, json_value_string, json_type);
 -                client.print(F("  \""));
 -                client.print(json_parameter);
@@ -221,8 +217,13 @@
 -                client.println();
 -                client.print(F("  }"));
 +                strcpy_P(formatbuf, PSTR("  \"%s\": {\n    \"status\": %d\n  }"));
-+                sprintf(buffer, formatbuf, json_parameter, status);
++                sprintf(buffer + buffershiftedbycolon, formatbuf, json_parameter, status);
++                buffershiftedbycolon = 0;
 +                client.print(buffer);
++
++                strcpy_P(formatbuf, PSTR("Setting parameter %s to %s with type %s\n"));
++                sprintf(buffer, formatbuf, json_parameter, json_value_string, json_type);
++                DebugOutput.print(buffer);
                }
                if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q')) {
                  json_token = strtok(NULL,",");
