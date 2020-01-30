@@ -1,5 +1,5 @@
---- BSB_lan.ino.orig    2020-01-24 10:06:29.000000000 +0300
-+++ BSB_lan.ino 2020-01-25 19:13:09.003323944 +0300
+--- BSB_lan.ino.orig    2020-01-29 17:29:51.963830790 +0300
++++ BSB_lan.ino 2020-01-30 17:14:59.671539315 +0300
 @@ -462,7 +462,7 @@
  // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
  // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
@@ -9,45 +9,100 @@
  #if defined(__SAM3X8E__)
    #include <SD.h>
  #else
-@@ -4581,7 +4581,7 @@
-               case 0x66: msg_cycle = 19; break;
-               case 0x7C: msg_cycle = 20; break;
-               default:
--                 DebugOutput.print("Unknown request: ");
-+                 DebugOutput.print(F("Unknown request: "));
-                 for (int c=0;c<9;c++) {
-                   if (msg[c]<16) DebugOutput.print("0");
-                   DebugOutput.print(msg[c], HEX);
-@@ -4725,7 +4725,7 @@
-                   break;
-                 case 0x00: break;
-                 default:
--                  DebugOutput.print("Unknown telegram: ");
-+                  DebugOutput.print(F("Unknown telegram: "));
-                   for (int c=0;c<9+pps_offset;c++) {
-                     if (msg[c]<16) DebugOutput.print("0");
-                     DebugOutput.print(msg[c], HEX);
-@@ -4826,12 +4826,16 @@
+@@ -4157,6 +4157,62 @@
+   return log_parameter;
+ }
+
++/** *****************************************************************
++ *  Function: transmitFile
++ *  Does: transmit file from SD card to network client
++ *  Pass parameters:
++ *  File dataFile - opened file
++ * Parameters passed back:
++ *   none
++ * Function value returned:
++ *   none
++ * Global resources used:
++ *   client instance
++ * *************************************************************** */
++void transmitFile(File dataFile) {
++  int logbuflen = 512;
++  byte loglineBuf[logbuflen];
++  int chars_read = dataFile.read(&loglineBuf , logbuflen);
++  while (chars_read == logbuflen) {
++    client.write(loglineBuf, logbuflen);
++    chars_read = dataFile.read(&loglineBuf , logbuflen);
++    }
++  if (chars_read > 0) client.write(loglineBuf, chars_read);
++}
++
++/** *****************************************************************
++ *  Function: bufferedprint and bufferedprintln
++ *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
++ *  Pass parameters:
++ *  WiFiEspClient/EthernetClient &cl
++ *  PGM_P outstr
++ * Parameters passed back:
++ *   none
++ * Function value returned:
++ *   none
++ * Global resources used:
++ *   buffer variable
++ * *************************************************************** */
++
++#ifdef WIFI
++void bufferedprint(WiFiEspClient& cl, PGM_P outstr){
++#else
++void bufferedprint(EthernetClient& cl, PGM_P outstr){
++#endif
++  strncpy_P(buffer, outstr, BUFLEN);
++  buffer[BUFLEN - 1] = 0;
++  cl.print(buffer);
++}
++#ifdef WIFI
++void bufferedprintln(WiFiEspClient& cl, PGM_P outstr){
++#else
++void bufferedprintln(EthernetClient& cl, PGM_P outstr){
++#endif
++  strncpy_P(buffer, outstr, BUFLEN - 2);
++  strcat_P(buffer, PSTR("\n"));
++  buffer[BUFLEN - 1] = 0;
++  cl.print(buffer);
++}
+
+ /** *****************************************************************
+  *  Function:
+@@ -4832,29 +4888,45 @@
          }
          // Got an EOL character
          DebugOutput.println();
 -        // perform HTTP-Authentification by reading the remaining client data and look for credentials
 -#ifdef USER_PASS_B64
 
+-        char linebuf[80];
 +        // perform HTTP-Authentification by reading the remaining client data and look for credentials
 +        // Parsing headers
-         char linebuf[80];
++        //char linebuf[80]; i have 'buffer' variable. I will use 'buffer' instead 'linebuf'
          uint8_t charcount=0;
 -        boolean authenticated=false;
+-        memset(linebuf,0,sizeof(linebuf));
 +        uint8_t httpflags = 0; //bit 0 - authenticated: 0 - no, 1 - yes
 +                               //bit 1 - client browser accept gzip: 0 - no, 2 - yes
 +                               //bit 2 - HEAD request received from client: 0 - no, 4 - yes
 +                               //...
 +                               //bit 7 - send HTML fragment only, without header and footer. For external webserver. 0 - full HTML, 128 - fragment
-         memset(linebuf,0,sizeof(linebuf));
++        memset(buffer,0,sizeof(buffer));
          boolean currentLineIsBlank = false;
          while (client.connected()) {
-@@ -4845,9 +4849,21 @@
+           if (client.available()) {
+             char c = client.read();
+-            linebuf[charcount]=c;
+-            if (charcount<sizeof(linebuf)-1) charcount++;
++            buffer[charcount]=c;
++            if (charcount<sizeof(buffer)-1) charcount++;
+             if (c == '\n' && currentLineIsBlank) {
+               break;
+             }
              if (c == '\n') {
                // you're starting a new line
                currentLineIsBlank = true;
@@ -55,23 +110,25 @@
 -                authenticated=true;
 +#ifdef WEBSERVER
 +              //Execute only if flag not set because strstr more expensive than bitwise operation
-+              if (!(httpflags & 2) && strstr(linebuf,"Accept-Encoding") != 0 && strstr(linebuf+16, "gzip") != 0) {
++              if (!(httpflags & 2) && strstr_P(buffer,PSTR("Accept-Encoding")) != 0 && strstr_P(buffer+16, PSTR("gzip")) != 0) {
 +                httpflags |= 2;
-+              }
+               }
+-              memset(linebuf,0,sizeof(linebuf));
 +#ifdef USER_PASS_B64
 +             else
 +#endif
 +#endif
 +#ifdef USER_PASS_B64
 +              //Execute only if flag not set because strstr more expensive than bitwise operation
-+              if (!(httpflags & 1) && strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
++              if (!(httpflags & 1) && strstr_P(buffer,PSTR("Authorization: Basic"))!=0 && strstr(buffer,USER_PASS_B64)!=0) {
 +                httpflags |= 1;
-               }
++              }
 +#endif
-               memset(linebuf,0,sizeof(linebuf));
++              memset(buffer,0, charcount);
                charcount=0;
              } else if (c != '\r') {
-@@ -4856,8 +4872,9 @@
+               // you've gotten a character on the current line
+@@ -4862,8 +4934,9 @@
              }
            }
          }
@@ -82,7 +139,7 @@
            client.println(F("HTTP/1.1 401 Authorization Required"));
            client.println(F("WWW-Authenticate: Basic realm=\"Secure Area\""));
            client.println(F("Content-Type: text/html"));
-@@ -4870,12 +4887,15 @@
+@@ -4876,12 +4949,15 @@
          }
          // otherwise continue like normal
  #endif
@@ -99,7 +156,33 @@
          urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
          DebugOutput.println(urlString);
          urlString.toCharArray(cLineBuffer, MaxArrayElement);
-@@ -4920,21 +4940,165 @@
+@@ -4897,14 +4973,22 @@
+ // IPWE END
+
+         if (urlString == "/favicon.ico") {
+-          client.println(F("HTTP/1.1 200 OK"));
+-          client.println(F("Content-Type: image/x-icon"));
+-          client.println();
++//          strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
++//          client.print(buffer);
++          bufferedprint(client, PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
++#ifdef WEBSERVER
++          File dataFile = SD.open(urlString + 1);
++          if (dataFile) {
++            transmitFile(dataFile);
++            dataFile.close();
++            } else {
+ #if defined(__SAM3X8E__)
+           printPStr(favicon, sizeof(favicon));
+ #else
+           printPStr(pgm_get_far_address(favicon), sizeof(favicon));
+ #endif
++            }
++#endif
+           break;
+         }
+
+@@ -4926,21 +5010,157 @@
          }
          *p='/';
  #endif
@@ -121,11 +204,14 @@
 +        else if(urlString.endsWith(F(".gif"))) mimetype = 102;
 +        else if(urlString.endsWith(F(".svg"))) mimetype = 103;
 +        else if(urlString.endsWith(F(".png"))) mimetype = 104;
++        else if(urlString.endsWith(F(".ico"))) mimetype = 105;
 +        else if(urlString.endsWith(F(".gz"))) mimetype = 201;
 +        // You can add more MIME types here
 +
 +        if(mimetype)  {
 +          File dataFile;
++          const char *getfarstrings;
++
 +          // client browser accept gzip
 +          if ((httpflags & 2)) dataFile = SD.open(urlString + ".gz");
 +          if (!dataFile) {
@@ -135,88 +221,76 @@
 +          }
 +          // if the file is available, read from it:
 +          if (dataFile) {
-+            DebugOutput.print(F("file opened from SD: ")); DebugOutput.println(urlString);
-+            client.print(F("HTTP/1.1 200 OK\nContent-Type: "));
++            DebugOutput.print(F("File opened from SD: ")); DebugOutput.println(urlString);
++            strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: "));
 +            switch(mimetype){
-+              case 1: client.println(F("text/html")); break;
-+              case 2: client.println(F("text/css")); break;
-+              case 3: client.println(F("application/x-javascript")); break;
-+              case 4: client.println(F("application/xml")); break;
++              case 1: getfarstrings = PSTR("text/html"); break;
++              case 2: getfarstrings = PSTR("text/css"); break;
++              case 3: getfarstrings = PSTR("application/x-javascript"); break;
++              case 4: getfarstrings = PSTR("application/xml"); break;
 +              // case 5 below
-+              case 101: client.println(F("image/jpeg")); break;
-+              case 102: client.println(F("image/gif")); break;
-+              case 103: client.println(F("image/svg")); break;
-+              case 104: client.println(F("image/png")); break;
-+              case 201: client.println(F("application/x-gzip")); break;
++              case 101: getfarstrings = PSTR("image/jpeg"); break;
++              case 102: getfarstrings = PSTR("image/gif"); break;
++              case 103: getfarstrings = PSTR("image/svg"); break;
++              case 104: getfarstrings = PSTR("image/png"); break;
++              case 105: getfarstrings = PSTR("image/x-icon"); break;
++              case 201: getfarstrings = PSTR("application/x-gzip"); break;
 +              case 5:
-+              default: client.println(F("text"));
++              default: getfarstrings = PSTR("text");
 +            }
-+
-+            client.print(F("Content-Length: ")); client.println(dataFile.size());
-+            client.println(F("Cache-Control: max-age=84400, must-revalidate"));
-+            if((httpflags & 2)) client.println(F("Content-Encoding: gzip"));
++            strcat_P(buffer, getfarstrings);
++            strcpy_P(outBuf, PSTR("\nContent-Length: %d\n"));
++            sprintf(buffer + strlen(buffer), outBuf, dataFile.size());
++            if((httpflags & 2)) strcat_P(buffer, PSTR("Content-Encoding: gzip\n"));
 +            dir_t d;
 +            if (dataFile.dirEntry(&d)) {
 +              char monthname[4];
 +              char downame[4];
-+              char outBuffer[50];
-+              String getfarstrings;
-+              getfarstrings = F("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT");
-+              uint8_t len = getfarstrings.length() + 1;
-+              char outBufferFormat[len];
-+              getfarstrings.toCharArray(outBufferFormat, len);
 +              uint16_t lastWrtYr =  (FAT_YEAR(d.lastWriteDate));
 +              byte monthval = FAT_MONTH(d.lastWriteDate);
 +              byte dayval = FAT_DAY(d.lastWriteDate);
 +              switch (dayofweek((uint8_t)dayval, (uint8_t)monthval, lastWrtYr))
 +              {
-+                case 1: getfarstrings = F("Mon"); break;
-+                case 2: getfarstrings = F("Tue"); break;
-+                case 3: getfarstrings = F("Wed"); break;
-+                case 4: getfarstrings = F("Thu"); break;
-+                case 5: getfarstrings = F("Fri"); break;
-+                case 6: getfarstrings = F("Sat"); break;
-+                case 7: getfarstrings = F("Sun"); break;
-+                default: getfarstrings = F("ERR"); break;
++                case 1: getfarstrings = PSTR("Mon"); break;
++                case 2: getfarstrings = PSTR("Tue"); break;
++                case 3: getfarstrings = PSTR("Wed"); break;
++                case 4: getfarstrings = PSTR("Thu"); break;
++                case 5: getfarstrings = PSTR("Fri"); break;
++                case 6: getfarstrings = PSTR("Sat"); break;
++                case 7: getfarstrings = PSTR("Sun"); break;
++                default: getfarstrings = PSTR("ERR"); break;
 +              }
-+              getfarstrings.toCharArray(downame, 4);
++              strcpy_P(downame, getfarstrings);
 +
 +              switch (monthval)
 +              {
-+                case 1: getfarstrings = F("Jan"); break;
-+                case 2: getfarstrings = F("Feb"); break;
-+                case 3: getfarstrings = F("Mar"); break;
-+                case 4: getfarstrings = F("Apr"); break;
-+                case 5: getfarstrings = F("May"); break;
-+                case 6: getfarstrings = F("Jun"); break;
-+                case 7: getfarstrings = F("Jul"); break;
-+                case 8: getfarstrings = F("Aug"); break;
-+                case 9: getfarstrings = F("Sep"); break;
-+                case 10: getfarstrings = F("Oct"); break;
-+                case 11: getfarstrings = F("Nov"); break;
-+                case 12: getfarstrings = F("Dec"); break;
-+                default: getfarstrings = F("ERR"); break;
++                case 1: getfarstrings = PSTR("Jan"); break;
++                case 2: getfarstrings = PSTR("Feb"); break;
++                case 3: getfarstrings = PSTR("Mar"); break;
++                case 4: getfarstrings = PSTR("Apr"); break;
++                case 5: getfarstrings = PSTR("May"); break;
++                case 6: getfarstrings = PSTR("Jun"); break;
++                case 7: getfarstrings = PSTR("Jul"); break;
++                case 8: getfarstrings = PSTR("Aug"); break;
++                case 9: getfarstrings = PSTR("Sep"); break;
++                case 10: getfarstrings = PSTR("Oct"); break;
++                case 11: getfarstrings = PSTR("Nov"); break;
++                case 12: getfarstrings = PSTR("Dec"); break;
++                default: getfarstrings = PSTR("ERR"); break;
 +              }
-+              getfarstrings.toCharArray(monthname, 4);
-+
-+            sprintf(outBuffer, outBufferFormat, downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
-+            client.println(outBuffer);
++              strcpy_P(monthname, getfarstrings);
++              strcpy_P(outBuf, PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\n"));
++              sprintf(buffer + strlen(buffer), outBuf, downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
 +            }
++            strcat_P(buffer, PSTR("Cache-Control: max-age=2592000, private\n\n")); //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \n
++            client.print(buffer);
 +
-+            client.println();
 +            //HEAD request received
 +            if (!(httpflags & 4)) {
-+              int logbuflen = 512;
-+              byte loglineBuf[logbuflen];
-+              int chars_read = dataFile.read(&loglineBuf , logbuflen);
-+              while (chars_read == logbuflen) {
-+                client.write(loglineBuf, logbuflen);
-+                chars_read = dataFile.read(&loglineBuf , logbuflen);
-+              }
-+              if (chars_read > 0) client.write(loglineBuf, chars_read);
++              transmitFile(dataFile);
 +            }
-+
-+            DebugOutput.println(((httpflags & 4)?(String)F("HEAD"):(String)F("GET")) + F(" request received"));
++            strcpy_P(buffer, ((httpflags & 4)?PSTR("HEAD"):PSTR("GET"))); strcat_P(buffer, PSTR(" request received\n"));
++            DebugOutput.print(buffer);
 +
 +            dataFile.close();
 +          }
@@ -227,10 +301,11 @@
 +              webPrintSite();
 +              break;
 +            }
-+            client.print(F("HTTP/1.1 404 Not Found\nContent-Type: text/html\n\n<h2>File not found!</h2><br>File name: "));
-+            client.println(urlString);
-+
-+          }
++            strcpy_P(buffer, PSTR("HTTP/1.1 404 Not Found\nContent-Type: text/html\n\n<h2>File not found!</h2><br>File name: "));
++            uint16_t x = strlen(buffer);
++            urlString.toCharArray(buffer + x, BUFLEN - x);
++            client.print(buffer);
++           }
 +          client.flush();
 +          break;
 +        }
@@ -266,7 +341,7 @@
          // setting verbosity level
          if(p[1]=='V'){
            p+=2;
-@@ -5171,7 +5335,7 @@
+@@ -5177,7 +5397,7 @@
          }
 
          if(p[1]=='Q') {
@@ -275,7 +350,7 @@
 
            client.print(F(MENU_TEXT_VER ": "));
            client.print(BSB_VERSION);
-@@ -5352,7 +5516,7 @@
+@@ -5358,7 +5578,7 @@
 
            client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
            bus.setBusType(bus.getBusType(), myAddr, destAddr);   // return to original destination address
@@ -284,7 +359,7 @@
            break;
          }
 
-@@ -5717,6 +5881,7 @@
+@@ -5723,6 +5943,7 @@
                client.println(F(MENU_TEXT_DTF));
              }
              webPrintFooter();
@@ -292,7 +367,26 @@
            } else if (p[2]=='G') {
              webPrintHeader();
              client.println(F("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>"));
-@@ -5754,12 +5919,13 @@
+@@ -5742,17 +5963,7 @@
+             if (dataFile) {
+
+               unsigned long startdump = millis();
+-              int logbuflen = 512;
+-              byte loglineBuf[logbuflen];
+-              int chars_read = 0;
+-
+-              chars_read = dataFile.read(&loglineBuf , logbuflen);
+-              while (chars_read == logbuflen) {
+-                client.write(loglineBuf,logbuflen);
+-                chars_read = dataFile.read(&loglineBuf , logbuflen);
+-              }
+-              //final packet
+-              if (chars_read > 0) client.write(loglineBuf, chars_read);
++              transmitFile(dataFile);
+               dataFile.close();
+
+               DebugOutput.print(F("Duration: "));
+@@ -5760,12 +5971,13 @@
              } else {
                client.println(F(MENU_TEXT_DTO));
              }
@@ -307,7 +401,7 @@
            client.println(F(MENU_TEXT_CFG "<BR><BR>"));
  //          client.println(F("BSB pins: "));
  //          client.println(bus);
-@@ -5924,7 +6090,7 @@
+@@ -5930,7 +6142,7 @@
            #endif
 
            client.println(F("<BR>"));
@@ -316,7 +410,7 @@
 
  #if defined(__AVR__)
            DebugOutput.println(F("EEPROM dump:"));
-@@ -7016,7 +7182,7 @@
+@@ -7022,7 +7234,7 @@
      }
    }
 
