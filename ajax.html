@@ -554,7 +554,7 @@
     gemById("cancelImage").src = cancelImage;
     gemById("okImage").src = okImage;
 
-    function LoadScript(src, onLoadCallBack) {
+    function LoadScript(src, onLoadCallBack, onErrorCallBack) {
       var script = document.createElement('script');
       script.src = src;
       script.async = false;
@@ -564,7 +564,7 @@
             type: "warn",
             time: 3
           });
-          onLoadCallBack();
+          if(onErrorCallBack) onErrorCallBack();
       };
       if (onLoadCallBack) script.onload = onLoadCallBack;
       document.head.appendChild(script);
@@ -598,24 +598,24 @@
         } else langcode = language.substring(0, 2);
       }
       if (langcode.localeCompare('de') != 0) {
-        LoadScript('lang_de.js', null); // Full interface
+        LoadScript('lang_de.js', null, null); // Full interface
         // If you like English more than German, you can uncomment line below
-        // LoadScript('lang_en.js', null); // Less than full interface
+        // LoadScript('lang_en.js', null, null); // Less than full interface
         LoadScript('lang_' + langcode + '.js', onLoadCallBack);
       } else
-        LoadScript('lang_de.js', onLoadCallBack); // Full interface
+        LoadScript('lang_de.js', onLoadCallBack, onLoadCallBack); // Full interface
       defaultLanguage = langcode;
     }
 
     function InterfaceInit() {
       // For synchronous loading of scripts (Arduino has a limit of simultaneous connections)
-      LoadScript('settings.js', SettingsInit);
+      LoadScript('settings.js', SettingsInit, SettingsInit);
     }
 
     function SettingsInit() {
       if(externaldevelop)
         baseURL = externalbaseURL;
-      LoadScript('languages.js', LanguageInit);
+      LoadScript('languages.js', LanguageInit, LanguageInit);
       document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="ajax.css" />`); //background loading
     }
 
@@ -1251,19 +1251,17 @@ path {
 
 </style>
 
-<!-- load the d3.js library-->
-<!--script src="http://d3js.org/d3.v3.min.js"></script-->
-
 <script>
-
 function drawGraph(elementtype, datasource){
   if(!d3libraryloaded)
     {
-// You can load the d3.js library from CDN
-//    LoadScript("http://d3js.org/d3.v3.min.js", function() {drawGraphInt(elementtype);});
-// or load it from Arduino web server
-    LoadScript("d3.v3.min.js", function() {drawGraphInt(elementtype, datasource);});
     d3libraryloaded = true;
+// You can load the d3.js library from CDN
+//    LoadScript("http://d3js.org/d3.v3.min.js", function() {drawGraphInt(elementtype, datasource);}, function(){d3libraryloaded = false;}});
+// or load it from Arduino web server
+//    LoadScript("d3.v3.min.js", function() {drawGraphInt(elementtype, datasource);}, function(){d3libraryloaded = false;}});
+// Try to load from Arduino web server. If failed try to load d3.js library from CDN
+    LoadScript("d3.v3.min.js", function() {drawGraphInt(elementtype, datasource);}, function() {LoadScript("http://d3js.org/d3.v3.min.js", function() {drawGraphInt(elementtype, datasource);}, function(){d3libraryloaded = false;});});
     }
   else
     drawGraphInt(elementtype, datasource);
