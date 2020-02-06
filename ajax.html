@@ -174,6 +174,7 @@
     var cancelImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjZjQ0MzM2IiBkPSJNNDQsMjRjMCwxMS4wNDUtOC45NTUsMjAtMjAsMjBTNCwzNS4wNDUsNCwyNFMxMi45NTUsNCwyNCw0UzQ0LDEyLjk1NSw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjkuNjU2LDE1LjUxNmwyLjgyOCwyLjgyOGwtMTQuMTQsMTQuMTRsLTIuODI4LTIuODI4TDI5LjY1NiwxNS41MTZ6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMyLjQ4NCwyOS42NTZsLTIuODI4LDIuODI4bC0xNC4xNC0xNC4xNGwyLjgyOC0yLjgyOEwzMi40ODQsMjkuNjU2eiI+PC9wYXRoPjwvc3ZnPg==";
     var okImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjNGNhZjUwIiBkPSJNNDQsMjRjMCwxMS4wNDUtOC45NTUsMjAtMjAsMjBTNCwzNS4wNDUsNCwyNFMxMi45NTUsNCwyNCw0UzQ0LDEyLjk1NSw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjY2NmZjkwIiBkPSJNMzQuNjAyLDE0LjYwMkwyMSwyOC4xOTlsLTUuNjAyLTUuNTk4bC0yLjc5NywyLjc5N0wyMSwzMy44MDFsMTYuMzk4LTE2LjQwMkwzNC42MDIsMTQuNjAyeiI+PC9wYXRoPjwvc3ZnPg==";
     var updateImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjZmY2ZjAyIiBkPSJNMzEgNy4wMDJsMTMgMS42ODZMMzMuMjk2IDE5IDMxIDcuMDAyek0xNyA0MUw0IDM5LjMxNCAxNC43MDQgMjkgMTcgNDF6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2ZmNmYwMCIgZD0iTTggMjRjMC04LjgzNyA3LjE2My0xNiAxNi0xNiAxLjAyNCAwIDIuMDIxLjEwNiAyLjk5Mi4yOWwuNjkzLTMuODY1QzI2LjUyNSA0LjExMiAyNS4yNjIgNC4wMDUgMjQgNC4wMDVjLTExLjA1MyAwLTIwIDguOTQ3LTIwIDIwIDAgNC44NDQgMS42ODYgOS40NzQgNC44NDQgMTMuMDUxbDMuMDM3LTIuNjI5QzkuNDY4IDMxLjYyNSA4IDI3Ljk4NyA4IDI0ek0zOS40NzMgMTEuMjY3bC0zLjE0MyAyLjUzN0MzOC42MjIgMTYuNTcyIDQwIDIwLjEyNSA0MCAyNGMwIDguODM3LTcuMTYzIDE2LTE2IDE2LTEuMDI5IDAtMi4wMzMtLjEwNi0zLjAwOC0uMjkybC0uNjc2IDMuNzcxYzEuMjYyLjIxIDIuNTI1LjMxNyAzLjY4NC4zMTcgMTEuMDUzIDAgMjAtOC45NDcgMjAtMjBDNDQgMTkuMzc1IDQyLjQyMSAxNC44NDggMzkuNDczIDExLjI2N3oiPjwvcGF0aD48L3N2Zz4=";
+    var restartImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjN2NiMzQyIiBkPSJNMjQgM0EyMSAyMSAwIDEgMCAyNCA0NUEyMSAyMSAwIDEgMCAyNCAzWiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNkY2VkYzgiIGQ9Ik0yNCwzNi4xYy02LjYsMC0xMi01LjQtMTItMTJjMC0zLjYsMS42LTcsNC40LTkuM2wyLjUsMy4xYy0xLjgsMS41LTIuOSwzLjgtMi45LDYuMmMwLDQuNCwzLjYsOCw4LDggczgtMy42LDgtOGMwLTIuMS0wLjgtNC0yLjItNS41bDIuOS0yLjdDMzQuOCwxOCwzNiwyMSwzNiwyNC4xQzM2LDMwLjcsMzAuNiwzNi4xLDI0LDM2LjF6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2RjZWRjOCIgZD0iTTEyIDEzTDIxIDEzIDIxIDIyeiI+PC9wYXRoPjwvc3ZnPg==";
     //              var homeImage = new Image().src = ;
   </script>
 
@@ -473,10 +474,82 @@
     <div class="divTable" style="display: table; width: 100%;">
       <div class="divTableBody1" style="display: table-row-group;">
         <div class="divTableRow" style="display: table-row;">
+          <div class="divTableCell" id="AboutMenuTableCell" style="display: none; text-align:center;">
+          About<br>
+          Developed: Sergey Dukachev (mailto:github@dukess.ru)<br>
+          Popup alerts: https://web3r.ru/js-css-alerts<br>
+          Icons: https://icons8.com/icons/color<br>
+          Loader: https://www.w3schools.com/howto/howto_css_loader.asp<br>
+          With gratitude to my family.<br>
+          In memoriam Konstantin Korneev.<br>
+          </div>
           <div class="divTableCell" id="HomePage" style="display: table-cell; text-align:center;">
             Init...
           </div>
-          <div class="divTableCell" id="LeftMenuTableCell" style="display: none;"></div>
+          <div class="divTableCell" id="LeftMenuTableCell" style="display: none;">
+    <div class="divTable" style="display: grid; width: 100%;">
+      <div class="divTableBody1" style="display: table-row-group; margin: auto">
+        <div class="divTableRow" style="display: table-row;">
+          <div class="divTableCell" style="display: table-cell;">
+
+
+<div class="divTableCatMenuBody" style="">
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+      <input value='Back' type='image' id="clockImage" onclick='syncDateTime()'>
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+      <input value='Update' type='image' id="restartImage" onclick='resetController();'>
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+    </div>
+  </div>
+  <div class="divTableCatMenuRow">
+    <div class="divTableCatMenuCell">
+
+    </div>
+  </div>
+</div>
+</div>
+          <div class="divTableCell" style="display: table-cell; width: 10vw">
+</div>
+          <div class="divTableCell" style="display: table-cell;">
+
+          <div class="divTableCell" id="RootTable" style="display: table-cell; margin: auto">
+</div>
+</div>
+</div>
+</div>
+</div>
+          </div>
           <div class="divTableCell" id="RightMenuTableCell" style="display: none; text-align:center;">
 <div class="divTableCatMenuBody" style="">
   <div class="divTableCatMenuRow">
@@ -553,6 +626,8 @@
     gemById("updateImage").src = updateImage;
     gemById("cancelImage").src = cancelImage;
     gemById("okImage").src = okImage;
+    gemById("clockImage").src = clockImage;
+    gemById("restartImage").src = restartImage;
 
     function LoadScript(src, onLoadCallBack, onErrorCallBack) {
       var script = document.createElement('script');
@@ -732,7 +807,8 @@
         outtext += `<div class="divTableRow"><div class="divTableCell"><a href="#" onclick="LoadCategoryEnum(${i});">` + i + ". " + translateString(RootCategoryEnum[i].name) + "</a></div><div class='divTableCell'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div></div>";
       }
       outtext += "</div>";
-      gemById("LeftMenuTableCell").innerHTML = outtext;
+//      gemById("LeftMenuTableCell").innerHTML = outtext;
+      gemById("RootTable").innerHTML = outtext;
     }
 
     function configpageshow(htmltext, command) {
@@ -748,7 +824,8 @@
     }
 
     function catlistshow(jsontext, command) {
-      if (gemById("LeftMenuTableCell") == null) LoadRootCategoryEnum();
+//      if (gemById("LeftMenuTableCell") == null) LoadRootCategoryEnum();
+      if (gemById("RootTable") == null) LoadRootCategoryEnum();
       var res = command.split("=");
       var outtext;
       if (res[0] == "JK" && res[1] >= 0) {
@@ -919,7 +996,7 @@
         var outtext = "";
         for(var k = 0; k < functionsListOnFrontPage.length; k++) {
           if(typeof jsontext[functionsListOnFrontPage[k]] === "object")
-            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsListOnFrontPage[k]}.&nbsp;</div><div class="divTableCell" align="justify"><output name="monitor${k}name">${translateString(jsontext[functionsListOnFrontPage[k]].name)}</output>:&nbsp;<output name="monitor${k}value">${jsontext[functionsListOnFrontPage[k]].value}</output>&nbsp;<output name="monitor${k}unit">${translateString(jsontext[functionsListOnFrontPage[k]].unit)}</output></div></div>`;
+            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsListOnFrontPage[k]}.&nbsp;</div><div class="divTableCell" align="left"><output name="monitor${k}name">${translateString(jsontext[functionsListOnFrontPage[k]].name)}</output>:&nbsp;<output name="monitor${k}value">${jsontext[functionsListOnFrontPage[k]].value}</output>&nbsp;<output name="monitor${k}unit">${translateString(jsontext[functionsListOnFrontPage[k]].unit)}</output></div></div>`;
         }
     sel.innerHTML = outtext;
     }
@@ -1021,6 +1098,26 @@
     }
 
     function nullshow() {
+    }
+
+    function syncDateTime() {
+      var datetimeNow = new Date();
+      var formatted_date = ((datetimeNow.getDate()>9)?"":"0") + datetimeNow.getDate() + "." + ((datetimeNow.getMonth()>8)?"":"0") + (datetimeNow.getMonth() + 1) + "." + datetimeNow.getFullYear() + "_" + ((datetimeNow.getHours()>9)?"":"0") + datetimeNow.getHours() + ":" + ((datetimeNow.getMinutes()>9)?"":"0") + datetimeNow.getMinutes() + ":" + ((datetimeNow.getSeconds()>9)?"":"0") + datetimeNow.getSeconds();
+      loadAjax(baseURL, 'S0=' + formatted_date, function(){
+            note({
+            content: "Time set to:" + formatted_date,
+            type: "info",
+            time: 3
+          });}, false);
+    }
+
+    function resetController() {
+      loadAjax(baseURL, 'N', function(){
+            note({
+            content: "Reset",
+            type: "info",
+            time: 3
+          });}, false);
     }
 
     function loadValues(functionsenum) {
@@ -1212,7 +1309,7 @@
       gemById("HomePage").innerHTML = outtext;
       if(functionsListOnFrontPage.length > 0) {
         loadMonitorValues(functionsListOnFrontPage);
-        if(monitorUpdateInterval < 15000) monitorUpdateInterval = 15000; // no reason for interval less than 15 sec.
+        if(monitorUpdateInterval < functionsListOnFrontPage.length * 300 * 2) monitorUpdateInterval = functionsListOnFrontPage.length * 300 * 2; // no reason for interval less than [double time of request to bus multiplied by length of array] sec.
         if(monitorTimerID == 0) monitorTimerID = setInterval(loadMonitorValues, monitorUpdateInterval, functionsListOnFrontPage);
       }
     }
@@ -1363,7 +1460,6 @@ var svg = d3.select(elementtype)
                                 d.active = active;
                         })
 //                      .text(d.key);
-//                      .text(()=>{if (typeof UIStrings[d.key] === 'undefined') return d.key; else return UIStrings[d.key];});
                         .text(translateString(d.key));
         });
 
