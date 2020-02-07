@@ -563,7 +563,7 @@
     <div class="divTableCatMenuCell">
     </div>
     <div class="divTableCatMenuCell">
-      <input value='Update' type='image' id="updateImage" onclick='reloadParams();'>
+      <input value='Update' type='image' id="updateImage" onclick='ReloadParams();'>
     </div>
     <div class="divTableCatMenuCell">
     </div>
@@ -602,7 +602,7 @@
     var textRegexp = /\b\w*_TEXT\w*\b/g; //regexp for text resources exctraction
     var JSONOptionsPerRequest = 10; //1 - 200. Less: more responsive (interactive), but slower. More: faster, but less responsive
     var warnAboutExitWithoutSave = 3; //Warnings before exit from category and discard changes
-    var onCacheCategoriesInRAM = true; //Freeing RAM after exit from category
+    var CacheCategoriesInRAM = true; //false - Freeing RAM after exit from category
     var DatalogURL = "datalog.txt";
     var functionsListOnFrontPage = []; // Array of integers: list of functions for displaying on home page
     var monitorUpdateInterval = 60000; // update displaying values on home page every ... ms.
@@ -841,8 +841,26 @@
             outtext += `<div class="divTableFuncListBody">`;
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
               if (FunctionsEnum[k] == null) continue;
+        //redefine datatype for dirty hack (arduino return strings/hexadecimal numbers)
+        switch(k){
+          case 5956:
+          case 6220:
+          case 6221:
+          case 6224:
+          case 6225:
+          case 6226:
+          case 6227:
+          case 6228:
+          case 6229:
+          case 6236:
+          case 6237:
+          case 7150:
+            FunctionsEnum[k].dataType = 99; break;
+          default: break;
+        }
               var dataType = FunctionsEnum[k].dataType;
               outtext += `<div class="divTableFuncListRow"><div class="divTableFuncListLeftCell" id="func${k}text"></div><div class="divTableFuncListLeftCell">${dataType}</div><div class="divTableFuncListLeftCell" id="func${k}value">`;
+
               var multiple = "multiple";
               switch (dataType) {
                 case 0: // number
@@ -869,19 +887,23 @@
                   outtext += `<input type="time" id="control${k}" onChange="StackChanges(${k});">`;
                   break;
                 case 5: //date and time
-                  outtext += `<input type="date" id="control${k}-d" onChange="StackChanges(${k});"><input type="time" id="control${k}-t" onChange="StackChanges(${k});">`;
+//                  outtext += `<input type="date" id="control${k}-d" onChange="StackChanges(${k});"><input type="time" id="control${k}-t" onChange="StackChanges(${k});">`;
+                  if(k >= 500 && k <=620){
+                    outtext += `1. <input type="time" id="control${k}-0" onChange="StackChanges(${k});"> - <input type="time" id="control${k}-1" onChange="StackChanges(${k});">&nbsp;2. <input type="time" id="control${k}-2" onChange="StackChanges(${k});"> - <input type="time" id="control${k}-3" onChange="StackChanges(${k});">&nbsp;3. <input type="time" id="control${k}-4" onChange="StackChanges(${k});"> - <input type="time" id="control${k}-5" onChange="StackChanges(${k});">`;
+                  } else
+                    outtext += `<output id="control${k}"></output>`;
                   break;
                 case 6: //day and month
-                  outtext += `<select id="control${k}-m" onChange="StackChanges(${k});">`;
+                  outtext += `<select id="control${k}-d" onChange="StackChanges(${k});">`;
                   outtext += `<option value="0">--</option>`;
                   for (var j = 1; j <= 31; j++ ) {
-                    outtext += `<option value="${j}">${j}</option>`;
+                    outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
                   }
                   outtext += `</select>`;
                   outtext += `<select id="control${k}-m" onChange="StackChanges(${k});">`;
                   outtext += `<option value="0">--</option>`;
                   for (var j = 1; j <= 12; j++ ) {
-                    outtext += `<option value="${j}">${j}</option>`;
+                    outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
                   }
                   outtext += `</select>`;
                   break;
@@ -900,6 +922,9 @@
                   }
                   outtext += `</select>`;
                   outtext += `<input type="time" id="control${k}-t" onChange="StackChanges(${k});">`;
+                  break;
+                case 99: // string with unit name. Hack.
+                  outtext += `<input id="control${k}" onChange="StackChanges(${k});" value="">&nbsp;<output id="func${k}unit"></output>`;
                   break;
                 default:
                   break;
@@ -928,7 +953,10 @@
 //slower, but recognize additional symbols in `desc` field
               for (var j in FunctionsEnum[k].possibleValues) {
                 var matchresult = FunctionsEnum[k].possibleValues[j].desc.match(textRegexp);
-                gemById("control" + k).options[j].text = FunctionsEnum[k].possibleValues[j].desc.replace(matchresult[0], translateString(matchresult[0]));
+                if(matchresult != null)
+                  gemById("control" + k).options[j].text = FunctionsEnum[k].possibleValues[j].desc.replace(matchresult[0], translateString(matchresult[0]));
+                else
+                  gemById("control" + k).options[j].text = FunctionsEnum[k].possibleValues[j].desc;
               }
 // faster, but can't recognize strings with '?' symbols
 //              for (var j in FunctionsEnum[k].possibleValues) {
@@ -937,6 +965,8 @@
 
               break;
             case 4:
+              break;
+            case 5:
               break;
             default:
               break;
@@ -962,8 +992,9 @@
     function insertvaluesincatlistshow(jsontext, command) {
       for (var k in jsontext) {
         var sel = gemById("control" + k);
-        switch (jsontext[k].dataType) {
+        switch (FunctionsEnum[k].dataType) {
           case 0:
+            if(jsontext[k].value == "---") sel.type = "text";
             sel.value = jsontext[k].value;
 //Put unit name to cache and display
             FunctionsEnum[k].unit = jsontext[k].unit;
@@ -984,6 +1015,44 @@
             }
             break;
           case 4:
+            sel.value = jsontext[k].value;
+            break;
+          case 5:
+            if(k >= 500 && k <= 620){
+              var matchresult = jsontext[k].value.match(/(\w+|--):(\w+|--)/g);
+              if (matchresult != null) {
+                for (var n in matchresult) {
+// HTML do not allow "24:00" for time input
+                if(matchresult[n] == "24:00"){
+                  gemById("control" + k + "-" + n).value = "23:59";
+                }else if(matchresult[n] == "--:--"){
+                }else
+                  gemById("control" + k + "-" + n).value = matchresult[n];
+                }
+              }
+            } else
+              sel.innerHTML = jsontext[k].value;
+            break;
+          case 6:
+              var matchresult = jsontext[k].value.match(/(\d+|---)/g);
+              if (matchresult != null) {
+                if(matchresult[0] == "---" || matchresult.length < 2){
+                  gemById("control" + k + "-d").options[0].selected = true;
+                  gemById("control" + k + "-m").options[0].selected = true;
+                } else {
+                  gemById("control" + k + "-d").options[parseInt(matchresult[0], 10)].selected = true;
+                  gemById("control" + k + "-m").options[parseInt(matchresult[1], 10)].selected = true;
+                }
+              }
+            break;
+          case 7:
+            sel.value = jsontext[k].value;
+            break;
+          case 99:
+            sel.value = jsontext[k].value;
+//Put unit name to cache and display
+            FunctionsEnum[k].unit = jsontext[k].unit;
+            gemById("func" + k + "unit").innerHTML = translateString(jsontext[k].unit);
             break;
           default:
             break;
@@ -995,8 +1064,14 @@
         var sel = gemById("monitorTable");
         var outtext = "";
         for(var k = 0; k < functionsListOnFrontPage.length; k++) {
-          if(typeof jsontext[functionsListOnFrontPage[k]] === "object")
-            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsListOnFrontPage[k]}.&nbsp;</div><div class="divTableCell" align="left"><output name="monitor${k}name">${translateString(jsontext[functionsListOnFrontPage[k]].name)}</output>:&nbsp;<output name="monitor${k}value">${jsontext[functionsListOnFrontPage[k]].value}</output>&nbsp;<output name="monitor${k}unit">${translateString(jsontext[functionsListOnFrontPage[k]].unit)}</output></div></div>`;
+          if(typeof jsontext[functionsListOnFrontPage[k]] === "object") {
+            var temp;
+            switch(jsontext[functionsListOnFrontPage[k]].dataType){
+              case 1: temp = translateString(jsontext[functionsListOnFrontPage[k]].desc); break;
+              default: temp = jsontext[functionsListOnFrontPage[k]].value; break;
+              }
+            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsListOnFrontPage[k]}.&nbsp;</div><div class="divTableCell" align="left"><output name="monitor${k}name">${translateString(jsontext[functionsListOnFrontPage[k]].name)}</output>:&nbsp;<output name="monitor${k}value">${temp}</output>&nbsp;<output name="monitor${k}unit">${translateString(jsontext[functionsListOnFrontPage[k]].unit)}</output></div></div>`;
+            }
         }
     sel.innerHTML = outtext;
     }
@@ -1091,6 +1166,83 @@
           }
           break;
         case 2:
+          break;
+        case 4:
+          note({
+            content: "Изменён параметр " + funkid + " на значение " + elem.value,
+            type: "info",
+            time: 3
+          });
+          loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
+          break;
+        case 5:
+            if(funkid >= 500 && funkid <= 620){
+                var val = [];
+                for (var n = 0; n < 6; n++) {
+                  val[n] = gemById("control" + funkid + "-" + n).value;
+// HTML do not allow "24:00" for time input
+                  if(val[n] == "23:59"){
+                    val[n] = "24:00";
+                }
+                var temp = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
+              }
+              note({
+                content: "Изменён параметр " + funkid + " на значение " + temp,
+                type: "info",
+                time: 3
+              });
+            loadAjax(baseURL, 'S' + funkid + '=' + temp, nullshow, false);
+            }
+            //else
+            //  sel.innerHTML = jsontext[k].value;
+          break;
+        case 6:
+          var elemd = gemById(controlid + "-d");
+          var elemm = gemById(controlid + "-m");
+          var temp;
+          for (var i = 0; i < elemd.options.length; i++) {
+            if (elemd.options[i].selected == true) {
+              if(elemd.options[i].value == 0)
+                temp = "---";
+              else {
+                temp = (elemd.options[i].value<10?"0":"")+elemd.options[i].value + ".";
+                for (var j = 0; j < elemm.options.length; j++) {
+                  if (elemm.options[j].selected == true) {
+                    if(elemm.options[j].value == 0)
+                      temp = "---";
+                    else {
+                      temp += (elemm.options[j].value<10?"0":"")+elemm.options[j].value;
+              note({
+                content: "Изменён параметр " + funkid + " на значение " + temp,
+                type: "info",
+                time: 3
+              });
+          loadAjax(baseURL, 'S' + funkid + '=' + temp, nullshow, false);
+                    }
+                  break;
+                  }
+                }
+                break;
+              }
+            break;
+            }
+          }
+          break;
+        case 7:
+          note({
+            content: "Изменён параметр " + funkid + " на значение " + elem.value,
+            type: "info",
+            time: 3
+          });
+          loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
+          break;
+        case 99:
+          note({
+            content: "Изменён параметр " + funkid + " на значение " + elem.value,
+            type: "info",
+            time: 3
+          });
+          loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
           break;
         default:
           break;
@@ -1247,7 +1399,7 @@
       if (CurrentCategory != null) {
         gemById("RightMenuTableCell" + CurrentCategory).style.display = "none";
         //Freeing RAM
-        if (onCacheCategoriesInRAM && id != 3){
+        if (!CacheCategoriesInRAM && id != 3){
           for (var k = RootCategoryEnum[CurrentCategory].min; k <= RootCategoryEnum[CurrentCategory].max; k++) {
             FunctionsEnum[k] = null;
             }
@@ -1309,7 +1461,7 @@
       gemById("HomePage").innerHTML = outtext;
       if(functionsListOnFrontPage.length > 0) {
         loadMonitorValues(functionsListOnFrontPage);
-        if(monitorUpdateInterval < functionsListOnFrontPage.length * 300 * 2) monitorUpdateInterval = functionsListOnFrontPage.length * 300 * 2; // no reason for interval less than [double time of request to bus multiplied by length of array] sec.
+        if(monitorUpdateInterval < functionsListOnFrontPage.length * 300 * 2) monitorUpdateInterval = functionsListOnFrontPage.length * 300 * 2; // no reason for interval less than [double time of request to bus (~300 ms) multiplied by length of array] sec.
         if(monitorTimerID == 0) monitorTimerID = setInterval(loadMonitorValues, monitorUpdateInterval, functionsListOnFrontPage);
       }
     }
