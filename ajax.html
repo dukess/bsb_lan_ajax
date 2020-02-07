@@ -841,23 +841,6 @@
             outtext += `<div class="divTableFuncListBody">`;
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
               if (FunctionsEnum[k] == null) continue;
-        //redefine datatype for dirty hack (arduino return strings/hexadecimal numbers)
-        switch(k){
-          case 5956:
-          case 6220:
-          case 6221:
-          case 6224:
-          case 6225:
-          case 6226:
-          case 6227:
-          case 6228:
-          case 6229:
-          case 6236:
-          case 6237:
-          case 7150:
-            FunctionsEnum[k].dataType = 99; break;
-          default: break;
-        }
               var dataType = FunctionsEnum[k].dataType;
               outtext += `<div class="divTableFuncListRow"><div class="divTableFuncListLeftCell" id="func${k}text"></div><div class="divTableFuncListLeftCell">${dataType}</div><div class="divTableFuncListLeftCell" id="func${k}value">`;
 
@@ -994,7 +977,7 @@
         var sel = gemById("control" + k);
         switch (FunctionsEnum[k].dataType) {
           case 0:
-            if(jsontext[k].value == "---") sel.type = "text";
+            if(jsontext[k].value.length > 0 && isNaN(jsontext[k].value)) sel.type = "text";
             sel.value = jsontext[k].value;
 //Put unit name to cache and display
             FunctionsEnum[k].unit = jsontext[k].unit;
@@ -1047,12 +1030,6 @@
             break;
           case 7:
             sel.value = jsontext[k].value;
-            break;
-          case 99:
-            sel.value = jsontext[k].value;
-//Put unit name to cache and display
-            FunctionsEnum[k].unit = jsontext[k].unit;
-            gemById("func" + k + "unit").innerHTML = translateString(jsontext[k].unit);
             break;
           default:
             break;
