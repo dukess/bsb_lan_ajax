@@ -26,7 +26,7 @@
 1. add or uncomment this string #define WEBSERVER
 2. change LANG from DE to C
 - Build sketch and flash it into Arduino.
-- Copy ajax.html, languages.js, ajax.css, settings.js to SD card.
+- Copy ajax.html, languages.js, settings.js to SD card.
 - Copy lang_\*.js and lang_\*.js.gz files to SD card.
 - Insert SD card into Arduino and start it.
 - Open http://yourbsblandeviceaddress/ajax.html in your browser. Note: you can rename ajax.html to index.html and just type http://yourbsblandeviceaddress/ to start interface.
