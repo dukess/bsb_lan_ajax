@@ -1,15 +1,37 @@
---- BSB_lan.ino 2020-02-09 00:27:11.460917779 +0300
-+++ BSB_lan.ino.new     2020-02-09 00:35:55.452939502 +0300
-@@ -462,7 +462,7 @@
+--- BSB_lan.ino 2020-02-10 13:45:13.482003556 +0300
++++ BSB_lan.ino.new     2020-02-10 13:45:27.926004155 +0300
+@@ -455,16 +455,16 @@
+ /*
+ int16_t json_parameters[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+ double json_values[20] = { 0 };
+-uint8_t json_types[20] = { 0 };
++uint8_t json_types[20] = { 0 };
+ */
+
+ // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
  // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
- // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
+-// byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
++// byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
 -#ifdef LOGGER
 +#if defined LOGGER || defined WEBSERVER
  #if defined(__SAM3X8E__)
-   #include <SD.h>
+-  #include <SD.h>
++  #include <SD.h>
  #else
-@@ -4187,6 +4196,62 @@
+   #include "src/SdFat/SdFat.h" // if you run into troubles with SdFat.h, just remove these two lines and activate the line above.
+   SdFat SD;
+@@ -3705,7 +3705,8 @@
+               client.println(F("</option>"));
+               client.print(F("<option value='1'"));
+               if (val>0) {
+-                client.print(F(" selected"));
++                 strcpy_P(pvalstr, PSTR("1")); //define one value instead two (1 or 255)
++                 client.print(F(" selected"));
+               }
+               client.print(F(">"));
+               if (type == VT_ONOFF) {
+@@ -4196,6 +4197,62 @@
    return log_parameter;
  }
 
@@ -72,7 +94,7 @@
 
  /** *****************************************************************
   *  Function:
-@@ -4862,29 +4927,45 @@
+@@ -4871,38 +4928,55 @@
          }
          // Got an EOL character
          DebugOutput.println();
@@ -128,8 +150,9 @@
                charcount=0;
              } else if (c != '\r') {
                // you've gotten a character on the current line
-@@ -4892,8 +4973,9 @@
-             }
+               currentLineIsBlank = false;
+-            }
++            }
            }
          }
 +#ifdef USER_PASS_B64
@@ -139,7 +162,7 @@
            client.println(F("HTTP/1.1 401 Authorization Required"));
            client.println(F("WWW-Authenticate: Basic realm=\"Secure Area\""));
            client.println(F("Content-Type: text/html"));
-@@ -4906,12 +4988,15 @@
+@@ -4915,12 +4989,15 @@
          }
          // otherwise continue like normal
  #endif
@@ -156,15 +179,13 @@
          urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
          DebugOutput.println(urlString);
          urlString.toCharArray(cLineBuffer, MaxArrayElement);
-@@ -4927,14 +5012,22 @@
+@@ -4936,14 +5013,20 @@
  // IPWE END
 
          if (urlString == "/favicon.ico") {
 -          client.println(F("HTTP/1.1 200 OK"));
 -          client.println(F("Content-Type: image/x-icon"));
 -          client.println();
-+//          strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
-+//          client.print(buffer);
 +          bufferedprint(client, PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
 +#ifdef WEBSERVER
 +          File dataFile = SD.open(urlString + 1);
@@ -182,7 +203,7 @@
            break;
          }
 
-@@ -4956,21 +5049,157 @@
+@@ -4965,21 +5048,157 @@
          }
          *p='/';
  #endif
@@ -239,7 +260,7 @@
 +              default: getfarstrings = PSTR("text");
 +            }
 +            strcat_P(buffer, getfarstrings);
-+            strcpy_P(outBuf, PSTR("\nContent-Length: %d\n"));
++            strcpy_P(outBuf, PSTR("\nContent-Length: %lu\n"));
 +            sprintf(buffer + strlen(buffer), outBuf, dataFile.size());
 +            if((httpflags & 2)) strcat_P(buffer, PSTR("Content-Encoding: gzip\n"));
 +            dir_t d;
@@ -285,7 +306,7 @@
 +            strcat_P(buffer, PSTR("Cache-Control: max-age=3600, private\n\n")); //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \n
 +            client.print(buffer);
 +
-+            //HEAD request received
++            //!HEAD request received
 +            if (!(httpflags & 4)) {
 +              transmitFile(dataFile);
 +            }
@@ -341,7 +362,7 @@
          // setting verbosity level
          if(p[1]=='V'){
            p+=2;
-@@ -5207,7 +5436,7 @@
+@@ -5216,7 +5435,7 @@
          }
 
          if(p[1]=='Q') {
@@ -350,7 +371,7 @@
 
            client.print(F(MENU_TEXT_VER ": "));
            client.print(BSB_VERSION);
-@@ -5388,7 +5617,7 @@
+@@ -5397,7 +5616,7 @@
 
            client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
            bus.setBusType(bus.getBusType(), myAddr, destAddr);   // return to original destination address
@@ -359,7 +380,7 @@
            break;
          }
 
-@@ -5434,14 +5663,12 @@
+@@ -5443,14 +5662,12 @@
          }
 
          if (p[1]=='J') {
@@ -370,7 +391,7 @@
 -
 +          strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
 +          client.print(buffer);
-+          char superbuffer[512];
++          char jsonbuffer[512];
            int i=0;
            uint32_t cmd=0;
 -
@@ -378,19 +399,19 @@
            // Parse potential JSON payload
 
            char json_temp[11];
-@@ -5508,40 +5735,45 @@
+@@ -5517,40 +5734,45 @@
                }
 
                output = false;
-+              superbuffer[0] = 0;
++              jsonbuffer[0] = 0;
 +              int buffershiftedbycolon = 0;
                if (!been_here || (p[2]=='K' && isdigit(p[4]))) {
                  been_here = true;
                } else {
 -                client.println(F(","));
 +//                client.println(F(","));
-+                strcpy_P(superbuffer, PSTR(","));
-+                buffershiftedbycolon = strlen(superbuffer);
++                strcpy_P(jsonbuffer, PSTR(","));
++                buffershiftedbycolon = strlen(jsonbuffer);
                }
                if (p[2]=='K' && !isdigit(p[4])) {
                  uint16_t x=2;
@@ -420,9 +441,9 @@
 -                    }
 +                  char z;
 +                  strcpy_P(formatbuf, PSTR("\"%d\": { \"name\": \""));
-+                  sprintf(superbuffer + buffershiftedbycolon, formatbuf, cat);
++                  sprintf(jsonbuffer + buffershiftedbycolon, formatbuf, cat);
 +                  buffershiftedbycolon = 0;
-+                  char *outBufp = superbuffer + strlen(superbuffer);
++                  char *outBufp = jsonbuffer + strlen(jsonbuffer);
 +                  strcpy_PF(outBufp, pgm_get_far_address(ENUM_CAT)+x);
 +                  uint16_t y = strlen(outBufp);
 +                  x += y;
@@ -434,13 +455,13 @@
 +                  if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
 +                    cat++;
 +                    x += 3;
-+                    client.print(superbuffer);
++                    client.print(jsonbuffer);
 +                    continue;
 +                  } else {
 +                    y = strlen(outBufp);
 +                    outBufp[--y] = 0;//shift to last non-zero char ('\n') and clear it
 +                    outBufp[--y] = 0;//shift to last non-zero char (',') and clear it
-+                    client.print(superbuffer);
++                    client.print(jsonbuffer);
 +                    json_token = NULL;
 +                    break;
                    }
@@ -449,7 +470,7 @@
                  }
                  json_token = NULL;
                }
-@@ -5574,21 +5806,16 @@
+@@ -5583,21 +5805,16 @@
                  uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
                  uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
@@ -470,18 +491,27 @@
 -                client.println(F("\","));
 +                strcpy_P(formatbuf, PSTR(",\n  \"%d\": {\n    \"name\": \""));
 +                if (p[2] == 'Q') buffershiftedbycolon = 0;
-+                sprintf(superbuffer + buffershiftedbycolon, been_here2?formatbuf:(formatbuf + 2), json_parameter); //do not print ",\n" if it first field
++                sprintf(jsonbuffer + buffershiftedbycolon, been_here2?formatbuf:(formatbuf + 2), json_parameter); //do not print ",\n" if it first field
 +                buffershiftedbycolon = 0;
 +                if (!been_here2 || p[2] == 'Q') been_here2=true;
 +
-+                char *bufferp = superbuffer + strlen(superbuffer);
++                char *bufferp = jsonbuffer + strlen(jsonbuffer);
 +                strcpy_PF(bufferp, get_cmdtbl_desc(i));
 +                strcat_P(bufferp, PSTR("\",\n"));
-+                client.print(superbuffer);
++                client.print(jsonbuffer);
 
                  uint8_t div_unit_len=0;
                  uint8_t div_data_type=0;
-@@ -5652,88 +5879,106 @@
+@@ -5638,7 +5855,7 @@
+                   } else if (div_unit_len <= 1) {
+                     if (div_data_type != DT_DTTM) {
+                       unit_str = strstr(ret_val_str, " ");
+-                    }
++                    }
+                     if (unit_str != NULL) {
+                       // Terminate the value sring at the position of the found space.
+                       *unit_str = '\0';
+@@ -5661,93 +5878,105 @@
                      }
                    }
 
@@ -502,11 +532,11 @@
 +//                  sprintf(outBuf, formatbuf, ret_val_str, unit_str, ((div_data_type == DT_ENUM)?desc_str:""));
 +//                  client.print(outBuf);
 +                  strcpy_P(formatbuf, PSTR("    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \""));
-+                  sprintf(superbuffer, formatbuf, ret_val_str, unit_str);
++                  sprintf(jsonbuffer, formatbuf, ret_val_str, unit_str);
 +                  if(div_data_type == DT_ENUM)
-+                    strcat(superbuffer,desc_str);
-+                  strcat_P(superbuffer,PSTR("\",\n"));
-+                  client.print(superbuffer);
++                    strcat(jsonbuffer,desc_str);
++                  strcat_P(jsonbuffer,PSTR("\",\n"));
++                  client.print(jsonbuffer);
                  }
 
                  if (p[2] != 'Q') {
@@ -539,27 +569,21 @@
 +                  client.print(formatbuf);
 +
 +                  if (type == VT_ONOFF || type == VT_YESNO) {
-+                    superbuffer[0] = 0;
-+                    strcat_P(superbuffer, PSTR("      { \"enumValue\": \"0\", \"desc\": \""));
++                    jsonbuffer[0] = 0;
++                    strcat_P(jsonbuffer, PSTR("      { \"enumValue\": \"0\", \"desc\": \""));
 +                    if (type == VT_ONOFF) {
-+                      strcat_P(superbuffer, PSTR(MENU_TEXT_OFF));
++                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_OFF));
 +                    } else {
-+                      strcat_P(superbuffer, PSTR(MENU_TEXT_NO));
++                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_NO));
 +                    }
-+                    strcat_P(superbuffer, PSTR("\" },\n      { \"enumValue\": \""));
++                    strcat_P(jsonbuffer, PSTR("\" },\n      { \"enumValue\": \"1\", \"desc\": \""));
 +                    if (type == VT_ONOFF) {
-+                      strcat_P(superbuffer, PSTR("255"));
++                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_ON));
 +                    } else {
-+                      strcat_P(superbuffer, PSTR("1"));
++                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_YES));
 +                    }
-+                    strcat_P(superbuffer, PSTR("\", \"desc\": \""));
-+                    if (type == VT_ONOFF) {
-+                      strcat_P(superbuffer, PSTR(MENU_TEXT_ON));
-+                    } else {
-+                      strcat_P(superbuffer, PSTR(MENU_TEXT_YES));
-+                    }
-+                    strcat_P(superbuffer, PSTR("\" }"));
-+                    client.print(superbuffer);
++                    strcat_P(jsonbuffer, PSTR("\" }"));
++                    client.print(jsonbuffer);
 +                  } else {
 +                    if (enumstr_len > 0) {
 +                      uint16_t x = 0;
@@ -573,14 +597,14 @@
 +                          val=uint16_t(pgm_read_byte_far(enumstr+x));
 +                        }
 +                        strcpy_P(formatbuf, PSTR(",\n      { \"enumValue\": \"%d\", \"desc\": \""));
-+                        sprintf(superbuffer, been_here?formatbuf:(formatbuf + 2), val); //do not print ",\n" if it first enumValue
++                        sprintf(jsonbuffer, been_here?formatbuf:(formatbuf + 2), val); //do not print ",\n" if it first enumValue
 +                        if (!been_here) been_here = true;
-+                        client.print(superbuffer);
++                        client.print(jsonbuffer);
 +                        //skip leading space
 +                        x = x + 2;
 +//                        strcpy_PF(buffer, pgm_get_far_address(enumstr)+x);
 +                        char z = pgm_read_byte_far(enumstr+x);
-+                        char *outB = superbuffer;
++                        char *outB = jsonbuffer;
 +                        while (z != '\0') {
 +                            outB[0] = z;
 +                            outB++;
@@ -589,8 +613,8 @@
 +                        }
 +                        outB[0] = 0;
 +//                        x += strlen(buffer);
-+                        strcat_P(superbuffer, PSTR("\" }"));
-+                        client.print(superbuffer);
++                        strcat_P(jsonbuffer, PSTR("\" }"));
++                        client.print(jsonbuffer);
                          x++;
 -                        z = pgm_read_byte_far(enumstr+x);
                        }
@@ -611,8 +635,8 @@
 -
 -                client.print(F("  }"));
 +                strcpy_P(formatbuf, PSTR("    \"dataType\": %d\n  }"));
-+                sprintf(superbuffer, formatbuf, div_data_type);
-+                client.print(superbuffer);
++                sprintf(jsonbuffer, formatbuf, div_data_type);
++                client.print(jsonbuffer);
                }
 
                if (p[2]=='S') {
@@ -631,13 +655,13 @@
 -                client.println();
 -                client.print(F("  }"));
 +                strcpy_P(formatbuf, PSTR("  \"%s\": {\n    \"status\": %d\n  }"));
-+                sprintf(superbuffer + buffershiftedbycolon, formatbuf, json_parameter, status);
++                sprintf(jsonbuffer + buffershiftedbycolon, formatbuf, json_parameter, status);
 +                buffershiftedbycolon = 0;
-+                client.print(superbuffer);
++                client.print(jsonbuffer);
 +
 +                strcpy_P(formatbuf, PSTR("Setting parameter %s to %s with type %s\n"));
-+                sprintf(superbuffer, formatbuf, json_parameter, json_value_string, json_type);
-+                DebugOutput.print(superbuffer);
++                sprintf(jsonbuffer, formatbuf, json_parameter, json_value_string, json_type);
++                DebugOutput.print(jsonbuffer);
                }
                if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q')) {
                  json_token = strtok(NULL,",");
@@ -651,15 +675,13 @@
            client.flush();
            break;
          }
-@@ -5753,6 +5998,7 @@
-               client.println(F(MENU_TEXT_DTF));
-             }
-             webPrintFooter();
-+#if !defined WEBSERVER && !defined USEEXTERNALINTERFACE
-           } else if (p[2]=='G') {
+
+-#ifdef LOGGER
++#ifdef LOGGER
+         if(p[1]=='D'){ // access datalog file
+           if (p[2]=='0') {  // remove datalog file
              webPrintHeader();
-            client.println(F("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>"));
-@@ -5772,17 +6018,7 @@
+@@ -5781,17 +6010,7 @@
              if (dataFile) {
 
                unsigned long startdump = millis();
@@ -678,13 +700,7 @@
                dataFile.close();
 
                DebugOutput.print(F("Duration: "));
-@@ -5790,12 +6026,13 @@
-             } else {
-               client.println(F(MENU_TEXT_DTO));
-             }
-+#endif
-           }
-           break;
+@@ -5804,7 +6023,7 @@
          }
  #endif
          if (p[1]=='C'){ // dump configuration
@@ -693,7 +709,7 @@
            client.println(F(MENU_TEXT_CFG "<BR><BR>"));
  //          client.println(F("BSB pins: "));
  //          client.println(bus);
-@@ -5960,7 +6197,7 @@
+@@ -5969,7 +6188,7 @@
            #endif
 
            client.println(F("<BR>"));
@@ -702,7 +718,7 @@
 
  #if defined(__AVR__)
            DebugOutput.println(F("EEPROM dump:"));
-@@ -7053,7 +7290,7 @@
+@@ -7062,7 +7281,7 @@
      }
    }
 
