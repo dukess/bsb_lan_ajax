@@ -30,7 +30,7 @@ All above was included in project, so you do not need do anything.
 2. change LANG from DE to C
 - Build sketch and flash it into Arduino.
 - Copy ajax.html, settings.js to root of SD card.
-- Copy languages.js to root of SD card.
+- Copy from BSB-lan project localization\www\languages.js to root of SD card.
 - Copy from BSB-lan project localization\www\lang_\*.js and localization\www\lang_\*.js.gz files to root of SD card.
 - Copy from BSB-lan project src/d3.v3.min.js to root of SD card.
 - Insert SD card into Arduino and start it.
