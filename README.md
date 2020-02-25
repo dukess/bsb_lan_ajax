@@ -48,3 +48,13 @@ All above was included in project, so you do not need do anything.
 - Asynchronous data loading/updating.
 - Switching between categories without page reloading.
 - D3 library can be placed on SD card for standalone installations (without connection to Internet).
+
+At this point time interface looks highly similar original bsb_lan.
+
+<img src="https://github.com/dukess/bsb_lan_ajax/blob/mainpage.png" size="50%">
+
+<img src="https://github.com/dukess/bsb_lan_ajax/blob/settings.png" size="50%">
+
+<img src="https://github.com/dukess/bsb_lan_ajax/blob/datalog.png" size="50%">
+
+<img src="https://github.com/dukess/bsb_lan_ajax/blob/functions.png" size="50%">
