@@ -23,8 +23,9 @@
 3. <s>lang_\*.js - JavaScript files with localizations.</s>
 4. <s>lang_\*.js.gz - gzipped JavaScript files with localizations (need gzip).</s>
 
-All above was included in project, so you do not need do anything.
+All above was included in bsb-lan project, so you do not need do anything.
 
+- Patch BSB_lan.ino with patch BSB_lan.ino-disablesomeinternalfunctions.patch and add this string #define USEEXTERNALINTERFACE if you want save some flash memory.
 - Edit BSB_lan_config.h:
 1. add or uncomment this string #define WEBSERVER
 2. change LANG from DE to C
@@ -40,7 +41,7 @@ All above was included in project, so you do not need do anything.
 ### Webserver:
 - Allowed to content caching (Send Cache-Control, Last-Modified, Content-Length, ETag headers, HEAD request support)
 - Allowed to send gzipped content (for throughput increasing more than 3 times)
-- <s>Save ~8 kB when define USEEXTERNALINTERFACE (disable /D and /DG command because /D is equal /datalog.txt and /DG included into ajax.html)</s>. Temporary not available.
+- Save ~8 kB when define USEEXTERNALINTERFACE (disable /D and /DG command because /D is equal /datalog.txt and /DG included into ajax.html). Need to patch. 
 ### Interface:
 - Pure JavaScript (excl. D3 library for charts drawing).
 - Language autodetection.
