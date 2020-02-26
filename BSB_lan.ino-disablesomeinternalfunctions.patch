@@ -1,0 +1,18 @@
+--- BSB_lan.ino.orig    2020-02-26 15:51:10.227851066 +0300
++++ BSB_lan.ino 2020-02-26 15:58:42.515869817 +0300
+@@ -6133,6 +6133,7 @@
+               client.println(F(MENU_TEXT_DTF));
+             }
+             webPrintFooter();
++#if !defined WEBSERVER && !defined USEEXTERNALINTERFACE
+           } else if (p[2]=='G') {
+             webPrintHeader();
+             client.println(F("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>"));
+@@ -6160,6 +6161,7 @@
+             } else {
+               client.println(F(MENU_TEXT_DTO));
+             }
++#endif
+           }
+           break;
+         }
