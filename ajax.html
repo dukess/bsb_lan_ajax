@@ -1689,6 +1689,13 @@ path {
 </style>
 
 <script>
+  function getLocalizedMonthName(m, t){
+  var objDate = new Date();
+  if (t) {rettype = { month: "long" };} else {rettype = { month: "short" };}
+  objDate.setMonth(m - 1);
+  return objDate.toLocaleString(defaultLanguage, rettype);
+}
+
 function drawGraph(elementtype, datasource){
   if(!d3libraryloaded)
     {
@@ -1709,6 +1716,46 @@ function drawGraphInt(elementtype, datasource){
 var margin = {top: 30, right: 20, bottom: 70, left: 50},
 width = 1000 - margin.left - margin.right,
 height = 600 - margin.top - margin.bottom;
+
+var localedefs = {
+    "decimal": ",",
+    "thousands": "\xa0",
+    "grouping": [3],
+    "currency": ["", ""],
+    "dateTime": "%d.%m.%Y %H:%M:%S",
+    "date": "%d.%m.%Y",
+    "time": "%H:%M:%S",
+    "periods": ["AM", "PM"],
+    "days": [UIStrings.ENUM_WEEKDAY_07_TEXT, UIStrings.ENUM_WEEKDAY_01_TEXT, UIStrings.ENUM_WEEKDAY_02_TEXT, UIStrings.ENUM_WEEKDAY_03_TEXT, UIStrings.ENUM_WEEKDAY_04_TEXT, UIStrings.ENUM_WEEKDAY_05_TEXT, UIStrings.ENUM_WEEKDAY_06_TEXT],
+    "shortDays": [UIStrings.STR506_TEXT, UIStrings.STR500_TEXT, UIStrings.STR501_TEXT, UIStrings.STR502_TEXT, UIStrings.STR503_TEXT, UIStrings.STR504_TEXT, UIStrings.STR505_TEXT],
+    "months": [
+        getLocalizedMonthName(1,1),
+        getLocalizedMonthName(2,1),
+        getLocalizedMonthName(3,1),
+        getLocalizedMonthName(4,1),
+        getLocalizedMonthName(5,1),
+        getLocalizedMonthName(6,1),
+        getLocalizedMonthName(7,1),
+        getLocalizedMonthName(8,1),
+        getLocalizedMonthName(9,1),
+        getLocalizedMonthName(10,1),
+        getLocalizedMonthName(11,1),
+        getLocalizedMonthName(12,1)],
+    "shortMonths": [
+        getLocalizedMonthName(1,0),
+        getLocalizedMonthName(2,0),
+        getLocalizedMonthName(3,0),
+        getLocalizedMonthName(4,0),
+        getLocalizedMonthName(5,0),
+        getLocalizedMonthName(6,0),
+        getLocalizedMonthName(7,0),
+        getLocalizedMonthName(8,0),
+        getLocalizedMonthName(9,0),
+        getLocalizedMonthName(10,0),
+        getLocalizedMonthName(11,0),
+        getLocalizedMonthName(12,0)],
+};
+d3.time.format = d3.locale(localedefs).timeFormat;
 
 // Parse the date / time
 var parseDate = d3.time.format("%d.%m.%Y %H:%M:%S").parse;
