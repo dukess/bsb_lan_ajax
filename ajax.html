@@ -818,6 +818,7 @@ h3 {
     var DatalogURL = "datalog.txt";
     var functionsListOnFrontPage = []; // Array of integers: list of functions for displaying on home page
     var monitorUpdateInterval = 60000; // update displaying values on home page every ... ms.
+    var quickManageFunctionsList = []; // Array of integers: list of functions for managing on home page
 
 // internal variables
     var monitorTimerID = 0;
@@ -829,8 +830,10 @@ h3 {
     var warnAboutExitWithoutSaveInt = warnAboutExitWithoutSave; //internal version of warnAboutExitWithoutSave
     var CurrentCategory = null;
     var AJAXRequests = new Array();
-    var FunctionsEnum = null; // JSON c перечнем функций.
+    var FunctionsEnum = null; // JSON c перечнем параметров.
     var RootCategoryEnum = null; // JSON c перечнем категорий.
+    var FunctionsListOnFrontPageEnum = null; // JSON c перечнем параметров для отображения на главной странице.
+    var FunctionsquickManageListOnFrontPageEnum = null; // JSON c перечнем параметров для управления с главной страницы.
     var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
     var d3libraryloaded = false;
 
@@ -1249,19 +1252,31 @@ h3 {
     }
 
     function insertvaluesinmonitorlistshow(jsontext, command) {
-        var sel = gemById("monitorTable");
-        var outtext = "";
         for(var k = 0; k < functionsListOnFrontPage.length; k++) {
-          if(typeof jsontext[functionsListOnFrontPage[k]] === "object") {
+          var outtext = "";
+          var m = functionsListOnFrontPage[k];
+          if(typeof FunctionsListOnFrontPageEnum[m] === "object") {
             var temp;
-            switch(jsontext[functionsListOnFrontPage[k]].dataType){
-              case 1: temp = translateString(jsontext[functionsListOnFrontPage[k]].desc); break;
-              default: temp = jsontext[functionsListOnFrontPage[k]].value; break;
+            switch(FunctionsListOnFrontPageEnum[m].dataType){
+              case 1: outtext = translateString(FunctionsListOnFrontPageEnum[m].possibleValues[jsontext[m].value].desc); break;
+              case 2:
+                var bitparam = parseInt(jsontext[m].value, 2);
+                bitparam = (bitparam << 8) + 255;
+                var notfirst = false;
+                for (var j in FunctionsListOnFrontPageEnum[m].possibleValues) {
+                  temp = parseInt(FunctionsListOnFrontPageEnum[m].possibleValues[j].enumValue);
+                  if((temp & bitparam) == temp){
+                    if(notfirst) {outtext +=", ";} else {notfirst = true;}
+                    outtext += translateString(FunctionsListOnFrontPageEnum[m].possibleValues[j].desc);
+                    }
+                }
+              break;
+              default: outtext = jsontext[m].value; break;
               }
-            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsListOnFrontPage[k]}.&nbsp;</div><div class="divTableCell" align="left"><output name="monitor${k}name">${translateString(jsontext[functionsListOnFrontPage[k]].name)}</output>:&nbsp;<output name="monitor${k}value">${temp}</output>&nbsp;<output name="monitor${k}unit">${translateString(jsontext[functionsListOnFrontPage[k]].unit)}</output></div></div>`;
+            gemById("monitor" + m + "value").innerHTML = `${outtext}&nbsp;${translateString(jsontext[m].unit)}`;
             }
         }
-    sel.innerHTML = outtext;
+//    sel.innerHTML = outtext;
     }
 
     function LoadValuesInCategory(catnum, type) {
@@ -1467,9 +1482,21 @@ h3 {
     function loadMonitorValues(functionsenum) {
       var temp = "";
       if(functionsenum.length > 0) {
-        for(var k = 0; k < functionsenum.length; k++) {
-          temp += functionsenum[k] + ",";
+      if(!FunctionsListOnFrontPageEnum)
+        {
+        loadAjax(baseURL, 'JC=' + functionsenum,  function(jsontext, command){
+            FunctionsListOnFrontPageEnum = jsontext;
+            loadMonitorValues(functionsenum);
+            }, true);
+        return;
         }
+        var sel = gemById("monitorTable");
+        var outtext = "";
+        for(var k = 0; k < functionsenum.length; k++) {
+            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsListOnFrontPageEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div></div>`;
+        }
+        sel.innerHTML = outtext;
+
         loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, true);
       }
     }
@@ -1689,7 +1716,7 @@ path {
 </style>
 
 <script>
-  function getLocalizedMonthName(m, t){
+function getLocalizedMonthName(m, t){
   var objDate = new Date();
   if (t) {rettype = { month: "long" };} else {rettype = { month: "short" };}
   objDate.setMonth(m - 1);
@@ -1717,7 +1744,8 @@ var margin = {top: 30, right: 20, bottom: 70, left: 50},
 width = 1000 - margin.left - margin.right,
 height = 600 - margin.top - margin.bottom;
 
-var localedefs = {
+
+var ru_RU = {
     "decimal": ",",
     "thousands": "\xa0",
     "grouping": [3],
@@ -1755,7 +1783,7 @@ var localedefs = {
         getLocalizedMonthName(11,0),
         getLocalizedMonthName(12,0)],
 };
-d3.time.format = d3.locale(localedefs).timeFormat;
+d3.time.format = d3.locale(ru_RU).timeFormat;
 
 // Parse the date / time
 var parseDate = d3.time.format("%d.%m.%Y %H:%M:%S").parse;
