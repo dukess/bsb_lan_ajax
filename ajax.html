@@ -1038,6 +1038,80 @@ h3 {
       gemById('HomePage').innerHTML = htmltext;
     }
 
+    function insertelement(jsonObject, func, prefix){
+              var dataType = jsonObject.dataType;
+              var multiple = "multiple";
+              var outtext = "";
+              switch (dataType) {
+                case 0: // number
+                  outtext += `<input id="${prefix}${func}control" type="number" step="0.1" onChange="StackChanges(${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+                  break;
+                case 1: // enum
+                  multiple = "";
+                case 2: // multiple choices enum (bitwise flags)
+                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func});" ${multiple}>`;
+                  for (var j in jsonObject.possibleValues) {
+                    outtext += `<option value="${jsonObject.possibleValues[j].enumValue}"></option>`;
+                  }
+                  outtext += `</select>`;
+                  break;
+                case 3:  // weekday
+                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func});">`;
+                  for (var j = 1; j <= 7; j++ ) {
+                    var temp = translateString("STR_" + (499 + j) + "_TEXT");
+                    outtext += `<option value="${j}">${temp}</option>`;
+                  }
+                  outtext += `</select>`;
+                  break;
+                case 4: //time
+                  outtext += `<input type="time" id="${prefix}${func}control" onChange="StackChanges(${func});">`;
+                  break;
+                case 5: //date and time
+                  if(func >= 500 && func <=620){
+                    outtext += `1. <input type="time" id="${prefix}${func}control-0" onChange="StackChanges(${func});"> - <input type="time" id="${prefix}${func}control-1" onChange="StackChanges(${func});">&nbsp;2. <input type="time" id="${prefix}${func}control-2" onChange="StackChanges(${func});"> - <input type="time" id="${prefix}${func}control-3" onChange="StackChanges(${func});">&nbsp;3. <input type="time" id="${prefix}${func}control-4" onChange="StackChanges(${func});"> - <input type="time" id="${prefix}${func}control-5" onChange="StackChanges(${func});">`;
+                  } else
+                    outtext += `<output id="${prefix}${func}control"></output>`;
+                  break;
+                case 6: //day and month
+                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func});">`;
+                  outtext += `<option value="0">--</option>`;
+                  for (var j = 1; j <= 31; j++ ) {
+                    outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
+                  }
+                  outtext += `</select>`;
+                  outtext += `<select id="${prefix}${func}control-m" onChange="StackChanges(${func});">`;
+                  outtext += `<option value="0">--</option>`;
+                  for (var j = 1; j <= 12; j++ ) {
+                    outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
+                  }
+                  outtext += `</select>`;
+                  break;
+                case 7: //string
+                  outtext += `<input type="text" id="${prefix}${func}control" onChange="StackChanges(${func});">`;
+                  break;
+                case 8: // weekday, time hh:mm
+                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func});">`;
+                  for (var j = 1; j <= 7; j++ ) {
+                    var temp;
+                    if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
+                      temp = UIStrings["STR_" + (499 + j) + "_TEXT"];
+                    else
+                      temp = "STR_" + (499 + j) + "_TEXT";
+                    outtext += `<option value="${j}">${temp}</option>`;
+                  }
+                  outtext += `</select>`;
+                  outtext += `<input type="time" id="${prefix}${func}control-t" onChange="StackChanges(${func});">`;
+                  break;
+                case 99: // string with unit name. Hack.
+                  outtext += `<input id="${prefix}${func}control" onChange="StackChanges(${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+                  break;
+                default:
+                  break;
+              }
+              return outtext;
+     }
+
+
     function catlistshow(jsontext, command) {
 //      if (gemById("LeftMenuTableCell") == null) LoadRootCategoryEnum();
       if (gemById("RootTable") == null) LoadRootCategoryEnum();
@@ -1056,77 +1130,12 @@ h3 {
             outtext += `<div class="divTableFuncListBody">`;
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
               if (FunctionsEnum[k] == null) continue;
-              var dataType = FunctionsEnum[k].dataType;
+//              var dataType = FunctionsEnum[k].dataType;
               outtext += `<div class="divTableFuncListRow"><div class="divTableFuncListLeftCell" id="func${k}text"></div><div class="divTableFuncListLeftCell">${dataType}</div><div class="divTableFuncListLeftCell" id="func${k}value">`;
 
-              var multiple = "multiple";
-              switch (dataType) {
-                case 0: // number
-                  outtext += `<input id="control${k}" type="number" step="0.1" onChange="StackChanges(${k});" value="">&nbsp;<output id="func${k}unit"></output>`;
-                  break;
-                case 1: // enum
-                  multiple = "";
-                case 2: // multiple choices enum (bitwise flags)
-                  outtext += `<select id="control${k}" onChange="StackChanges(${k});" ${multiple}>`;
-                  for (var j in FunctionsEnum[k].possibleValues) {
-                    outtext += `<option value="${FunctionsEnum[k].possibleValues[j].enumValue}"></option>`;
-                  }
-                  outtext += `</select>`;
-                  break;
-                case 3:  // weekday
-                  outtext += `<select id="control${k}" onChange="StackChanges(${k});">`;
-                  for (var j = 1; j <= 7; j++ ) {
-                    var temp = translateString("STR_" + (499 + j) + "_TEXT");
-                    outtext += `<option value="${j}">${temp}</option>`;
-                  }
-                  outtext += `</select>`;
-                  break;
-                case 4: //time
-                  outtext += `<input type="time" id="control${k}" onChange="StackChanges(${k});">`;
-                  break;
-                case 5: //date and time
-                  if(k >= 500 && k <=620){
-                    outtext += `1. <input type="time" id="control${k}-0" onChange="StackChanges(${k});"> - <input type="time" id="control${k}-1" onChange="StackChanges(${k});">&nbsp;2. <input type="time" id="control${k}-2" onChange="StackChanges(${k});"> - <input type="time" id="control${k}-3" onChange="StackChanges(${k});">&nbsp;3. <input type="time" id="control${k}-4" onChange="StackChanges(${k});"> - <input type="time" id="control${k}-5" onChange="StackChanges(${k});">`;
-                  } else
-                    outtext += `<output id="control${k}"></output>`;
-                  break;
-                case 6: //day and month
-                  outtext += `<select id="control${k}-d" onChange="StackChanges(${k});">`;
-                  outtext += `<option value="0">--</option>`;
-                  for (var j = 1; j <= 31; j++ ) {
-                    outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
-                  }
-                  outtext += `</select>`;
-                  outtext += `<select id="control${k}-m" onChange="StackChanges(${k});">`;
-                  outtext += `<option value="0">--</option>`;
-                  for (var j = 1; j <= 12; j++ ) {
-                    outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
-                  }
-                  outtext += `</select>`;
-                  break;
-                case 7: //string
-                  outtext += `<input type="text" id="control${k}" onChange="StackChanges(${k});">`;
-                  break;
-                case 8: // weekday, time hh:mm
-                  outtext += `<select id="control${k}-d" onChange="StackChanges(${k});">`;
-                  for (var j = 1; j <= 7; j++ ) {
-                    var temp;
-                    if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
-                      temp = UIStrings["STR_" + (499 + j) + "_TEXT"];
-                    else
-                      temp = "STR_" + (499 + j) + "_TEXT";
-                    outtext += `<option value="${j}">${temp}</option>`;
-                  }
-                  outtext += `</select>`;
-                  outtext += `<input type="time" id="control${k}-t" onChange="StackChanges(${k});">`;
-                  break;
-                case 99: // string with unit name. Hack.
-                  outtext += `<input id="control${k}" onChange="StackChanges(${k});" value="">&nbsp;<output id="func${k}unit"></output>`;
-                  break;
-                default:
-                  break;
-              }
-              outtext += `</div><!--div class="divTableFuncListLeftCell" id="func${k}unit"></div--></div>`;
+              outtext += insertelement(FunctionsEnum[k], k, "func");
+
+              outtext += `</div></div>`;
             }
             outtext += "</div>";
             gemById("RightMenuTableCell" + res[1]).innerHTML = outtext;
@@ -1151,13 +1160,13 @@ h3 {
               for (var j in FunctionsEnum[k].possibleValues) {
                 var matchresult = FunctionsEnum[k].possibleValues[j].desc.match(textRegexp);
                 if(matchresult != null)
-                  gemById("control" + k).options[j].text = FunctionsEnum[k].possibleValues[j].desc.replace(matchresult[0], translateString(matchresult[0]));
+                  gemById("func" + k + "control").options[j].text = FunctionsEnum[k].possibleValues[j].desc.replace(matchresult[0], translateString(matchresult[0]));
                 else
-                  gemById("control" + k).options[j].text = FunctionsEnum[k].possibleValues[j].desc;
+                  gemById("func" + k + "control").options[j].text = FunctionsEnum[k].possibleValues[j].desc;
               }
 // faster, but can't recognize strings with '?' symbols
 //              for (var j in FunctionsEnum[k].possibleValues) {
-//                gemById("control" + k).options[j].text = translateString(FunctionsEnum[k].possibleValues[j].desc);
+//                gemById("func" + k + "control").options[j].text = translateString(FunctionsEnum[k].possibleValues[j].desc);
 //              }
 
               break;
@@ -1188,67 +1197,74 @@ h3 {
 
     function insertvaluesincatlistshow(jsontext, command) {
       for (var k in jsontext) {
-        var sel = gemById("control" + k);
-        switch (FunctionsEnum[k].dataType) {
+        insertvalue(FunctionsEnum[k], jsontext[k], k, "func");
+      }
+    }
+
+    function insertvalue(jsonObject, currentValueObject, func,  prefix) {
+        var sel = gemById(prefix + func + "control");
+        switch (jsonObject.dataType) {
           case 0:
-            if(jsontext[k].value.length > 0 && isNaN(jsontext[k].value)) sel.type = "text";
-            sel.value = jsontext[k].value;
+            if(currentValueObject.value.length > 0 && isNaN(currentValueObject.value)) sel.type = "text";
+            sel.value = currentValueObject.value;
 //Put unit name to cache and display
-            FunctionsEnum[k].unit = jsontext[k].unit;
-            gemById("func" + k + "unit").innerHTML = translateString(jsontext[k].unit);
+            jsonObject.unit = currentValueObject.unit;
+            gemById(prefix + func + "unit").innerHTML = translateString(currentValueObject.unit);
             break;
           case 1:
             for (var i = 0; i < sel.options.length; i++) {
-              if (sel.options[i].value == jsontext[k].value) sel.options[i].selected = true;
+              if (sel.options[i].value == currentValueObject.value) sel.options[i].selected = true;
               else sel.options[i].selected = false;
             }
             break;
           case 2:
-            var bitparam = parseInt(jsontext[k].value, 2);
+            var bitparam = parseInt(currentValueObject.value, 2);
             bitparam = (bitparam << 8) + 255;
             for (var i = 0; i < sel.options.length; i++) {
-              if ((parseInt(sel.options[i].value) & bitparam) == parseInt(sel.options[i].value)) sel.options[i].selected = true;
-              else sel.options[i].selected = false;
+              sel.options[i].selected = false;
+              if(parseInt(sel.options[i].value) > 255)
+                {if ((parseInt(sel.options[i].value) & bitparam) == parseInt(sel.options[i].value)) sel.options[i].selected = true;}
+              else
+                {if (((parseInt(sel.options[i].value) + (parseInt(sel.options[i].value) << 8)) & bitparam) != (parseInt(sel.options[i].value) + (parseInt(sel.options[i].value) << 8))) sel.options[i].selected = true;}
             }
             break;
           case 4:
-            sel.value = jsontext[k].value;
+            sel.value = currentValueObject.value;
             break;
           case 5:
-            if(k >= 500 && k <= 620){
-              var matchresult = jsontext[k].value.match(/(\w+|--):(\w+|--)/g);
+            if(func >= 500 && func <= 620){
+              var matchresult = currentValueObject.value.match(/(\w+|--):(\w+|--)/g);
               if (matchresult != null) {
                 for (var n in matchresult) {
 // HTML do not allow "24:00" for time input
                 if(matchresult[n] == "24:00"){
-                  gemById("control" + k + "-" + n).value = "23:59";
+                  gemById(prefix + func + "control" + "-" + n).value = "23:59";
                 }else if(matchresult[n] == "--:--"){
                 }else
-                  gemById("control" + k + "-" + n).value = matchresult[n];
+                  gemById(prefix + func + "control" + "-" + n).value = matchresult[n];
                 }
               }
             } else
-              sel.innerHTML = jsontext[k].value;
+              sel.innerHTML = currentValueObject.value;
             break;
           case 6:
-              var matchresult = jsontext[k].value.match(/(\d+|---)/g);
+              var matchresult = currentValueObject.value.match(/(\d+|---)/g);
               if (matchresult != null) {
                 if(matchresult[0] == "---" || matchresult.length < 2){
-                  gemById("control" + k + "-d").options[0].selected = true;
-                  gemById("control" + k + "-m").options[0].selected = true;
+                  gemById(prefix + func + "control" + "-d").options[0].selected = true;
+                  gemById(prefix + func + "control" + "-m").options[0].selected = true;
                 } else {
-                  gemById("control" + k + "-d").options[parseInt(matchresult[0], 10)].selected = true;
-                  gemById("control" + k + "-m").options[parseInt(matchresult[1], 10)].selected = true;
+                  gemById(prefix + func + "control" + "-d").options[parseInt(matchresult[0], 10)].selected = true;
+                  gemById(prefix + func + "control" + "-m").options[parseInt(matchresult[1], 10)].selected = true;
                 }
               }
             break;
           case 7:
-            sel.value = jsontext[k].value;
+            sel.value = currentValueObject.value;
             break;
           default:
             break;
         }
-      }
     }
 
     function insertvaluesinmonitorlistshow(jsontext, command) {
@@ -1265,7 +1281,14 @@ h3 {
                 var notfirst = false;
                 for (var j in FunctionsListOnFrontPageEnum[m].possibleValues) {
                   temp = parseInt(FunctionsListOnFrontPageEnum[m].possibleValues[j].enumValue);
-                  if((temp & bitparam) == temp){
+                  var bitflag = false;
+                  if(temp > 255)
+                    {if ((temp & bitparam) == temp) bitflag  = true;}
+                  else
+                    {if (((temp + (temp << 8)) & bitparam) != (temp + (temp << 8))) bitflag = true;}
+
+
+                  if(bitflag){
                     if(notfirst) {outtext +=", ";} else {notfirst = true;}
                     outtext += translateString(FunctionsListOnFrontPageEnum[m].possibleValues[j].desc);
                     }
@@ -1345,7 +1368,7 @@ h3 {
     }
 
     function gameIsChanged(funkid) {
-      var controlid = "control" + funkid;
+      var controlid = "func" + funkid + "control";
       var elem = gemById(controlid);
       switch (FunctionsEnum[funkid]["dataType"]) {
         case 0:
@@ -1498,6 +1521,28 @@ h3 {
         sel.innerHTML = outtext;
 
         loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, true);
+      }
+    }
+
+    function loadManagementValues(functionsenum) {
+      var temp = "";
+      if(functionsenum.length > 0) {
+      if(!FunctionsquickManageListOnFrontPageEnum)
+        {
+        loadAjax(baseURL, 'JC=' + functionsenum,  function(jsontext, command){
+            FunctionsquickManageListOnFrontPageEnum = jsontext;
+            loadManagementValues(functionsenum);
+            }, true);
+        return;
+        }
+        var sel = gemById("managementTable");
+        var outtext = "";
+        for(var k = 0; k < functionsenum.length; k++) {
+            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="manager${functionsenum[k]}name">${translateString(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="manager${functionsenum[k]}value"></output>&nbsp;<output id="manager${functionsenum[k]}unit"></output></div></div>`;
+        }
+        sel.innerHTML = outtext;
+
+//        loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, true);
       }
     }
 
@@ -1673,9 +1718,11 @@ h3 {
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
 `;
       if(functionsListOnFrontPage.length > 0) outtext += `<br><div align="center">Monitor</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div>`;
+      if(quickManageFunctionsList.length > 0) outtext += `<br><div align="center">Management</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>`;
       gemById("HomePage").innerHTML = outtext;
       if(functionsListOnFrontPage.length > 0) {
         loadMonitorValues(functionsListOnFrontPage);
+        loadManagementValues(quickManageFunctionsList);
         if(monitorUpdateInterval < functionsListOnFrontPage.length * 300 * 2) monitorUpdateInterval = functionsListOnFrontPage.length * 300 * 2; // no reason for interval less than [double time of request to bus (~300 ms) multiplied by length of array] sec.
         if(monitorTimerID == 0) monitorTimerID = setInterval(loadMonitorValues, monitorUpdateInterval, functionsListOnFrontPage);
       }
@@ -1993,3 +2040,4 @@ var svg = d3.select(elementtype)
 </script>
 
 </body>
+
