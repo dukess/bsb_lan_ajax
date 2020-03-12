@@ -763,14 +763,12 @@ h3 {
 </div>
           </div>
           <div class="divTableCell" id="RightMenuTableCell" style="display: none; text-align:center;">
-<div class="divTableCatMenuBody" style="">
+<div class="divTableCatMenuBody" style="display:inline-table;">
   <div class="divTableCatMenuRow">
     <div class="divTableCatMenuCell">
     </div>
     <div class="divTableCatMenuCell">
       <input value='Back' type='image' id="backImage" onclick='ReturnToRoot()'>
-    </div>
-    <div class="divTableCatMenuCell">
     </div>
     <div class="divTableCatMenuCell">
     </div>
@@ -782,13 +780,14 @@ h3 {
     <div class="divTableCatMenuCell">
     </div>
     <div class="divTableCatMenuCell">
-      <input value='Cancel' type='image' id="cancelImage" onclick='CancelChanges()'>
+      <input value='Cancel' type='image' id="funccancelImage" onclick='CancelChanges("func")'>
     </div>
     <div class="divTableCatMenuCell">
     </div>
     <div class="divTableCatMenuCell">
-      <input value='Save' type='image' id="okImage" onclick='ApplyChanges()'>
-
+      <input value='Save' type='image' id="funcokImage" onclick='ApplyChanges(FunctionsEnum, "func")'>
+    </div>
+    <div class="divTableCatMenuCell">
     </div>
   </div>
 </div>
@@ -839,8 +838,8 @@ h3 {
 
     gemById("backImage").src = backImage;
     gemById("updateImage").src = updateImage;
-    gemById("cancelImage").src = cancelImage;
-    gemById("okImage").src = okImage;
+    gemById("funccancelImage").src = cancelImage;
+    gemById("funcokImage").src = okImage;
     gemById("clockImage").src = clockImage;
     gemById("restartImage").src = restartImage;
 
@@ -974,24 +973,27 @@ h3 {
       return hex;
     }
 
-    function StackChanges(id) {
+    function StackChanges(id, prefix) {
       ListOfChanges[id] = true;
-      gemById("cancelImage").style.opacity = 1;
-      gemById("okImage").style.opacity = 1;
+      gemById(prefix + "cancelImage").style.opacity = 1;
+      gemById(prefix + "okImage").style.opacity = 1;
     }
 
-    function ApplyChanges() {
+    function ApplyChanges(funcenum, prefix) {
       for (var k in ListOfChanges) {
-        gameIsChanged(k);
+        gameIsChanged(funcenum[k], k, prefix);
         delete ListOfChanges[k];
       }
-      gemById("cancelImage").style.opacity = 0.33;
-      gemById("okImage").style.opacity = 0.33;
+      gemById(prefix + "cancelImage").style.opacity = 0.33;
+      gemById(prefix + "okImage").style.opacity = 0.33;
       ListOfChanges = new Object();
     }
 
-    function CancelChanges() {
-      LoadValuesInCategory(CurrentCategory, 1);
+    function CancelChanges(prefix) {
+      gemById(prefix + "cancelImage").style.opacity = 0.33;
+      gemById(prefix + "okImage").style.opacity = 0.33;
+      if(prefix == "func")
+        LoadValuesInCategory(CurrentCategory, 1);
       ListOfChanges = new Object();
     }
 
@@ -1038,25 +1040,27 @@ h3 {
       gemById('HomePage').innerHTML = htmltext;
     }
 
-    function insertelement(jsonObject, func, prefix){
+    function insertinterfaceelement(jsonObject, func, prefix){
               var dataType = jsonObject.dataType;
               var multiple = "multiple";
               var outtext = "";
+//              outtext += `<div class="divTableFuncListLeftCell" id="${prefix}${func}text"></div><div class="divTableFuncListLeftCell">${dataType}</div><div class="divTableFuncListLeftCell" id="${prefix}${func}value">`;
+              outtext += `<div class="divTableFuncListLeftCell" id="${prefix}${func}text"></div><div class="divTableFuncListLeftCell" id="${prefix}${func}value">`;
               switch (dataType) {
                 case 0: // number
-                  outtext += `<input id="${prefix}${func}control" type="number" step="0.1" onChange="StackChanges(${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+                  outtext += `<input id="${prefix}${func}control" type="number" step="0.1" onChange="StackChanges(${func}, '${prefix}');" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
                   break;
                 case 1: // enum
                   multiple = "";
                 case 2: // multiple choices enum (bitwise flags)
-                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func});" ${multiple}>`;
+                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');" ${multiple}>`;
                   for (var j in jsonObject.possibleValues) {
                     outtext += `<option value="${jsonObject.possibleValues[j].enumValue}"></option>`;
                   }
                   outtext += `</select>`;
                   break;
                 case 3:  // weekday
-                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func});">`;
+                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');">`;
                   for (var j = 1; j <= 7; j++ ) {
                     var temp = translateString("STR_" + (499 + j) + "_TEXT");
                     outtext += `<option value="${j}">${temp}</option>`;
@@ -1064,22 +1068,22 @@ h3 {
                   outtext += `</select>`;
                   break;
                 case 4: //time
-                  outtext += `<input type="time" id="${prefix}${func}control" onChange="StackChanges(${func});">`;
+                  outtext += `<input type="time" id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');">`;
                   break;
                 case 5: //date and time
                   if(func >= 500 && func <=620){
-                    outtext += `1. <input type="time" id="${prefix}${func}control-0" onChange="StackChanges(${func});"> - <input type="time" id="${prefix}${func}control-1" onChange="StackChanges(${func});">&nbsp;2. <input type="time" id="${prefix}${func}control-2" onChange="StackChanges(${func});"> - <input type="time" id="${prefix}${func}control-3" onChange="StackChanges(${func});">&nbsp;3. <input type="time" id="${prefix}${func}control-4" onChange="StackChanges(${func});"> - <input type="time" id="${prefix}${func}control-5" onChange="StackChanges(${func});">`;
+                    outtext += `1. <input type="time" id="${prefix}${func}control-0" onChange="StackChanges(${func}, '${prefix}');"> - <input type="time" id="${prefix}${func}control-1" onChange="StackChanges(${func}, '${prefix}');">&nbsp;2. <input type="time" id="${prefix}${func}control-2" onChange="StackChanges(${func}, '${prefix}');"> - <input type="time" id="${prefix}${func}control-3" onChange="StackChanges(${func}, '${prefix}');">&nbsp;3. <input type="time" id="${prefix}${func}control-4" onChange="StackChanges(${func}, '${prefix}');"> - <input type="time" id="${prefix}${func}control-5" onChange="StackChanges(${func}, '${prefix}');">`;
                   } else
                     outtext += `<output id="${prefix}${func}control"></output>`;
                   break;
                 case 6: //day and month
-                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func});">`;
+                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func}, '${prefix}');">`;
                   outtext += `<option value="0">--</option>`;
                   for (var j = 1; j <= 31; j++ ) {
                     outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
                   }
                   outtext += `</select>`;
-                  outtext += `<select id="${prefix}${func}control-m" onChange="StackChanges(${func});">`;
+                  outtext += `<select id="${prefix}${func}control-m" onChange="StackChanges(${func}, '${prefix}');">`;
                   outtext += `<option value="0">--</option>`;
                   for (var j = 1; j <= 12; j++ ) {
                     outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
@@ -1087,10 +1091,10 @@ h3 {
                   outtext += `</select>`;
                   break;
                 case 7: //string
-                  outtext += `<input type="text" id="${prefix}${func}control" onChange="StackChanges(${func});">`;
+                  outtext += `<input type="text" id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');">`;
                   break;
                 case 8: // weekday, time hh:mm
-                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func});">`;
+                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func}, '${prefix}');">`;
                   for (var j = 1; j <= 7; j++ ) {
                     var temp;
                     if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
@@ -1100,17 +1104,51 @@ h3 {
                     outtext += `<option value="${j}">${temp}</option>`;
                   }
                   outtext += `</select>`;
-                  outtext += `<input type="time" id="${prefix}${func}control-t" onChange="StackChanges(${func});">`;
+                  outtext += `<input type="time" id="${prefix}${func}control-t" onChange="StackChanges(${func}, '${prefix}');">`;
                   break;
                 case 99: // string with unit name. Hack.
-                  outtext += `<input id="${prefix}${func}control" onChange="StackChanges(${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+                  outtext += `<input id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
                   break;
                 default:
                   break;
               }
+              outtext += `</div>`;
               return outtext;
      }
 
+    function insertinterfacevalues(jsonObject, func, prefix){
+          gemById(prefix + func + "text").textContent = func + ". " + translateString(jsonObject.name);
+          switch (jsonObject.dataType) {
+            case 0:
+//Get unit name from cache
+              if(typeof jsonObject.unit === 'string'){
+                gemById(prefix + func + "unit").innerHTML = translateString(jsonObject.unit);
+                }
+              break;
+            case 1:
+            case 2:
+//slower, but recognize additional symbols in `desc` field
+              for (var j in jsonObject.possibleValues) {
+                var matchresult = jsonObject.possibleValues[j].desc.match(textRegexp);
+                if(matchresult != null)
+                  gemById(prefix + func + "control").options[j].text = jsonObject.possibleValues[j].desc.replace(matchresult[0], translateString(matchresult[0]));
+                else
+                  gemById(prefix + func + "control").options[j].text = jsonObject.possibleValues[j].desc;
+              }
+// faster, but can't recognize strings with '?' symbols
+//              for (var j in jsonObject.possibleValues) {
+//                gemById(prefix + func + "control").options[j].text = translateString(jsonObject.possibleValues[j].desc);
+//              }
+
+              break;
+            case 4:
+              break;
+            case 5:
+              break;
+            default:
+              break;
+          }
+    }
 
     function catlistshow(jsontext, command) {
 //      if (gemById("LeftMenuTableCell") == null) LoadRootCategoryEnum();
@@ -1130,12 +1168,11 @@ h3 {
             outtext += `<div class="divTableFuncListBody">`;
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
               if (FunctionsEnum[k] == null) continue;
-//              var dataType = FunctionsEnum[k].dataType;
-              outtext += `<div class="divTableFuncListRow"><div class="divTableFuncListLeftCell" id="func${k}text"></div><div class="divTableFuncListLeftCell">${dataType}</div><div class="divTableFuncListLeftCell" id="func${k}value">`;
+              outtext += `<div class="divTableFuncListRow">`;
 
-              outtext += insertelement(FunctionsEnum[k], k, "func");
+              outtext += insertinterfaceelement(FunctionsEnum[k], k, "func");
 
-              outtext += `</div></div>`;
+              outtext += `</div>`;
             }
             outtext += "</div>";
             gemById("RightMenuTableCell" + res[1]).innerHTML = outtext;
@@ -1144,39 +1181,7 @@ h3 {
         }
         for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
           if (FunctionsEnum[k] == null) continue;
-          var temp;
-          var dataType = FunctionsEnum[k].dataType;
-          gemById("func" + k + "text").textContent = k + ". " + translateString(FunctionsEnum[k].name);
-          switch (dataType) {
-            case 0:
-//Get unit name from cache
-              if(typeof FunctionsEnum[k].unit === 'string'){
-                gemById("func" + k + "unit").innerHTML = translateString(FunctionsEnum[k].unit);
-                }
-              break;
-            case 1:
-            case 2:
-//slower, but recognize additional symbols in `desc` field
-              for (var j in FunctionsEnum[k].possibleValues) {
-                var matchresult = FunctionsEnum[k].possibleValues[j].desc.match(textRegexp);
-                if(matchresult != null)
-                  gemById("func" + k + "control").options[j].text = FunctionsEnum[k].possibleValues[j].desc.replace(matchresult[0], translateString(matchresult[0]));
-                else
-                  gemById("func" + k + "control").options[j].text = FunctionsEnum[k].possibleValues[j].desc;
-              }
-// faster, but can't recognize strings with '?' symbols
-//              for (var j in FunctionsEnum[k].possibleValues) {
-//                gemById("func" + k + "control").options[j].text = translateString(FunctionsEnum[k].possibleValues[j].desc);
-//              }
-
-              break;
-            case 4:
-              break;
-            case 5:
-              break;
-            default:
-              break;
-          }
+          insertinterfacevalues(FunctionsEnum[k], k, "func");
         }
         gemById("categorytitle" + res[1]).textContent = translateString(RootCategoryEnum[res[1]].name);
         if (CurrentCategory == null) CurrentCategory = 0;
@@ -1201,14 +1206,28 @@ h3 {
       }
     }
 
+    function insertvaluesinmanagementlistshow(jsontext, command) {
+      for (var k in jsontext) {
+        insertvalue(FunctionsquickManageListOnFrontPageEnum[k], jsontext[k], k, "manager");
+      }
+    }
+
     function insertvalue(jsonObject, currentValueObject, func,  prefix) {
+// get value from cache, if exist
+        if(currentValueObject == null) {
+          if(typeof jsonObject.value === 'undefined') return;
+          currentValueObject = jsonObject;
+        }
+        else {
+//cache current value and unit name
+          jsonObject.value = currentValueObject.value;
+          if(jsonObject.dataType == 0)jsonObject.unit = currentValueObject.unit; // For numerical values only
+        }
         var sel = gemById(prefix + func + "control");
         switch (jsonObject.dataType) {
           case 0:
             if(currentValueObject.value.length > 0 && isNaN(currentValueObject.value)) sel.type = "text";
             sel.value = currentValueObject.value;
-//Put unit name to cache and display
-            jsonObject.unit = currentValueObject.unit;
             gemById(prefix + func + "unit").innerHTML = translateString(currentValueObject.unit);
             break;
           case 1:
@@ -1271,6 +1290,16 @@ h3 {
         for(var k = 0; k < functionsListOnFrontPage.length; k++) {
           var outtext = "";
           var m = functionsListOnFrontPage[k];
+// get value from cache, if exist
+          if(jsontext == null && command == null) {
+            if(typeof FunctionsListOnFrontPageEnum[m].value === 'undefined') continue;
+            jsontext = FunctionsListOnFrontPageEnum;
+          }
+          else {
+//cache current value and unit name
+            FunctionsListOnFrontPageEnum[m].value = jsontext[m].value;
+            if(FunctionsListOnFrontPageEnum[m].dataType == 0)FunctionsListOnFrontPageEnum[m].unit = jsontext[m].unit; // For numerical values only
+          }
           if(typeof FunctionsListOnFrontPageEnum[m] === "object") {
             var temp;
             switch(FunctionsListOnFrontPageEnum[m].dataType){
@@ -1296,10 +1325,10 @@ h3 {
               break;
               default: outtext = jsontext[m].value; break;
               }
-            gemById("monitor" + m + "value").innerHTML = `${outtext}&nbsp;${translateString(jsontext[m].unit)}`;
+            if(typeof jsontext[m].unit === 'string') outtext += "&nbsp;" + translateString(jsontext[m].unit);
+            gemById("monitor" + m + "value").innerHTML = outtext;
             }
         }
-//    sel.innerHTML = outtext;
     }
 
     function LoadValuesInCategory(catnum, type) {
@@ -1325,8 +1354,8 @@ h3 {
                 cmdlist += ",";
             }
           }
-          gemById("cancelImage").style.opacity = 0.33;
-          gemById("okImage").style.opacity = 0.33;
+          gemById("funccancelImage").style.opacity = 0.33;
+          gemById("funcokImage").style.opacity = 0.33;
           break;
         case 1:
       // cancel changes. Partial update
@@ -1342,8 +1371,8 @@ h3 {
                 cmdlist += ",";
             }
           }
-          gemById("cancelImage").style.opacity = 0.33;
-          gemById("okImage").style.opacity = 0.33;
+          gemById("funccancelImage").style.opacity = 0.33;
+          gemById("funcokImage").style.opacity = 0.33;
           break;
         case 2:
         //exclude changes
@@ -1367,10 +1396,10 @@ h3 {
       if (j > 0) loadValues(cmdlist);
     }
 
-    function gameIsChanged(funkid) {
-      var controlid = "func" + funkid + "control";
+    function gameIsChanged(func, funkid, controlname) {
+      var controlid = controlname + funkid + "control";
       var elem = gemById(controlid);
-      switch (FunctionsEnum[funkid]["dataType"]) {
+      switch (func["dataType"]) {
         case 0:
           note({
             content: "Изменён параметр " + funkid + " на значение " + elem.value,
@@ -1405,7 +1434,7 @@ h3 {
             if(funkid >= 500 && funkid <= 620){
                 var val = [];
                 for (var n = 0; n < 6; n++) {
-                  val[n] = gemById("control" + funkid + "-" + n).value;
+                  val[n] = gemById(controlid + "-" + n).value;
 // HTML do not allow "24:00" for time input
                   if(val[n] == "23:59"){
                     val[n] = "24:00";
@@ -1519,7 +1548,9 @@ h3 {
             outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsListOnFrontPageEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div></div>`;
         }
         sel.innerHTML = outtext;
-
+//Show cached values
+        insertvaluesinmonitorlistshow(null, null);
+//Show current values
         loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, true);
       }
     }
@@ -1538,12 +1569,39 @@ h3 {
         var sel = gemById("managementTable");
         var outtext = "";
         for(var k = 0; k < functionsenum.length; k++) {
-            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="manager${functionsenum[k]}name">${translateString(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="manager${functionsenum[k]}value"></output>&nbsp;<output id="manager${functionsenum[k]}unit"></output></div></div>`;
+            outtext += `<div class="divTableRow">`;
+              outtext += insertinterfaceelement(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]], functionsenum[k], "manager");
+            outtext += `</div>`;
         }
+        outtext += `
+            <div class="divTableRow">
+             <div class="divTableFuncListLeftCell">
+              <div style="display:block; float:left;">
+               <input value='Cancel' type='image' id="managercancelImage" onclick='CancelChanges("manager")'>
+              </div>
+             </div>
+             <div class="divTableFuncListLeftCell">
+              <div style="display:block; float:right;">
+               <input value='Save' type='image' id="managerokImage" onclick='ApplyChanges(FunctionsquickManageListOnFrontPageEnum, "manager")'>
+              </div>
+             </div>
+            </div>`;
+
         sel.innerHTML = outtext;
 
-//        loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, true);
+        for(var k = 0; k < functionsenum.length; k++) {
+              insertinterfacevalues(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]], functionsenum[k], "manager");
+              insertvalue(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]], null, functionsenum[k], "manager");
+        }
+
+        loadAjax(baseURL, 'JQ=' + functionsenum,
+        insertvaluesinmanagementlistshow
+        , true);
       }
+    gemById("managercancelImage").src = cancelImage;
+    gemById("managerokImage").src = okImage;
+      gemById("managercancelImage").style.opacity = 0.33;
+      gemById("managerokImage").style.opacity = 0.33;
     }
 
     function loadAjax(urlvar, cmdvar, showvar, isajaxvar) {
@@ -1652,7 +1710,9 @@ h3 {
       monitorTimerID = 0;
 
 //warnings about unsaved changes. dirty, because fragments will be loading anyway
-      if (id != 3 && Object.keys(ListOfChanges).length > 0) { ReturnToRoot(); return; }
+//      if (id != 3 && Object.keys(ListOfChanges).length > 0) { ReturnToRoot(); return; }
+      if (!CheckForUnsavedChanges()) return false;
+
       gemById("HomePage").style.display = (id==1)?"table-cell":"none";
       gemById("LeftMenuTableCell").style.display = (id==2)?"grid":"none";
       gemById("RightMenuTableCell").style.display = (id==3)?"table-cell":"none";
@@ -1668,9 +1728,15 @@ h3 {
           CurrentCategory = null;
         }
       }
+    return true;
     }
 
     function ReturnToRoot() {
+      if (CheckForUnsavedChanges())
+        ShowSelectedMode(2);
+    }
+
+    function CheckForUnsavedChanges(){
       if (warnAboutExitWithoutSaveInt && Object.keys(ListOfChanges).length > 0) {
         note({
           content: "Warn about exit without save. You Sure? " + warnAboutExitWithoutSaveInt,
@@ -1678,26 +1744,27 @@ h3 {
           time: 5
         });
         warnAboutExitWithoutSaveInt--;
+        return false;
       } else {
-        ShowSelectedMode(2);
         warnAboutExitWithoutSaveInt = warnAboutExitWithoutSave;
         ListOfChanges = new Object();
+        return true;
       }
     }
 
     function LoadElement(place, command) {
-      ShowSelectedMode(1);
+      if(ShowSelectedMode(1))
         loadAjax(baseURL, command, configpageshow, false);
     }
 
     function LoadExternalElement(place, url) {
-      ShowSelectedMode(1);
-      gemById(place).innerHTML = `<object type="text/html" data="${url}" style="width: 100%; height: 89vh;"></object>`;
+      if(ShowSelectedMode(1))
+        gemById(place).innerHTML = `<object type="text/html" data="${url}" style="width: 100%; height: 89vh;"></object>`;
     }
 
     function GoHome() {
-      ShowSelectedMode(1);
-      LoadUIStrings();
+      if(ShowSelectedMode(1))
+        LoadUIStrings();
     }
 
     function GoManage() {
@@ -1705,10 +1772,10 @@ h3 {
     }
 
     function DisplayChart() {
+      if(!ShowSelectedMode(1)) return;
       var displaychartclassname = "displaychart";
       var outtext = `<A HREF='${DatalogURL}'>${UIStrings.MENU_TEXT_DTD}</A><div class="${displaychartclassname}" align=center></div>`;
       gemById("HomePage").innerHTML = outtext;
-      ShowSelectedMode(1);
       drawGraph("div." + displaychartclassname, DatalogURL);
     }
 
@@ -1717,14 +1784,23 @@ h3 {
 <br><b>${UIStrings.MENU_TEXT_CFG}:</b> ${UIStrings.MENU_DESC_CFG}
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
 `;
-      if(functionsListOnFrontPage.length > 0) outtext += `<br><div align="center">Monitor</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div>`;
-      if(quickManageFunctionsList.length > 0) outtext += `<br><div align="center">Management</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>`;
+      outtext += `<br>`;
+      if(functionsListOnFrontPage.length > 0) outtext += `<div style="width:50%; min-width:500px; display: inline-block;" align="center"><div align="center">Monitor</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
+      if(quickManageFunctionsList.length > 0) {outtext += `<div style="width:50%; min-width:500px; display: inline-block;" align="center"><div align="center">Management</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
+          <p></p>
+
+      </div>`;
+      }
       gemById("HomePage").innerHTML = outtext;
       if(functionsListOnFrontPage.length > 0) {
         loadMonitorValues(functionsListOnFrontPage);
+      }
+      if(quickManageFunctionsList.length > 0) {
         loadManagementValues(quickManageFunctionsList);
-        if(monitorUpdateInterval < functionsListOnFrontPage.length * 300 * 2) monitorUpdateInterval = functionsListOnFrontPage.length * 300 * 2; // no reason for interval less than [double time of request to bus (~300 ms) multiplied by length of array] sec.
-        if(monitorTimerID == 0) monitorTimerID = setInterval(loadMonitorValues, monitorUpdateInterval, functionsListOnFrontPage);
+      }
+      if(functionsListOnFrontPage.length > 0 || quickManageFunctionsList.length > 0) {
+        if(monitorUpdateInterval < functionsListOnFrontPage.length * 300 * 2) monitorUpdateInterval = (quickManageFunctionsList.length + functionsListOnFrontPage.length) * 300 * 2; // no reason for interval less than [double time of request to bus (~300 ms) multiplied by length of array] sec.
+        if(monitorTimerID == 0) monitorTimerID = setTimeout(function ticktak(){loadMonitorValues(functionsListOnFrontPage); loadManagementValues(quickManageFunctionsList); monitorTimerID = setTimeout(ticktak, monitorUpdateInterval);}, monitorUpdateInterval);
       }
     }
 
@@ -2040,4 +2116,3 @@ var svg = d3.select(elementtype)
 </script>
 
 </body>
-
