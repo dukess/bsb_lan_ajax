@@ -905,7 +905,6 @@ h3 {
       if(externaldevelop)
         baseURL = externalbaseURL;
       LoadScript('languages.js', LanguageInit, LanguageInit);
-//      document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="ajax.css" />`); //background loading
     }
 
     function LanguageInit() {
@@ -956,7 +955,7 @@ h3 {
 
       LoadRootCategoryEnum();
       if (CurrentCategory != null)
-        if (gemById("RightMenuTableCell" + CurrentCategory).style.display.localeCompare("none")) LoadCategoryEnum(CurrentCategory);
+        if (gemById("RightMenuTableCell0").style.display.localeCompare("none")) LoadCategoryEnum(CurrentCategory);
     }
 
     function languageIsChanged(controlid) {
@@ -1016,15 +1015,14 @@ h3 {
         FunctionsEnum = new Array(RootCategoryEnum[i-1].max + 1); // plus param #0
       }
       if (gemById("RightMenuTableCell0") == null)
-        for (var i = 0; i < RootCategoryEnum.length; i++)
-          gemById("FunctionsMenuTable").insertAdjacentHTML("beforeend", `<div class="divTableResultCell" id="RightMenuTableCell${i}"></div>`);
+          gemById("FunctionsMenuTable").insertAdjacentHTML("beforeend", `<div class="divTableResultCell" id="RightMenuTableCell0"></div>`);
+
       var outtext = `<div class="divTableBody1" style="display: table-row-group; margin: 0 auto;">`;
 
       for (var i = 0; i < RootCategoryEnum.length; i++) {
         outtext += `<div class="divTableRow"><div class="divTableCell"><a href="#" onclick="LoadCategoryEnum(${i});">` + i + ". " + translateString(RootCategoryEnum[i].name) + "</a></div><div class='divTableCell'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div></div>";
       }
       outtext += "</div>";
-//      gemById("LeftMenuTableCell").innerHTML = outtext;
       gemById("RootTable").innerHTML = outtext;
     }
 
@@ -1044,7 +1042,6 @@ h3 {
               var dataType = jsonObject.dataType;
               var multiple = "multiple";
               var outtext = "";
-//              outtext += `<div class="divTableFuncListLeftCell" id="${prefix}${func}text"></div><div class="divTableFuncListLeftCell">${dataType}</div><div class="divTableFuncListLeftCell" id="${prefix}${func}value">`;
               outtext += `<div class="divTableFuncListLeftCell" id="${prefix}${func}text"></div><div class="divTableFuncListLeftCell" id="${prefix}${func}value">`;
               switch (dataType) {
                 case 0: // number
@@ -1151,45 +1148,47 @@ h3 {
     }
 
     function catlistshow(jsontext, command) {
-//      if (gemById("LeftMenuTableCell") == null) LoadRootCategoryEnum();
       if (gemById("RootTable") == null) LoadRootCategoryEnum();
       var res = command.split("=");
       var outtext;
+      var isAlreadyLoaded = FlagCategoryIsLoaded[res[1]];
       if (res[0] == "JK" && res[1] >= 0) {
-        if (!FlagCategoryIsLoaded[res[1]]) {
+        if (!isAlreadyLoaded) {
           if (jsontext != null) {
-            //Interface generator
-            outtext = `<br><h2 id='categorytitle${res[1]}'></h2><br>`
-            FlagCategoryIsLoaded[res[1]] = true;
             for (var k in jsontext) {
               FunctionsEnum[k] = jsontext[k];
             }
-            gemById("RightMenuTableCell" + res[1]).innerHTML = "";
+            FlagCategoryIsLoaded[res[1]] = true;
+          } else
+            return;
+        }
+
+            //Interface generator
+            outtext = `<br><h2 id='categorytitle${res[1]}'></h2><br>`
+            gemById("RightMenuTableCell0").innerHTML = "";
             outtext += `<div class="divTableFuncListBody">`;
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
               if (FunctionsEnum[k] == null) continue;
               outtext += `<div class="divTableFuncListRow">`;
-
               outtext += insertinterfaceelement(FunctionsEnum[k], k, "func");
-
               outtext += `</div>`;
             }
             outtext += "</div>";
-            gemById("RightMenuTableCell" + res[1]).innerHTML = outtext;
-          }
-          LoadValuesInCategory(res[1], 0);
-        }
+            gemById("RightMenuTableCell0").innerHTML = outtext;
         for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
           if (FunctionsEnum[k] == null) continue;
           insertinterfacevalues(FunctionsEnum[k], k, "func");
+          insertvalue(FunctionsEnum[k], null, k, "func");
         }
+//        if (!isAlreadyLoaded)
+          LoadValuesInCategory(res[1], 0);
+
         gemById("categorytitle" + res[1]).textContent = translateString(RootCategoryEnum[res[1]].name);
         if (CurrentCategory == null) CurrentCategory = 0;
         ShowSelectedMode(3);
 
         CurrentCategory = res[1];
-        gemById("RightMenuTableCell" + CurrentCategory).style.display = "table-cell";
-        FlagCategoryIsLoaded[res[1]] = true;
+        gemById("RightMenuTableCell0").style.display = "table-cell";
       } else {
         note({
           content: "Error: Category not exist!",
@@ -1717,14 +1716,16 @@ h3 {
       gemById("LeftMenuTableCell").style.display = (id==2)?"grid":"none";
       gemById("RightMenuTableCell").style.display = (id==3)?"table-cell":"none";
       if (CurrentCategory != null) {
-        gemById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+//        gemById("RightMenuTableCell" + CurrentCategory).style.display = "none";
+        gemById("RightMenuTableCell0").style.display = "none";
         //Freeing RAM
         if (!CacheCategoriesInRAM && id != 3){
           for (var k = RootCategoryEnum[CurrentCategory].min; k <= RootCategoryEnum[CurrentCategory].max; k++) {
             FunctionsEnum[k] = null;
             }
           FlagCategoryIsLoaded[CurrentCategory] = false;
-          gemById("RightMenuTableCell" + CurrentCategory).innerHTML = "";
+//          gemById("RightMenuTableCell" + CurrentCategory).innerHTML = "";
+          gemById("RightMenuTableCell0").innerHTML = "";
           CurrentCategory = null;
         }
       }
