@@ -402,6 +402,7 @@ width:auto;
       width: 10%;
       border: 5px solid transparent;
       align: center;
+      text-align: center;
     word-wrap: break-word;
     }
 
@@ -650,6 +651,10 @@ width:auto;
           </div>
         <br><output class="menudesc" id="menurubber10celltext"></output>
       </div>
+      <div class="divMenuCell" id="menurubber11cell">
+        <input type="image" class="dropbtn" id="menurubberimage11" onclick="GoAbout();" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAADdElEQVR4nO3cz2tUVxjG8eedOziQTKMbF9EG4pCF/gUFRZdiUyG4KbhwKTqmunVRxR/gxqUSAtm7sZsSEpEuC4r/QTfNJJJo7KoxGYOmc+/bhYpIm3jOuWd8c2aez3bOuTmc75ybOyEMQERERERERERE/UJiXGTs3ua3eTWfAPQ0VEYhMgLoYIxr7x7yBqrLIroIlblKns3+eWVgpfRVy0weu7exP89wDYJLAKplF5OYAtAHRZZdfX5hcDX0IsEBGtPrp1XlAYCh0Gv0iHWpVM62Lg4+CplcCZnUmNq4pCq/gpsPAENaFLON6Y1myGTvEzA61T4lonMAspAf2MMKEZ1oNYfmfCZ5BRi5/+ZANSv+AN/523mtKoeXJuuvXCd43YKqWXEL3Pyd7K2I3vCZ4HwCPjxqLqL/nnZ8df6RbHSlOfDCZbDzCcir+Rlw811U9xT5hOtg5wAC/T5sPf1HRcZdxzoHUMhY2HL6kTrvlc8v4eGAlfSrg64DfQLUAxbSr5z3KuiTMMWT5FPNcF1w/VgNx0fefxh/spLj7rMttNYK45X5Sy7AcF0w/+MA9tU+fYQ5eaiK7w5kGH+4idW2Gq7OX3K3oOvHap9t/kd7a4Kfj9YMVlROcgE+3nb+z4kdXtutkguwk7RuPu8lF+DJSr7ta78vb//abpVcgLvPtvD63X/f63+/Vdx5+s5gReUkF6C1VmD84SYeLXTQ3lK0txTzCx388MsmXiX2BAQk+BgKAKttxU+/vbVeRhTJnYBewwDGGMAYAxhjAGPJPQW1mjv/qb0x3f5KK4mDJ8AYAxhjAGMMYIwBjDGAMQYwxgDGGMAYAxhjAGMMYIwBjDGAMQYwxgDGGMAYAxhjAGMMYIwBjCX3XxGp/dfDl/AEGGMAYwxgjAGMMYAxBuiOddeBDNAdTt+WBTBAl8iC60gG6AKFzruOZYD4OnlemXUdzACxCWaWLw++dB3OAHGtoSq3fSYwQDyFiJ5bPF//y2cSA8SRKzDp+73RQIJ/jt6F1lTl7NJk/XHIZJ6AcB0AM6pyJHTzAZ4AH20Ay4C0FDqX55VZn6ed7XQlgApuLjW/udWNa/ea6Lcgbr6fqAG4+f6iBeDmh4kSgJsfrnQAbn45pQJw88sLDsDNjyMoADc/Hu8A3Py4vAJw8w01pjZuWq+BiIiol/wLDhTrAmYSEBUAAAAASUVORK5CYII="></input>
+        <br><output class="menudesc" id="menurubber11celltext"></output>
+      </div>
     </div>
   </div>
   <br>
@@ -683,8 +688,8 @@ width:auto;
     </div>
   </div>
   <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-      <input value='Back' type='image' class="dropbtn" id="clockImage" onclick='syncDateTime()'>
+    <div class="divTableCatMenuCell" id="menurubber21cell">
+      <input value='Back' type='image' class="dropbtn" id="menurubberimage21" onclick='syncDateTime()'>
       <br><output class="menudesc" id="menurubber21celltext"></output>
     </div>
   </div>
@@ -697,8 +702,8 @@ width:auto;
     </div>
   </div>
   <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-      <input value='Update' type='image' class="dropbtn" id="restartImage" onclick='resetController();'>
+    <div class="divTableCatMenuCell" id="menurubber22cell">
+      <input value='Update' type='image' class="dropbtn" id="menurubberimage22" onclick='resetController();'>
         <br><output class="menudesc" id="menurubber22celltext"></output>
     </div>
   </div>
@@ -741,28 +746,28 @@ width:auto;
   <div class="divTableCatMenuRow">
     <div class="divTableCatMenuCell">
     </div>
-    <div class="divTableCatMenuCell">
-      <input value='Back' type='image' class="dropbtn" id="backImage" onclick='ReturnToRoot()'>
+    <div class="divTableCatMenuCell" id="menurubber31cell">
+      <input value='Back' type='image' class="dropbtn" id="menurubberimage31" onclick='ReturnToRoot()'>
       <br><output class="menudesc" id="menurubber31celltext"></output>
     </div>
     <div class="divTableCatMenuCell">
     </div>
-    <div class="divTableCatMenuCell">
-      <input value='Update' type='image' class="dropbtn" id="updateImage" onclick='ReloadParams();'>
+    <div class="divTableCatMenuCell" id="menurubber32cell">
+      <input value='Update' type='image' class="dropbtn" id="menurubberimage32" onclick='ReloadParams();'>
       <br><output class="menudesc" id="menurubber32celltext"></output>
     </div>
     <div class="divTableCatMenuCell">
     </div>
     <div class="divTableCatMenuCell">
     </div>
-    <div class="divTableCatMenuCell">
-      <input value='Cancel' type='image' class="dropbtn" id="funccancelImage" onclick='CancelChanges("func")'>
+    <div class="divTableCatMenuCell" id="menurubber33cell">
+      <input value='Cancel' type='image' class="dropbtn" id="menurubberimage33" onclick='CancelChanges("func")'>
       <br><output class="menudesc" id="menurubber33celltext"></output>
     </div>
     <div class="divTableCatMenuCell">
     </div>
-    <div class="divTableCatMenuCell">
-      <input value='Save' type='image' class="dropbtn" id="funcokImage" onclick='ApplyChanges(FunctionsEnum, "func")'>
+    <div class="divTableCatMenuCell" id="menurubber34cell">
+      <input value='Save' type='image' class="dropbtn" id="menurubberimage34" onclick='ApplyChanges(FunctionsEnum, "func")'>
       <br><output class="menudesc" id="menurubber34celltext"></output>
     </div>
     <div class="divTableCatMenuCell">
@@ -814,12 +819,12 @@ width:auto;
     var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
     var d3libraryloaded = false;
 
-    gemById("backImage").src = backImage;
-    gemById("updateImage").src = updateImage;
-    gemById("funccancelImage").src = cancelImage;
-    gemById("funcokImage").src = okImage;
-    gemById("clockImage").src = clockImage;
-    gemById("restartImage").src = restartImage;
+    gemById("menurubberimage31").src = backImage;
+    gemById("menurubberimage32").src = updateImage;
+    gemById("menurubberimage33").src = cancelImage;
+    gemById("menurubberimage34").src = okImage;
+    gemById("menurubberimage21").src = clockImage;
+    gemById("menurubberimage22").src = restartImage;
 
     function LoadScript(src, onLoadCallBack, onErrorCallBack) {
       var script = document.createElement('script');
@@ -891,7 +896,6 @@ width:auto;
 
     function SetMainMenuUIString(element, id, text) {
       gemById(element + "image" + id).alt = text;
-//      gemById(element + id + "link").title = text;
       gemById(element + id + "cell").title = text;
       gemById(element + id + "celltext").innerHTML = text;
     }
@@ -908,6 +912,13 @@ width:auto;
       SetMainMenuUIString("menurubber", 8, UIStrings.MENU_TEXT_HWT);
       SetMainMenuUIString("menurubber", 9, UIStrings.MENU_TEXT_FAQ);
       SetMainMenuUIString("menurubber", 10, UIStrings.STR20_TEXT);
+      SetMainMenuUIString("menurubber", 11, "About");
+      SetMainMenuUIString("menurubber", 21, "Set clock");
+      SetMainMenuUIString("menurubber", 22, "Reset");
+      SetMainMenuUIString("menurubber", 31, "Back");
+      SetMainMenuUIString("menurubber", 32, "Update");
+      SetMainMenuUIString("menurubber", 33, "Cancel");
+      SetMainMenuUIString("menurubber", 34, "Save");
 //If no selectLanguage selector - create it
       var elem = gemById("LanguageDropdownId");
       if(elem.innerHTML == ""){
@@ -1344,8 +1355,8 @@ window.onclick = function(event) {
                 cmdlist += ",";
             }
           }
-          gemById("funccancelImage").style.opacity = 0.33;
-          gemById("funcokImage").style.opacity = 0.33;
+          gemById("menurubberimage33").style.opacity = 0.33;
+          gemById("menurubberimage34").style.opacity = 0.33;
           break;
         case 1:
       // cancel changes. Partial update
@@ -1361,8 +1372,8 @@ window.onclick = function(event) {
                 cmdlist += ",";
             }
           }
-          gemById("funccancelImage").style.opacity = 0.33;
-          gemById("funcokImage").style.opacity = 0.33;
+          gemById("menurubberimage33").style.opacity = 0.33;
+          gemById("menurubberimage34").style.opacity = 0.33;
           break;
         case 2:
         //exclude changes
@@ -1699,15 +1710,14 @@ window.onclick = function(event) {
       clearTimeout(monitorTimerID); //disable update when Home Page is hidden or just started
       monitorTimerID = 0;
 
-//warnings about unsaved changes. dirty, because fragments will be loading anyway
-//      if (id != 3 && Object.keys(ListOfChanges).length > 0) { ReturnToRoot(); return; }
+//warnings about unsaved changes.
       if (!CheckForUnsavedChanges()) return false;
 
       gemById("HomePage").style.display = (id==1)?"table-cell":"none";
       gemById("LeftMenuTableCell").style.display = (id==2)?"grid":"none";
       gemById("RightMenuTableCell").style.display = (id==3)?"table-cell":"none";
+      gemById("AboutMenuTableCell").style.display = (id==4)?"table-cell":"none";
       if (CurrentCategory != null) {
-//        gemById("RightMenuTableCell" + CurrentCategory).style.display = "none";
         gemById("RightMenuTableCell0").style.display = "none";
         //Freeing RAM
         if (!CacheCategoriesInRAM && id != 3){
@@ -1715,7 +1725,6 @@ window.onclick = function(event) {
             FunctionsEnum[k] = null;
             }
           FlagCategoryIsLoaded[CurrentCategory] = false;
-//          gemById("RightMenuTableCell" + CurrentCategory).innerHTML = "";
           gemById("RightMenuTableCell0").innerHTML = "";
           CurrentCategory = null;
         }
@@ -1752,6 +1761,10 @@ window.onclick = function(event) {
     function LoadExternalElement(place, url) {
       if(ShowSelectedMode(1))
         gemById(place).innerHTML = `<object type="text/html" data="${url}" style="width: 100%; height: 89vh;"></object>`;
+    }
+
+    function GoAbout() {
+      if(ShowSelectedMode(4));
     }
 
     function GoHome() {
@@ -1860,7 +1873,7 @@ width = 1000 - margin.left - margin.right,
 height = 600 - margin.top - margin.bottom;
 
 
-var ru_RU = {
+var customlocale = {
     "decimal": ",",
     "thousands": "\xa0",
     "grouping": [3],
@@ -1898,7 +1911,7 @@ var ru_RU = {
         getLocalizedMonthName(11,0),
         getLocalizedMonthName(12,0)],
 };
-d3.time.format = d3.locale(ru_RU).timeFormat;
+d3.time.format = d3.locale(customlocale).timeFormat;
 
 // Parse the date / time
 var parseDate = d3.time.format("%d.%m.%Y %H:%M:%S").parse;
