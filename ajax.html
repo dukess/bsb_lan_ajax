@@ -538,6 +538,8 @@ border-bottom: none; /* Prevent double borders */
     var okImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjNGNhZjUwIiBkPSJNNDQsMjRjMCwxMS4wNDUtOC45NTUsMjAtMjAsMjBTNCwzNS4wNDUsNCwyNFMxMi45NTUsNCwyNCw0UzQ0LDEyLjk1NSw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjY2NmZjkwIiBkPSJNMzQuNjAyLDE0LjYwMkwyMSwyOC4xOTlsLTUuNjAyLTUuNTk4bC0yLjc5NywyLjc5N0wyMSwzMy44MDFsMTYuMzk4LTE2LjQwMkwzNC42MDIsMTQuNjAyeiI+PC9wYXRoPjwvc3ZnPg==";
     var updateImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjZmY2ZjAyIiBkPSJNMzEgNy4wMDJsMTMgMS42ODZMMzMuMjk2IDE5IDMxIDcuMDAyek0xNyA0MUw0IDM5LjMxNCAxNC43MDQgMjkgMTcgNDF6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2ZmNmYwMCIgZD0iTTggMjRjMC04LjgzNyA3LjE2My0xNiAxNi0xNiAxLjAyNCAwIDIuMDIxLjEwNiAyLjk5Mi4yOWwuNjkzLTMuODY1QzI2LjUyNSA0LjExMiAyNS4yNjIgNC4wMDUgMjQgNC4wMDVjLTExLjA1MyAwLTIwIDguOTQ3LTIwIDIwIDAgNC44NDQgMS42ODYgOS40NzQgNC44NDQgMTMuMDUxbDMuMDM3LTIuNjI5QzkuNDY4IDMxLjYyNSA4IDI3Ljk4NyA4IDI0ek0zOS40NzMgMTEuMjY3bC0zLjE0MyAyLjUzN0MzOC42MjIgMTYuNTcyIDQwIDIwLjEyNSA0MCAyNGMwIDguODM3LTcuMTYzIDE2LTE2IDE2LTEuMDI5IDAtMi4wMzMtLjEwNi0zLjAwOC0uMjkybC0uNjc2IDMuNzcxYzEuMjYyLjIxIDIuNTI1LjMxNyAzLjY4NC4zMTcgMTEuMDUzIDAgMjAtOC45NDcgMjAtMjBDNDQgMTkuMzc1IDQyLjQyMSAxNC44NDggMzkuNDczIDExLjI2N3oiPjwvcGF0aD48L3N2Zz4=";
     var restartImage = new Image().src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjN2NiMzQyIiBkPSJNMjQgM0EyMSAyMSAwIDEgMCAyNCA0NUEyMSAyMSAwIDEgMCAyNCAzWiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNkY2VkYzgiIGQ9Ik0yNCwzNi4xYy02LjYsMC0xMi01LjQtMTItMTJjMC0zLjYsMS42LTcsNC40LTkuM2wyLjUsMy4xYy0xLjgsMS41LTIuOSwzLjgtMi45LDYuMmMwLDQuNCwzLjYsOCw4LDggczgtMy42LDgtOGMwLTIuMS0wLjgtNC0yLjItNS41bDIuOS0yLjdDMzQuOCwxOCwzNiwyMSwzNiwyNC4xQzM2LDMwLjcsMzAuNiwzNi4xLDI0LDM2LjF6Ij48L3BhdGg+PHBhdGggZmlsbD0iI2RjZWRjOCIgZD0iTTEyIDEzTDIxIDEzIDIxIDIyeiI+PC9wYXRoPjwvc3ZnPg==";
+    var downloadImage = new Image().src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAAGTElEQVR4nO2cXWgcVRiGn2931kZrhSIi1daajUWhSBWsFf+iTdKmSVqNouK/oIIiItWiICpVRASpIorghYIoglab1hJNk/4kaetvLXpRqdhu1GqtoC1WamN2Zz4vGm8sdWZ3z9mZzZznNue855152XPmO3Mm4HA4HA6Hw+FwOBwOh8PhcDgcaUDiHLzve53mBcUOhWZUZiPMBE4CSij7gV8V+YJM8Gkml1vbOl1+j9OvDWIJYGCkeAXKMqAdyEbsNiZKL1meaz0z94lFezWlpgH07Ro9K5vJvgwsrEZHlB4Rb2lLXn4wZC02ahbAQKF0G+grwGQTegIHVOXutibvfRN6cZGpxSD9I8VHQN/A0M0HUJiK6HvrC8XHTWnGgfUA+gvFp0R51pa+wlP9heKjtvRtY3UKGp923rA5xjgqIte0Nnqr//uHDd+NNgWZzBJE2oGZwPTxP+0BflZhQAnWLGyctLMGPo/CWgDjC+5XGJx2QjiIeue2NcmPAH2FsTlZ5ElgCdGuczCDPtKSP+5zqy7/g7UABgrFPqp82ikXgZX7D3u3TD2+9DSwjPKvT1F59cBo9oHrZ8uYBYtHYSWA8ef8TTa0I7ATOKcaAYHhUs7rbp8h+w15OiZ2FuEjRVZcVHXzARQuzxZLq7Zt05wJQ/+H8QD6vtdp1HjqsUTzgZP9F20PYjwALyh2AJ5p3VhQvWdgZOwim0MYD0Ch2bRmjAiBPGNzAPNrgMps45pxIly5sTB6ti158wEc2VKeUASSvcqWto2noCkWNGMlUFptadsIILCgGSsCZ9jSthHAAQuacXO6LWELi/CEDOBEW8JVb0Ws3asnNBwu3oDQAjIXmGVCN4EcAn4C9glsFXTN/MbcFyKi1YhWfKO27NQpf+VKj2WEuxWmVmOifpERhSc+bsy+vVykorWvogDWjxTbVfVVEGuLU53xVSDBjZW8Uyg7gPGXLK8xUbYbzPGnIrcsyHsflNOprAD6C2P3CfJSuf1M8PRD/WW1f2zFAktO/hc/k5HFLWd6H0XtEPkpaN3I2DxBnmdiLrCmyAaBvrPxu78jb8dECmDdPp2cUVYCx1VsLT1M8bOZN5erRrq30Rr9VboXZEZ1vlLF+ReP+DdFaRgawKYRbYBY33DVJQJPqmrodB0agE/pCuBUE6bSheY3FIoXhLUKDSBQFpkxlD5UZElYm9AABOaZsZNKLg1rEGER1tNMOEkpofcuQgByigknKWVaWIMoU9BhM15SSehOaWgAqvxixksqCb134VOQsMeIlTSi7A1rEqUS3mDASioR2BzWJrwQC/weM3bSh68aujUdGkD7WQ27gM+MOEoTIrsXNOW2hzWLtBkXwMPVO0oXGvB4lPfFkQJYmM8NC6yt3lZKULZ/nM++E6Vp5BcypZx3B8iuik2lh4PiBbdGfUkfOYD2GbI/6/tXA9a/GqljfBFuaJ056ZuoHco6mDV/1qQdGd+/ECXyACnizwDpbm3M9ZXTqeyTcS2zGnaDdzEirwN+uf0nJMr2LP7chXmv7HWyoqOJbU3yR1ujd2fWD+YovEda94tEdqNy89a8N3d+vuHbSiSqOtszf9akHcB16/bpZBn1F2QCvURFp4nKdEVOA21i4pyiOATsQfkFYauqrmlr9L6M7WhirWnu7i3rQod6Ouvi2mryzzocx8YFEDMugJiJfZ5s7u5dATwYx9iiumJwdVesZ55i/wUM9XQsQ3kzhqHfHTxvW+ybjLEHAKK/5Q7dhbK+ViMqDJ0wKrexfHnsHxTGPgX9y7xFH57U0KDDwBy7I+kOf4zLtvR2JeJbtgT8Ao7w2UcdB0t+qQPlR4vD/Ox72pGUmw8JCgBg6wdX7Q1UFmHnU9eDGYLOLSsX2wy4bBIVAMDmNR3fqHA1MGpQdkwyeu2mnsVfG9Q0QuICABhe1Tmsyu2Y+epeRfXOwfe7arbIl0MiAwAYXt35LqL3G5B6aHB111sGdKyQ2AAAhlZ1vQI8X2l/UV0x1NP5gkFLxkl0AFBVoZaIQiuMxAdQSaGWpEIrjMQUYmFEL9SSVWiFUQe/gCNELNQSV2iFUTcBQGihlshCK4y6CgCOWaglttAKo+4CgKMKtUQXWhOa5u7epc3dvUvj9uFwOBwOh8PhcDgcDofD4XBE4R+J4Qlt7bghfAAAAABJRU5ErkJggg==";
+    var uploadImage = new Image().src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAAGPUlEQVR4nO3cf2hVZRgH8O9zzrluZQskImaa7c5RJGFBZlg42+8sLIOSrCQIoeiPiAQhLFQkgigIIhJDlFBnmjpF2Xbdlpqrpk7NFhPnvculm4abW+quOz+e/tgSf93dc+4573l1vp8/957z3Oee73be855zFFAURVEURVEURVEURVEURbkdkOwGAKC6nXMNx5zJQCGYJoEwAcDdACwwugGcZtA+aM6vWiSyrWQcnZXccmCkBhBLmDPAWACgAoDucrcBYmyHjs9LHoz8IrC9UEgJoLotOVHX9K8BlPupQ4zNRMYHxVH6K6DWQhd6ALG4NQ/gbwCMDqIeAT3MNL803/gxiHph08L8sNqEuRDg1Qjo4AMAA2NAvHFn3Pw4qJphCi2A2ri5lBifiarPwNLauPmRqPqihHIKGjrtrA7ho5iIXi7JM7ZcO1B3LJnvaNosEFUAmABg3NBQB4CTTIgxnKryvKzWEPq8THgAQxPuIQR42kmjD2w8WppPJwCgOj4wWQctATAL7r7vTxp4YXF0VJPQLocIDyAWN6vh82rHKwI2dPcbb4y5w1oGYAG8f08G0/KepP7+q5NoQECLlwkNYOg6v0HkZwyjFcDDfgoQsNuKGLMrxlN3QD1dR+wkPLjIksXXwQcABqbrprVp/36OBNHQjQgLoLqdcxHyqUeQwp577K9EFRcWgOGYMwEYouqHivmdWGLgKRGlhQXAQKGo2hIQHPpURGFxcwDTJGG1ZSA8Wx9PPhR0WXEBDN5SHlEc0l8MuqbIq6AcgbWlcBglQdcUGYAjsLYUBDwQdE2RAfQIrC3L/UEXFDgJj8gA7gq6YGC3Irad4juz+805IBQDNAVAQZD1byIXAPwNoIuAvQSuKsqL7CMizqSY7wP0cyvnXIxYizTCfAbG+K13a6IEA5805ulrFxN5mvt8BbAzYVYw83KAAp+cvGhv68aR/Z14Yc4jIJL6R3fIIec1L88UMp4DYnFrHjO2yT74ZzrPY+Oqwzi87yQadrTJbAUAHtNYa6qNW7Pc7pBRALXxgfcAXgXJ93r6epOoXNGMZL8JAGisT6Bp9wmZLQFADoE31bVbz7nZ2HMANYmBqQT6EpIn2P6LJtZ8ewB9vcmrfh7behStv5+W1NVluuPw+vpjl9LejvEUQE0Xj9YYGwCMyri1AJimjR9WHsTZMxeuG2NmbFlzBB2JcxI6u0qOrWvfL2Ye9hh7CkC7aL0L0Hh/ffnDzKha+8ewB9iyHFR+14wznedD7OyGHp+WsOcOt4HrABoSnA1IfcIFAIhVuTvFXEpaqFzRjL5zybTbikTAEmZOebp2HYANawaA+4JoKlON9Qk07XE/yfb1JrHuiklaDo7Wxc0nUo26DsBhuJrVRWk52ImGHcc87/dP1+Blqm3JuzfIRCkvS10HQMDUYNrxrr2tG1srW8AZLfav3D/DAv49k2rAwyTMY4PoxKv/F1p+f4MH/4KkLdRSHjsPAdC9QXTixbULLb8kLtRyUw14OQX1B9OLO6kWWn5JWqilPPe5DoAZncH0kt5wCy2/JC3UUh4796cgQkcgraThZqHlV+gLNcapVENeVsJ1AbSSltuFll9hLtQI2JNqzP1CzLE3B9NOal4XWn6FtVCzmbemGnMdQMXE7DYAvwXS0Q1kutDyS/hCjeh4WX6kOeWwl1o1cXO6Buzy31Xmln1Y62n7RV+UCerEHWaaW5ZvrEs17uluaHk0spuAbf7buk0wmhuj+vrhNvH8QMaKGG8BJP3Z3y2gjwznzXQP6T0HUDGeunXbfgmAsH81MgLYRJhTMiHrz3QbZvRMuKggq0Wz7SfBSPsBt6F/HdDskrxItZuNM34rorgg+zhgTAPRSgB2pnVGFEazDntKedRwPU/6ejWxNJ96S/OMt3XbmczARoR8v+imQXQcTK/vjRpTiqLZR73sGshrJUUFWS0AXqnp4tGUtMs0h59m4lxiGsegsQDnY+S8pngBQAcYnSDsZeaq0jzjgLRXE8NWOHu7py+6a/PzN/V3DPU/61CupwKQTAUgmQpAMhWAZCoAyVQAkqkAJFMBSKYCkEwFIJkKQDIVgGQqAMlUAJKpACRTAUimApBMBaAoiqIoiqIoiqIoiqIoiqKE4D8TVU+mvMIZTAAAAABJRU5ErkJggg==";
     //              var homeImage = new Image().src = ;
   </script>
 
@@ -731,6 +733,10 @@ border-bottom: none; /* Prevent double borders */
         <input type="image" class="menubutton" id="menurubberimage11" onclick="GoAbout();" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAADdElEQVR4nO3cz2tUVxjG8eedOziQTKMbF9EG4pCF/gUFRZdiUyG4KbhwKTqmunVRxR/gxqUSAtm7sZsSEpEuC4r/QTfNJJJo7KoxGYOmc+/bhYpIm3jOuWd8c2aez3bOuTmc75ybOyEMQERERERERERE/UJiXGTs3ua3eTWfAPQ0VEYhMgLoYIxr7x7yBqrLIroIlblKns3+eWVgpfRVy0weu7exP89wDYJLAKplF5OYAtAHRZZdfX5hcDX0IsEBGtPrp1XlAYCh0Gv0iHWpVM62Lg4+CplcCZnUmNq4pCq/gpsPAENaFLON6Y1myGTvEzA61T4lonMAspAf2MMKEZ1oNYfmfCZ5BRi5/+ZANSv+AN/523mtKoeXJuuvXCd43YKqWXEL3Pyd7K2I3vCZ4HwCPjxqLqL/nnZ8df6RbHSlOfDCZbDzCcir+Rlw811U9xT5hOtg5wAC/T5sPf1HRcZdxzoHUMhY2HL6kTrvlc8v4eGAlfSrg64DfQLUAxbSr5z3KuiTMMWT5FPNcF1w/VgNx0fefxh/spLj7rMttNYK45X5Sy7AcF0w/+MA9tU+fYQ5eaiK7w5kGH+4idW2Gq7OX3K3oOvHap9t/kd7a4Kfj9YMVlROcgE+3nb+z4kdXtutkguwk7RuPu8lF+DJSr7ta78vb//abpVcgLvPtvD63X/f63+/Vdx5+s5gReUkF6C1VmD84SYeLXTQ3lK0txTzCx388MsmXiX2BAQk+BgKAKttxU+/vbVeRhTJnYBewwDGGMAYAxhjAGPJPQW1mjv/qb0x3f5KK4mDJ8AYAxhjAGMMYIwBjDGAMQYwxgDGGMAYAxhjAGMMYIwBjDGAMQYwxgDGGMAYAxhjAGMMYIwBjCX3XxGp/dfDl/AEGGMAYwxgjAGMMYAxBuiOddeBDNAdTt+WBTBAl8iC60gG6AKFzruOZYD4OnlemXUdzACxCWaWLw++dB3OAHGtoSq3fSYwQDyFiJ5bPF//y2cSA8SRKzDp+73RQIJ/jt6F1lTl7NJk/XHIZJ6AcB0AM6pyJHTzAZ4AH20Ay4C0FDqX55VZn6ed7XQlgApuLjW/udWNa/ea6Lcgbr6fqAG4+f6iBeDmh4kSgJsfrnQAbn45pQJw88sLDsDNjyMoADc/Hu8A3Py4vAJw8w01pjZuWq+BiIiol/wLDhTrAmYSEBUAAAAASUVORK5CYII="></input>
         <br><output class="menudesc" id="menurubber11celltext"></output>
       </div>
+      <div class="divMenuCell" id="menurubber12cell">
+        <input type="image" class="menubutton" id="menurubberimage12" onclick="GoSettingsIO();" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAAE4ElEQVR4nO2cXWhbZRjH/0/6kbRssW3aDtdkF0W2aWHtVSvYVuPQQZUhtd66C8XOKgPLBn4wENQLoS1eiF1VEAQZgojiUGZB120XzpuxlardipS2VtcPa0O7pik5jxdbtElzcs5JT/rmnDy/q/Y9b97z8v/leU/ew0kAQRAEQRAEQRAEQSgkyKhDuPPcExrTEIC6HZhPPjMDphdGvur4zs5BPUYdNKYzkPABIAjiIbsHNRQAIGj3SR1MyO4BzQgQcogIUIwIUIwIUIwIUIwIUIwIUIzhTnj49w3eiYk4hcfqSwwzs4JUgGJEgGJEgGJEgGJEgGJEgGJEgGJEgGJEgGKKczXws2d+Tfr/0+P3Zzy+06TORxVSAYoRAYoRAYqRu6EWkbuhLkMEKEYEKEb2AYqRClCMCFCMCFCM7AMsIvsAl5GzT0FuZ6a3N0xEgwBqGRio6+9/hwDLq4VUQBbMnjr1OBF9C+AAgEoC3vrj5MlBNrGkp5Kza4Bb9wENg68fYU37GoAv9RgTDdX19b1opRKkAiwQv/0PIhWBd5EmfAAg5u7Z3t73rFSCCDBJfG0Z0fkJjD/YWh+prhnT7Uh0wspyJAJMEF9bRnTuJsAamMh/o7k1lEkCMXeblSD7AAM2h78ZYo7sv3Jpxr+48IDeaxk4HezvfzvT+FIBGShemUwbPgAwkX+8pb1uJZChEoBXjM4hAnQILA6j/UojKnFLvxPhnt9aWkORQPUvOj3mjM4jAtIQWBxG49VOeOK30T7eiUqa1+3LRP4bLW3BNBKizNxjdC7ZB6TwX/hadFOrBxcPfIklrtEdj5gj+3++PO1fmG8AEGPmp4MDA+eM5lGQFbDbl/4OTPrwAUAzVwl3Ph1dBVGXmfCBAhSw21eMV4/u29KuH36COxKqomOX9cZmIu/N5tY36vr6vjE7n4ISkAg/VOVNajcOP4GGtqnuh6rWro+kORgDa88cPdxq6edsCn4fYD78zRBfCn1w8e+yQw/fbYiBta6nDreZfucnKKgKSCW78AGAqW26p/1uJWQdPlDAAgIL57MMPwFT23RP897VCx3Zhg8U6BKU/Ts/iRiALjqOrMMHXPxc0PYvuBmxJXzApUuQU8IHXCggl+FrVArYGD7gMgG5Dn+06XPYGT5QABdhO8Ofr3lSnguygt3h5wLXCnBC+IBLBTglfMCFApwUPuAyAU4LH3CRACeGD7hEgFPDB1wgwMnhAw4X4PTwAQd/P8Ab/xP3Tb22vfA9Plxr+gKL1UdsnJk1HFsBlesjKKudxWpNQ1av16gUo41nlYYPZPGFgnyBL3g/AuF5ECKYik1jha2YsPWW8nZwbAXAgzAAgOHHvtIQdpH+I+PJ5E34gEMrgH8sC8KjTSc1mquEvAofcGoFEIe3tBlXQt6FDwBFqieQDRWhhg8P3rsc9JVseWzci4oiH9a0CcRQu6k9L8MHHCrAu6dp8PzYXk/44F8oL41vOZwiIW/DBxy4BL1/+lDLrYiveHJhF176rBmLq6VbOyWWo3K6hjwOH3CggKX1kucSf+tImADjYzD3oL6sI5/DBxy4E56L+JIuwOsbRfGzV+pHX350fBAavqdwdPL/o7Ednp11HPcx9NixR5b8ZRsLe/zrP/jLY5+cePP6T6rnJAiCIAiCIAiCYIV/ARATMfHJA9YgAAAAAElFTkSuQmCC"></input>
+        <br><output class="menudesc" id="menurubber11cel2text"></output>
+      </div>
     </div>
   </div>
   <br>
@@ -750,6 +756,18 @@ border-bottom: none; /* Prevent double borders */
           </div>
         <div class="divTableCell" id="HomePage" style="display: table-cell; text-align:center;">
             Init...
+        </div>
+        <div class="divTableCell" id="SaveLoadConfig" style="display: none; text-align:center;">
+          <br>
+          <br><output id="SaveLoadConfigLogCat"></output>
+          <br><output id="SaveLoadConfigLogFunc"></output>
+          <br><output id="SaveLoadConfigLog"></output>
+          <br>
+          <input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0)'>
+          <input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden onclick='UploadConfig(this)' />
+          <br>
+          <div class="divTable" id="CategoryForSaving" style="text-align: left;">
+          </div>
         </div>
         <div class="divTableCell" id="LeftMenuTableCell" style="display: none;">
           <div class="divTable" style="display: grid; width: 100%;">
@@ -887,6 +905,7 @@ border-bottom: none; /* Prevent double borders */
     var FunctionsquickManageListOnFrontPageEnum = null; // JSON c перечнем параметров для управления с главной страницы.
     var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
     var d3libraryloaded = false;
+    var configBuildStage = -1;
 
     gemById("menurubberimage31").src = backImage;
     gemById("menurubberimage32").src = updateImage;
@@ -894,6 +913,8 @@ border-bottom: none; /* Prevent double borders */
     gemById("menurubberimage34").src = okImage;
     gemById("menurubberimage21").src = clockImage;
     gemById("menurubberimage22").src = restartImage;
+    gemById("menurubberimage41").src = downloadImage;
+    gemById("menurubberimage42").src = uploadImage;
 
     function LoadScript(src, onLoadCallBack, onErrorCallBack) {
       var script = document.createElement('script');
@@ -1069,6 +1090,125 @@ window.onclick = function(event) {
       LoadValuesInCategory(CurrentCategory, 2);
     }
 
+    function UploadConfig(fileName){
+      var reader = new FileReader();
+      reader.onload = function(event) {
+        var contents = JSON.parse(event.target.result);
+        if (contents != null) {
+          for (var k in contents){
+            var value = contents[k].value;
+            switch (contents[k].dataType) {
+              case 5:
+                var val = contents[k].value.match(/(\w+|--):(\w+|--)/g);
+                if (val != null)
+                  value = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
+                break;
+              default:
+                break;
+            }
+          loadAjax(baseURL, 'S' + k + '=' + value, uploadParamNotify, false);
+          }
+        }
+        };
+
+       reader.onerror = function(event) {
+             console.error("Файл не может быть прочитан! код " + event.target.error.code);
+      };
+      reader.readAsText(fileName.files[0]);
+    }
+
+    function uploadParamNotify(jsontext, command){
+      var res = command.split("=");
+      note({
+        content: "Изменён параметр " + res[0].slice(1) + " на значение " + res[1],
+        type: "info",
+        time: 3
+      });
+    }
+
+
+    function DownloadConfig(stage){
+    switch(stage){
+      case 0:
+        configBuildStage = -1;
+        for (var k = 0; k < RootCategoryEnum.length; k++) {
+          if(gemById("catrootcheckbox" + k).checked){
+            if (FlagCategoryIsLoaded[k]) {
+              catlistload4configdump(null, 'JK=' + k);
+            } else {
+              loadAjax(baseURL, 'JK=' + k, catlistload4configdump, true);
+              configBuildStage = k;
+            }
+          }
+        }
+        break;
+      case 1:
+        configBuildStage = -1;
+        var cmdlist = "";
+        var j = 0;
+        for (var k = 0; k < RootCategoryEnum.length; k++) {
+          if(gemById("catrootcheckbox" + k).checked){
+            for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
+              if (FunctionsEnum[i] != null && !('value' in FunctionsEnum[i])) {
+                j++;
+                cmdlist += i;
+                configBuildStage = i;
+                if (j == JSONOptionsPerRequest) {
+                  loadValues4BuildConfig(cmdlist);
+                  cmdlist = "";
+                  j = 0;
+                } else
+                  cmdlist += ",";
+              }
+            }
+          }
+        }
+        if (j > 0) loadValues4BuildConfig(cmdlist);
+        break;
+      case 2:
+        BuildConfig4Download();
+        break;
+      }
+    }
+
+    function BuildConfig4Download(){
+    var isNotFirstElement = false;
+    var currentcat = 0;
+var text = "{\n";
+    for(var k in FunctionsEnum){
+    var allowtonext = false;
+    do{
+    if(RootCategoryEnum[currentcat].max < k) {
+    currentcat++;
+    continue;
+    } else {
+    allowtonext = true;
+    if(!gemById("catrootcheckbox" + currentcat).checked) continue;
+    }
+    if(isNotFirstElement){
+    text += `,\n`;
+    } else{
+    isNotFirstElement = true;
+    }
+    text += `"${k}": {\n`;
+    text += `"dataType": ${FunctionsEnum[k].dataType},\n`;
+    text += `"value": "${FunctionsEnum[k].value}"\n`;
+    text += `}`;
+    }while(!allowtonext)
+    }
+    text += "\n}";
+downloadAsFile(text);
+    }
+
+function downloadAsFile(data) {
+  let a = document.createElement("a");
+    let file = new Blob([data], {type: 'application/json'});
+      a.href = URL.createObjectURL(file);
+        a.download = "config.json";
+          a.click();
+//          document.body.removeChild(a);
+          }
+
     function rootlistshow(jsontext, command) {
       if (jsontext != null && RootCategoryEnum == null) {
         var i = 0;
@@ -1083,19 +1223,20 @@ window.onclick = function(event) {
         FlagCategoryIsLoaded = new Array(i);
         FunctionsEnum = new Array(RootCategoryEnum[i-1].max + 1); // plus param #0
       }
-//      if (gemById("RightMenuTableCell0") == null)
-//          gemById("FunctionsMenuTable").insertAdjacentHTML("beforeend", `<div class="divTableResultCell" id="RightMenuTableCell0"></div>`);
 
-        var  outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>`
+        var  outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>`;
+        var outtext1 = `<label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}">All</label><br><br>`;
       outtext += `<div class="funcTable textBtnGroup">`;
 //      var outtext = `<div class="gridtable" style="display: grid; margin: 0 auto; grid-template-columns: auto 2em auto;">`;
 
       for (var i = 0; i < RootCategoryEnum.length; i++) {
         outtext += `<div class="funcRow"><div class="funcCell">${i}.</div><div class="funcCell"><button onclick="LoadCategoryEnum(${i});">` + translateString(RootCategoryEnum[i].name) + "</button></div><div class='funcCell'></div><div class='funcCell centered'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div></div>";
 //        outtext += `<div class='grid-item'><a href="#" onclick="LoadCategoryEnum(${i});">` + i + ". " + translateString(RootCategoryEnum[i].name) + "</a></div><div class='grid-item'></div><div class='grid-item'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div>";
+      outtext1 += `<label><input id="catrootcheckbox${i}" type="checkbox" checked>`+ translateString(RootCategoryEnum[i].name) + `</label><br>`;
       }
       outtext += "</div>";
       gemById("RootTable").innerHTML = outtext;
+      gemById("CategoryForSaving").innerHTML = outtext1;
     }
 
     function configpageshow(htmltext, command) {
@@ -1151,7 +1292,7 @@ window.onclick = function(event) {
                   for (var j = 1; j <= 31; j++ ) {
                     outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
                   }
-                  outtext += `</select>`;
+                  outtext += `</select>.`;
                   outtext += `<select id="${prefix}${func}control-m" onChange="StackChanges(${func}, '${prefix}');">`;
                   outtext += `<option value="0">--</option>`;
                   for (var j = 1; j <= 12; j++ ) {
@@ -1219,24 +1360,51 @@ window.onclick = function(event) {
           }
     }
 
-    function catlistshow(jsontext, command) {
-      if (gemById("RootTable") == null) LoadRootCategoryEnum();
+    function catlistloader(jsontext, command) {
       var res = command.split("=");
-      var outtext;
-      var isAlreadyLoaded = FlagCategoryIsLoaded[res[1]];
       if (res[0] == "JK" && res[1] >= 0) {
-        if (!isAlreadyLoaded) {
+        if (!FlagCategoryIsLoaded[res[1]]) {
           if (jsontext != null) {
             for (var k in jsontext) {
               FunctionsEnum[k] = jsontext[k];
             }
             FlagCategoryIsLoaded[res[1]] = true;
-          } else
-            return;
+            return true;
+          } else {
+            return false;
+          }
         }
+      else
+        {
+        return true;
+        }
+      } else {
+        note({
+          content: "Error: Category not exist!",
+          type: "error",
+          time: 5
+        });
+        return false;
+      }
+    return false;
+    }
+
+    function catlistload4configdump(jsontext, command) {
+      var result = catlistloader(jsontext, command);
+      var res = command.split("=");
+      gemById("SaveLoadConfigLogCat").textContent = "Category #" + res[1] + ": " + (result?"ok":"failed");
+      if(configBuildStage == res[1]) DownloadConfig(1);
+    }
+
+    function catlistshow(jsontext, command) {
+      if (gemById("RootTable") == null) LoadRootCategoryEnum();
+      var res = command.split("=");
+      var outtext;
+      var isAlreadyLoaded = false;
+      if(catlistloader(jsontext, command)) isAlreadyLoaded = true; else return;
 
             //Interface generator
-            outtext = `<br><h2 id='categorytitle${res[1]}'></h2><br>`
+            outtext = `<br><h2 id='categorytitle${res[1]}'></h2><br>`;
             gemById("FunctionsMenuTable").innerHTML = "";
             outtext += `<div style="display: table; margin: 0 auto; text-align: center;"><div class="divTableFuncListBody">`;
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
@@ -1261,19 +1429,20 @@ window.onclick = function(event) {
 
         CurrentCategory = res[1];
         gemById("FunctionsMenuTable").style.display = "block";
-      } else {
-        note({
-          content: "Error: Category not exist!",
-          type: "error",
-          time: 5
-        });
-        return;
-      }
     }
 
     function insertvaluesincatlistshow(jsontext, command) {
       for (var k in jsontext) {
         insertvalue(FunctionsEnum[k], jsontext[k], k, "func");
+      }
+    }
+
+    function insertvaluesinram(jsontext, command) {
+      for (var k in jsontext) {
+        FunctionsEnum[k].value = jsontext[k].value;
+        if(FunctionsEnum[k].dataType == 0)FunctionsEnum[k].unit = jsontext[k].unit; // For numerical values only
+        gemById("SaveLoadConfigLogFunc").textContent = "Function #" + k + ": ok";
+        if(k == configBuildStage) DownloadConfig(2);
       }
     }
 
@@ -1478,6 +1647,7 @@ window.onclick = function(event) {
             time: 3
           });
           loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
+          FunctionsEnum[funkid].value = elem.value;
           break;
         case 1:
           for (var i = 0; i < elem.options.length; i++) {
@@ -1488,6 +1658,7 @@ window.onclick = function(event) {
                 time: 3
               });
             loadAjax(baseURL, 'S' + funkid + '=' + elem.options[i].value, nullshow, false);
+            FunctionsEnum[funkid].value = elem.options[i].value;
             }
           }
           break;
@@ -1500,6 +1671,7 @@ window.onclick = function(event) {
             time: 3
           });
           loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
+          FunctionsEnum[funkid].value = elem.value;
           break;
         case 5:
             if(funkid >= 500 && funkid <= 620){
@@ -1518,6 +1690,7 @@ window.onclick = function(event) {
                 time: 3
               });
             loadAjax(baseURL, 'S' + funkid + '=' + temp, nullshow, false);
+            FunctionsEnum[funkid].value = temp;
             }
             //else
             //  sel.innerHTML = jsontext[k].value;
@@ -1544,6 +1717,7 @@ window.onclick = function(event) {
                 time: 3
               });
           loadAjax(baseURL, 'S' + funkid + '=' + temp, nullshow, false);
+          FunctionsEnum[funkid].value = temp;
                     }
                   break;
                   }
@@ -1561,6 +1735,7 @@ window.onclick = function(event) {
             time: 3
           });
           loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
+          FunctionsEnum[funkid].value = elem.value;
           break;
         case 99:
           note({
@@ -1569,6 +1744,7 @@ window.onclick = function(event) {
             time: 3
           });
           loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
+          FunctionsEnum[funkid].value = elem.value;
           break;
         default:
           break;
@@ -1600,6 +1776,10 @@ window.onclick = function(event) {
 
     function loadValues(functionsenum) {
       loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesincatlistshow, true);
+    }
+
+    function loadValues4BuildConfig(functionsenum) {
+      loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinram, true);
     }
 
     function loadMonitorValues(functionsenum) {
@@ -1787,6 +1967,7 @@ window.onclick = function(event) {
       gemById("LeftMenuTableCell").style.display = (id==2)?"grid":"none";
       gemById("RightMenuTableCell").style.display = (id==3)?"table-cell":"none";
       gemById("AboutMenuTableCell").style.display = (id==4)?"table-cell":"none";
+      gemById("SaveLoadConfig").style.display = (id==5)?"table-cell":"none";
       if (CurrentCategory != null) {
         gemById("FunctionsMenuTable").style.display = "none";
         //Freeing RAM
@@ -1835,6 +2016,10 @@ window.onclick = function(event) {
 
     function GoAbout() {
       if(ShowSelectedMode(4));
+    }
+
+    function GoSettingsIO() {
+      if(ShowSelectedMode(5));
     }
 
     function GoHome() {
