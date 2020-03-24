@@ -764,7 +764,7 @@ border-bottom: none; /* Prevent double borders */
           <br><output id="SaveLoadConfigLog"></output>
           <br>
           <input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0)'>
-          <input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden onclick='UploadConfig(this)' />
+          <input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden onchange='UploadConfig(this)' />
           <br>
           <div class="divTable" id="CategoryForSaving" style="text-align: left;">
           </div>
@@ -1095,18 +1095,34 @@ window.onclick = function(event) {
       reader.onload = function(event) {
         var contents = JSON.parse(event.target.result);
         if (contents != null) {
+          var j = 0;
           for (var k in contents){
-            var value = contents[k].value;
-            switch (contents[k].dataType) {
-              case 5:
-                var val = contents[k].value.match(/(\w+|--):(\w+|--)/g);
-                if (val != null)
-                  value = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
-                break;
-              default:
-                break;
+            while(k > RootCategoryEnum[j].max){
+              j++;
+              gemById("SaveLoadConfigLogCat").textContent = "Category #" + j;
+              }
+            if(gemById("catrootcheckbox" + j).checked){
+              var value = contents[k].value;
+              switch (contents[k].dataType) {
+                case 2: value = null;
+                case 5:
+                  if(k >= 500 && k <= 620){
+                    var val = contents[k].value.match(/(\w+|--):(\w+|--)/g);
+                    if (val != null)
+                      value = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
+                  }
+                  else
+                    value = null;
+                    //value = value.replace(/\s/g,"_");
+                  break;
+                default:
+                  break;
+              }
+            if(value != null) {
+              gemById("SaveLoadConfigLogFunc").textContent = "Function #" + k;
+              loadAjax(baseURL, 'S' + k + '=' + value, uploadParamNotify, false);
+              }
             }
-          loadAjax(baseURL, 'S' + k + '=' + value, uploadParamNotify, false);
           }
         }
         };
@@ -1114,7 +1130,9 @@ window.onclick = function(event) {
        reader.onerror = function(event) {
              console.error("Файл не может быть прочитан! код " + event.target.error.code);
       };
-      reader.readAsText(fileName.files[0]);
+      if(fileName.files[0]){
+        reader.readAsText(fileName.files[0]);
+        }
     }
 
     function uploadParamNotify(jsontext, command){
@@ -1225,16 +1243,16 @@ function downloadAsFile(data) {
       }
 
         var  outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>`;
-        var outtext1 = `<label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}">All</label><br><br>`;
+        var outtext1 = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br><div class="funcTable textBtnGroup">
+        <div class="funcRow"><div class="funcCell"></div><div class="funcCell"><label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}"></label></div><div class="funcCell"><button onclick="gemById('catrootcheckboxall').checked=!gemById('catrootcheckboxall').checked; gemById('catrootcheckboxall').onchange();">All</button></div><div class='funcCell centered'>` + RootCategoryEnum[0].min + " - " + RootCategoryEnum[RootCategoryEnum.length - 1].max + `</div></div>`;
       outtext += `<div class="funcTable textBtnGroup">`;
-//      var outtext = `<div class="gridtable" style="display: grid; margin: 0 auto; grid-template-columns: auto 2em auto;">`;
 
       for (var i = 0; i < RootCategoryEnum.length; i++) {
         outtext += `<div class="funcRow"><div class="funcCell">${i}.</div><div class="funcCell"><button onclick="LoadCategoryEnum(${i});">` + translateString(RootCategoryEnum[i].name) + "</button></div><div class='funcCell'></div><div class='funcCell centered'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div></div>";
-//        outtext += `<div class='grid-item'><a href="#" onclick="LoadCategoryEnum(${i});">` + i + ". " + translateString(RootCategoryEnum[i].name) + "</a></div><div class='grid-item'></div><div class='grid-item'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div>";
-      outtext1 += `<label><input id="catrootcheckbox${i}" type="checkbox" checked>`+ translateString(RootCategoryEnum[i].name) + `</label><br>`;
+        outtext1 += `<div class="funcRow"><div class="funcCell">${i}.</div><div class="funcCell"><label><input id="catrootcheckbox${i}" type="checkbox" checked></label></div><div class="funcCell"><button onclick="gemById('catrootcheckbox${i}').checked=!gemById('catrootcheckbox${i}').checked">`+ translateString(RootCategoryEnum[i].name) + `</button></div><div class='funcCell centered'>` + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + `</div></div>`;
       }
       outtext += "</div>";
+      outtext1 += "</div>";
       gemById("RootTable").innerHTML = outtext;
       gemById("CategoryForSaving").innerHTML = outtext1;
     }

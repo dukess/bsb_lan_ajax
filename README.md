@@ -3,7 +3,7 @@
 ## Benefits:
 - Saving flash memory for future features and functions (more than 39kB for German language and more than 150kB for multi-byte alphabets). You do not need Arduino Due now.
 - Modern interface (Oh, yeah)
-- More comfort expirience on mobile device.
+- More comfort experience on mobile device.
 - Easy for customization and expansion.
 
 ## Disadvantages:
@@ -36,18 +36,19 @@ All above was included in bsb-lan project, so you do not need do anything.
 - Copy from BSB-lan project src/d3.v3.min.js to root of SD card.
 - Insert SD card into Arduino and start it.
 - Open http://yourbsblandeviceaddress/ajax.html in your browser. Note: you can rename ajax.html to index.html and just type http://yourbsblandeviceaddress/ to start interface.
-   
+
 ## Features:
 ### Webserver:
 - Allowed to content caching (Send Cache-Control, Last-Modified, Content-Length, ETag headers, HEAD request support)
 - Allowed to send gzipped content (for throughput increasing more than 3 times)
-- Save ~8 kB when define USEEXTERNALINTERFACE (disable /D and /DG command because /D is equal /datalog.txt and /DG included into ajax.html). Need to patch. 
+- Save ~8 kB when define USEEXTERNALINTERFACE (disable /D and /DG command because /D is equal /datalog.txt and /DG included into ajax.html). Need to patch.
 ### Interface:
 - Pure JavaScript (excl. D3 library for charts drawing).
 - Language autodetection.
 - Language switching on the fly.
 - Asynchronous data loading/updating.
 - Switching between categories without page reloading.
+- Configuration save/restore (very slow due BSB protocol limitation).
 - D3 library can be placed on SD card for standalone installations (without connection to Internet).
 
 At this point time interface looks highly similar original bsb_lan.
