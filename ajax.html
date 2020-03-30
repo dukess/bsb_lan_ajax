@@ -1785,7 +1785,7 @@ function downloadAsFile(data) {
             if (jsontext != null) {
               for (var k in jsontext) {
                 FunctionsEnum[k] = jsontext[k];
-                FunctionsEnum[m].protect = true; //protect function against RAM freeing
+                FunctionsEnum[k].protect = true; //protect function against RAM freeing
               }
               FunctionsListOnFrontPageFlag = true;
             }
@@ -1818,7 +1818,7 @@ function downloadAsFile(data) {
             if (jsontext != null) {
               for (var k in jsontext) {
                 FunctionsEnum[k] = jsontext[k];
-                FunctionsEnum[m].protect = true; //protect function against RAM freeing
+                FunctionsEnum[k].protect = true; //protect function against RAM freeing
               }
               FunctionsquickManageListOnFrontPageFlag = true;
             }
