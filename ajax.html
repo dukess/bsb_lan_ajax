@@ -859,7 +859,7 @@ display: none;
     <div class="divTableCatMenuCell">
     </div>
     <div class="divTableCatMenuCell" id="menurubber34cell">
-      <input value='Save' type='image' class="menubutton okCancelIcons" id="menurubberimage34" onclick='ApplyChanges(FunctionsEnum, "func")'>
+      <input value='Save' type='image' class="menubutton okCancelIcons" id="menurubberimage34" onclick='ApplyChanges()'>
       <br><output class="menudesc" id="menurubber34celltext"></output>
     </div>
     <div class="divTableCatMenuCell">
@@ -900,10 +900,10 @@ display: none;
     var warnAboutExitWithoutSaveInt = warnAboutExitWithoutSave; //internal version of warnAboutExitWithoutSave
     var CurrentCategory = null;
     var AJAXRequests = new Array();
-    var FunctionsEnum = null; // JSON c перечнем параметров.
+    var FunctionsEnum = []; // JSON c перечнем параметров.
     var RootCategoryEnum = null; // JSON c перечнем категорий.
-    var FunctionsListOnFrontPageEnum = null; // JSON c перечнем параметров для отображения на главной странице.
-    var FunctionsquickManageListOnFrontPageEnum = null; // JSON c перечнем параметров для управления с главной страницы.
+    var FunctionsListOnFrontPageFlag = false; // JSON c перечнем параметров для отображения на главной странице.
+    var FunctionsquickManageListOnFrontPageFlag = false;  //Флаг загрузки параметров для управления с главной страницы.
     var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
     var d3libraryloaded = false;
     var configBuildStage = -1;
@@ -1029,7 +1029,6 @@ display: none;
         }
       gemById("HomePage").style.textAlign = "start";
       }
-
       LoadRootCategoryEnum();
       if (CurrentCategory != null)
         if (gemById("FunctionsMenuTable").style.display.localeCompare("none")) LoadCategoryEnum(CurrentCategory);
@@ -1064,15 +1063,15 @@ window.onclick = function(event) {
       return hex;
     }
 
-    function StackChanges(id) {
-      ListOfChanges[id] = true;
+    function StackChanges(elementid, id) {
+      ListOfChanges[id] = elementid;
       for(var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
         document.getElementsByClassName('okCancelIcons')[i].style.opacity = 1;
     }
 
-    function ApplyChanges(funcenum, prefix) {
+    function ApplyChanges() {
       for (var k in ListOfChanges) {
-        gameIsChanged(funcenum[k], k, prefix);
+        gameIsChanged(k);
         delete ListOfChanges[k];
       }
       for(var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
@@ -1085,6 +1084,8 @@ window.onclick = function(event) {
         document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
       if(prefix == "func")
         LoadValuesInCategory(CurrentCategory, 1);
+      else
+        loadManagementValues(quickManageFunctionsList);
       ListOfChanges = new Object();
     }
 
@@ -1122,7 +1123,7 @@ window.onclick = function(event) {
               }
             if(value != null) {
               gemById("SaveLoadConfigLogFunc").textContent = "Function #" + k;
-              loadAjax(baseURL, 'S' + k + '=' + value, uploadParamNotify, false);
+              loadAjax(baseURL, 'WS' + k + '=' + value, uploadParamNotify, false);
               }
             }
           }
@@ -1241,7 +1242,8 @@ function downloadAsFile(data) {
           RootCategoryEnum[i++] = jsontext[k];
         }
         FlagCategoryIsLoaded = new Array(i);
-        FunctionsEnum = new Array(RootCategoryEnum[i-1].max + 1); // plus param #0
+//Dynamic array allocation
+//        FunctionsEnum = new Array(RootCategoryEnum[i-1].max + 1); // plus param #0
       }
 
         var  outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>`;
@@ -1271,26 +1273,27 @@ function downloadAsFile(data) {
       gemById('HomePage').innerHTML = htmltext;
     }
 
-    function insertinterfaceelement(jsonObject, func, prefix){
+    function insertinterfaceelement(func, prefix){
+              var jsonObject = FunctionsEnum[func];
               var dataType = jsonObject.dataType;
               var multiple = "multiple";
               var outtext = "";
               outtext += `<div class="funcCell" id="${prefix}${func}text"></div><div class="funcCell"></div><div class="funcCell" id="${prefix}${func}value">`;
               switch (dataType) {
                 case 0: // number
-                  outtext += `<input id="${prefix}${func}control" type="number" step="0.1" onChange="StackChanges(${func}, '${prefix}');" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+                  outtext += `<input id="${prefix}${func}control" type="number" step="0.1" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
                   break;
                 case 1: // enum
                   multiple = "";
                 case 2: // multiple choices enum (bitwise flags)
-                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');" ${multiple}>`;
+                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(this, ${func});" ${multiple}>`;
                   for (var j in jsonObject.possibleValues) {
                     outtext += `<option value="${jsonObject.possibleValues[j].enumValue}"></option>`;
                   }
                   outtext += `</select>`;
                   break;
                 case 3:  // weekday
-                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');">`;
+                  outtext += `<select id="${prefix}${func}control" onChange="StackChanges(this, ${func});">`;
                   for (var j = 1; j <= 7; j++ ) {
                     var temp = translateString("STR_" + (499 + j) + "_TEXT");
                     outtext += `<option value="${j}">${temp}</option>`;
@@ -1298,22 +1301,22 @@ function downloadAsFile(data) {
                   outtext += `</select>`;
                   break;
                 case 4: //time
-                  outtext += `<input type="time" id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');">`;
+                  outtext += `<input type="time" id="${prefix}${func}control" onChange="StackChanges(this, ${func});">`;
                   break;
                 case 5: //date and time
                   if(func >= 500 && func <=620){
-                    outtext += `1. <input type="time" id="${prefix}${func}control-0" onChange="StackChanges(${func}, '${prefix}');"> - <input type="time" id="${prefix}${func}control-1" onChange="StackChanges(${func}, '${prefix}');">&nbsp;2. <input type="time" id="${prefix}${func}control-2" onChange="StackChanges(${func}, '${prefix}');"> - <input type="time" id="${prefix}${func}control-3" onChange="StackChanges(${func}, '${prefix}');">&nbsp;3. <input type="time" id="${prefix}${func}control-4" onChange="StackChanges(${func}, '${prefix}');"> - <input type="time" id="${prefix}${func}control-5" onChange="StackChanges(${func}, '${prefix}');">`;
+                    outtext += `1. <input type="time" id="${prefix}${func}control-0" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onChange="StackChanges(this, ${func});">&nbsp;2. <input type="time" id="${prefix}${func}control-2" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onChange="StackChanges(this, ${func});">&nbsp;3. <input type="time" id="${prefix}${func}control-4" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onChange="StackChanges(this, ${func})">`;
                   } else
                     outtext += `<output id="${prefix}${func}control"></output>`;
                   break;
                 case 6: //day and month
-                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func}, '${prefix}');">`;
+                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(this, ${func});">`;
                   outtext += `<option value="0">--</option>`;
                   for (var j = 1; j <= 31; j++ ) {
                     outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
                   }
                   outtext += `</select>.`;
-                  outtext += `<select id="${prefix}${func}control-m" onChange="StackChanges(${func}, '${prefix}');">`;
+                  outtext += `<select id="${prefix}${func}control-m" onChange="StackChanges(this, ${func});">`;
                   outtext += `<option value="0">--</option>`;
                   for (var j = 1; j <= 12; j++ ) {
                     outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
@@ -1321,10 +1324,10 @@ function downloadAsFile(data) {
                   outtext += `</select>`;
                   break;
                 case 7: //string
-                  outtext += `<input type="text" id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');">`;
+                  outtext += `<input type="text" id="${prefix}${func}control" onChange="StackChanges(this, '${func}');">`;
                   break;
                 case 8: // weekday, time hh:mm
-                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(${func}, '${prefix}');">`;
+                  outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(this, '${func}');">`;
                   for (var j = 1; j <= 7; j++ ) {
                     var temp;
                     if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
@@ -1334,10 +1337,10 @@ function downloadAsFile(data) {
                     outtext += `<option value="${j}">${temp}</option>`;
                   }
                   outtext += `</select>`;
-                  outtext += `<input type="time" id="${prefix}${func}control-t" onChange="StackChanges(${func}, '${prefix}');">`;
+                  outtext += `<input type="time" id="${prefix}${func}control-t" onChange="StackChanges(this, '${func}');">`;
                   break;
                 case 99: // string with unit name. Hack.
-                  outtext += `<input id="${prefix}${func}control" onChange="StackChanges(${func}, '${prefix}');" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+                  outtext += `<input id="${prefix}${func}control" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
                   break;
                 default:
                   break;
@@ -1346,7 +1349,8 @@ function downloadAsFile(data) {
               return outtext;
      }
 
-    function insertinterfacevalues(jsonObject, func, prefix){
+    function insertinterfacevalues(func, prefix){
+          var jsonObject = FunctionsEnum[func];
           gemById(prefix + func + "text").textContent = func + ". " + translateString(jsonObject.name);
           switch (jsonObject.dataType) {
             case 0:
@@ -1430,15 +1434,15 @@ function downloadAsFile(data) {
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
               if (FunctionsEnum[k] == null) continue;
               outtext += `<div class="divTableFuncListRow">`;
-              outtext += insertinterfaceelement(FunctionsEnum[k], k, "func");
+              outtext += insertinterfaceelement(k, "func");
               outtext += `</div>`;
             }
             outtext += "</div></div>";
             gemById("FunctionsMenuTable").innerHTML = outtext;
         for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
           if (FunctionsEnum[k] == null) continue;
-          insertinterfacevalues(FunctionsEnum[k], k, "func");
-          insertvalue(FunctionsEnum[k], null, k, "func");
+          insertinterfacevalues(k, "func");
+          insertvalue(null, k, "func");
         }
 //        if (!isAlreadyLoaded)
           LoadValuesInCategory(res[1], 0);
@@ -1453,7 +1457,7 @@ function downloadAsFile(data) {
 
     function insertvaluesincatlistshow(jsontext, command) {
       for (var k in jsontext) {
-        insertvalue(FunctionsEnum[k], jsontext[k], k, "func");
+        insertvalue(jsontext[k], k, "func");
       }
     }
 
@@ -1468,11 +1472,12 @@ function downloadAsFile(data) {
 
     function insertvaluesinmanagementlistshow(jsontext, command) {
       for (var k in jsontext) {
-        insertvalue(FunctionsquickManageListOnFrontPageEnum[k], jsontext[k], k, "manager");
+        insertvalue(jsontext[k], k, "manager");
       }
     }
 
-    function insertvalue(jsonObject, currentValueObject, func,  prefix) {
+    function insertvalue(currentValueObject, func,  prefix) {
+      var jsonObject = FunctionsEnum[func];
 // get value from cache, if exist
         if(currentValueObject == null) {
           if(typeof jsonObject.value === 'undefined') return;
@@ -1552,24 +1557,24 @@ function downloadAsFile(data) {
           var m = functionsListOnFrontPage[k];
 // get value from cache, if exist
           if(jsontext == null && command == null) {
-            if(typeof FunctionsListOnFrontPageEnum[m].value === 'undefined') continue;
-            jsontext = FunctionsListOnFrontPageEnum;
+            if(typeof FunctionsEnum[m].value === 'undefined') continue;
+            jsontext = FunctionsEnum;
           }
           else {
 //cache current value and unit name
-            FunctionsListOnFrontPageEnum[m].value = jsontext[m].value;
-            if(FunctionsListOnFrontPageEnum[m].dataType == 0)FunctionsListOnFrontPageEnum[m].unit = jsontext[m].unit; // For numerical values only
+            FunctionsEnum[m].value = jsontext[m].value;
+            if(FunctionsEnum[m].dataType == 0)FunctionsEnum[m].unit = jsontext[m].unit; // For numerical values only
           }
-          if(typeof FunctionsListOnFrontPageEnum[m] === "object") {
+          if(typeof FunctionsEnum[m] === "object") {
             var temp;
-            switch(FunctionsListOnFrontPageEnum[m].dataType){
-              case 1: outtext = translateString(FunctionsListOnFrontPageEnum[m].possibleValues[jsontext[m].value].desc); break;
+            switch(FunctionsEnum[m].dataType){
+              case 1: outtext = translateString(FunctionsEnum[m].possibleValues[jsontext[m].value].desc); break;
               case 2:
                 var bitparam = parseInt(jsontext[m].value, 2);
                 bitparam = (bitparam << 8) + 255;
                 var notfirst = false;
-                for (var j in FunctionsListOnFrontPageEnum[m].possibleValues) {
-                  temp = parseInt(FunctionsListOnFrontPageEnum[m].possibleValues[j].enumValue);
+                for (var j in FunctionsEnum[m].possibleValues) {
+                  temp = parseInt(FunctionsEnum[m].possibleValues[j].enumValue);
                   var bitflag = false;
                   if(temp > 255)
                     {if ((temp & bitparam) == temp) bitflag  = true;}
@@ -1579,7 +1584,7 @@ function downloadAsFile(data) {
 
                   if(bitflag){
                     if(notfirst) {outtext +=", ";} else {notfirst = true;}
-                    outtext += translateString(FunctionsListOnFrontPageEnum[m].possibleValues[j].desc);
+                    outtext += translateString(FunctionsEnum[m].possibleValues[j].desc);
                     }
                 }
               break;
@@ -1614,8 +1619,8 @@ function downloadAsFile(data) {
                 cmdlist += ",";
             }
           }
-          gemById("menurubberimage33").style.opacity = 0.33;
-          gemById("menurubberimage34").style.opacity = 0.33;
+          for(var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
+            document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
           break;
         case 1:
       // cancel changes. Partial update
@@ -1631,8 +1636,8 @@ function downloadAsFile(data) {
                 cmdlist += ",";
             }
           }
-          gemById("menurubberimage33").style.opacity = 0.33;
-          gemById("menurubberimage34").style.opacity = 0.33;
+          for(var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
+            document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
           break;
         case 2:
         //exclude changes
@@ -1656,69 +1661,44 @@ function downloadAsFile(data) {
       if (j > 0) loadValues(cmdlist);
     }
 
-    function gameIsChanged(func, funkid, controlname) {
-      var controlid = controlname + funkid + "control";
-      var elem = gemById(controlid);
-      switch (func["dataType"]) {
+    function gameIsChanged(funkid) {
+      var elem = ListOfChanges[funkid];
+      var setvalue = null;
+      switch (FunctionsEnum[funkid].dataType) {
         case 0:
-          note({
-            content: "Изменён параметр " + funkid + " на значение " + elem.value,
-            type: "info",
-            time: 3
-          });
-          loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
-          FunctionsEnum[funkid].value = elem.value;
+          setvalue = elem.value;
           break;
         case 1:
           for (var i = 0; i < elem.options.length; i++) {
             if (elem.options[i].selected == true) {
-              note({
-                content: "Изменён параметр " + funkid + " на значение " + elem.options[i].value,
-                type: "info",
-                time: 3
-              });
-            loadAjax(baseURL, 'S' + funkid + '=' + elem.options[i].value, nullshow, false);
-            FunctionsEnum[funkid].value = elem.options[i].value;
+              setvalue = elem.options[i].value;
             }
           }
           break;
         case 2:
           break;
         case 4:
-          note({
-            content: "Изменён параметр " + funkid + " на значение " + elem.value,
-            type: "info",
-            time: 3
-          });
-          loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
-          FunctionsEnum[funkid].value = elem.value;
+          setvalue = elem.value;
           break;
         case 5:
             if(funkid >= 500 && funkid <= 620){
                 var val = [];
                 for (var n = 0; n < 6; n++) {
-                  val[n] = gemById(controlid + "-" + n).value;
+                  val[n] = gemById(elem.id.substring(0, elem.id.length - 1) + n).value;
 // HTML do not allow "24:00" for time input
                   if(val[n] == "23:59"){
                     val[n] = "24:00";
                 }
-                var temp = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
               }
-              note({
-                content: "Изменён параметр " + funkid + " на значение " + temp,
-                type: "info",
-                time: 3
-              });
-            loadAjax(baseURL, 'S' + funkid + '=' + temp, nullshow, false);
-            FunctionsEnum[funkid].value = temp;
+            setvalue = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
             }
             //else
             //  sel.innerHTML = jsontext[k].value;
           break;
         case 6:
-          var elemd = gemById(controlid + "-d");
-          var elemm = gemById(controlid + "-m");
-          var temp;
+          var elemd = gemById(elem.id.substring(0, elem.id.length - 1) + "d");
+          var elemm = gemById(elem.id.substring(0, elem.id.length - 1) + "m");
+          var temp = null;
           for (var i = 0; i < elemd.options.length; i++) {
             if (elemd.options[i].selected == true) {
               if(elemd.options[i].value == 0)
@@ -1731,13 +1711,7 @@ function downloadAsFile(data) {
                       temp = "---";
                     else {
                       temp += (elemm.options[j].value<10?"0":"")+elemm.options[j].value;
-              note({
-                content: "Изменён параметр " + funkid + " на значение " + temp,
-                type: "info",
-                time: 3
-              });
-          loadAjax(baseURL, 'S' + funkid + '=' + temp, nullshow, false);
-          FunctionsEnum[funkid].value = temp;
+                      setvalue = temp;
                     }
                   break;
                   }
@@ -1747,28 +1721,28 @@ function downloadAsFile(data) {
             break;
             }
           }
+          setvalue = temp;
           break;
         case 7:
-          note({
-            content: "Изменён параметр " + funkid + " на значение " + elem.value,
-            type: "info",
-            time: 3
-          });
-          loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
-          FunctionsEnum[funkid].value = elem.value;
+          setvalue = elem.value;
           break;
         case 99:
-          note({
-            content: "Изменён параметр " + funkid + " на значение " + elem.value,
-            type: "info",
-            time: 3
-          });
-          loadAjax(baseURL, 'S' + funkid + '=' + elem.value, nullshow, false);
-          FunctionsEnum[funkid].value = elem.value;
+          setvalue = elem.value;
           break;
         default:
           break;
       }
+
+    if(setvalue != null){
+      note({
+            content: "Изменён параметр " + funkid + " на значение " + setvalue,
+            type: "info",
+            time: 3
+      });
+      loadAjax(baseURL, 'WS' + funkid + '=' + setvalue, nullshow, false);
+      FunctionsEnum[funkid].value = setvalue;
+      }
+
     }
 
     function nullshow() {
@@ -1777,7 +1751,7 @@ function downloadAsFile(data) {
     function syncDateTime() {
       var datetimeNow = new Date();
       var formatted_date = ((datetimeNow.getDate()>9)?"":"0") + datetimeNow.getDate() + "." + ((datetimeNow.getMonth()>8)?"":"0") + (datetimeNow.getMonth() + 1) + "." + datetimeNow.getFullYear() + "_" + ((datetimeNow.getHours()>9)?"":"0") + datetimeNow.getHours() + ":" + ((datetimeNow.getMinutes()>9)?"":"0") + datetimeNow.getMinutes() + ":" + ((datetimeNow.getSeconds()>9)?"":"0") + datetimeNow.getSeconds();
-      loadAjax(baseURL, 'S0=' + formatted_date, function(){
+      loadAjax(baseURL, 'WS0=' + formatted_date, function(){
             note({
             content: "Time set to:" + formatted_date,
             type: "info",
@@ -1805,10 +1779,16 @@ function downloadAsFile(data) {
     function loadMonitorValues(functionsenum) {
       var temp = "";
       if(functionsenum.length > 0) {
-      if(!FunctionsListOnFrontPageEnum)
+      if(!FunctionsListOnFrontPageFlag)
         {
         loadAjax(baseURL, 'JC=' + functionsenum,  function(jsontext, command){
-            FunctionsListOnFrontPageEnum = jsontext;
+            if (jsontext != null) {
+              for (var k in jsontext) {
+                FunctionsEnum[k] = jsontext[k];
+                FunctionsEnum[m].protect = true; //protect function against RAM freeing
+              }
+              FunctionsListOnFrontPageFlag = true;
+            }
             loadMonitorValues(functionsenum);
             }, true);
         return;
@@ -1816,7 +1796,7 @@ function downloadAsFile(data) {
         var sel = gemById("monitorTable");
         var outtext = "";
         for(var k = 0; k < functionsenum.length; k++) {
-            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsListOnFrontPageEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div></div>`;
+            outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div></div>`;
         }
         sel.innerHTML = outtext;
 //Show cached values
@@ -1826,22 +1806,32 @@ function downloadAsFile(data) {
       }
     }
 
-    function loadManagementValues(functionsenum) {
+
+
+    function loadManagementValues(funcenum) {
       var temp = "";
-      if(functionsenum.length > 0) {
-      if(!FunctionsquickManageListOnFrontPageEnum)
+      if(funcenum.length > 0) {
+      if(!FunctionsquickManageListOnFrontPageFlag)
         {
-        loadAjax(baseURL, 'JC=' + functionsenum,  function(jsontext, command){
-            FunctionsquickManageListOnFrontPageEnum = jsontext;
-            loadManagementValues(functionsenum);
-            }, true);
+        loadAjax(baseURL, 'JC=' + funcenum,
+          function (jsontext, command){
+            if (jsontext != null) {
+              for (var k in jsontext) {
+                FunctionsEnum[k] = jsontext[k];
+                FunctionsEnum[m].protect = true; //protect function against RAM freeing
+              }
+              FunctionsquickManageListOnFrontPageFlag = true;
+            }
+            loadManagementValues(funcenum);
+            }
+        , true);
         return;
         }
         var sel = gemById("managementTable");
         var outtext = "";
-        for(var k = 0; k < functionsenum.length; k++) {
+        for(var k = 0; k < funcenum.length; k++) {
             outtext += `<div class="divTableRow">`;
-              outtext += insertinterfaceelement(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]], functionsenum[k], "manager");
+              outtext += insertinterfaceelement(funcenum[k], "manager");
             outtext += `</div>`;
         }
         outtext += `
@@ -1853,26 +1843,26 @@ function downloadAsFile(data) {
              </div>
              <div class="divTableFuncListLeftCell">
               <div style="display:block; float:right;">
-               <input value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges(FunctionsquickManageListOnFrontPageEnum, "manager")'>
+               <input value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges()'>
               </div>
              </div>
             </div>`;
 
         sel.innerHTML = outtext;
 
-        for(var k = 0; k < functionsenum.length; k++) {
-              insertinterfacevalues(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]], functionsenum[k], "manager");
-              insertvalue(FunctionsquickManageListOnFrontPageEnum[functionsenum[k]], null, functionsenum[k], "manager");
+        for(var k = 0; k < funcenum.length; k++) {
+              insertinterfacevalues(funcenum[k], "manager");
+              insertvalue(null, funcenum[k], "manager");
         }
 
-        loadAjax(baseURL, 'JQ=' + functionsenum,
+        loadAjax(baseURL, 'JQ=' + funcenum,
         insertvaluesinmanagementlistshow
         , true);
       }
-    gemById("managercancelImage").src = cancelImage;
-    gemById("managerokImage").src = okImage;
-      gemById("managercancelImage").style.opacity = 0.33;
-      gemById("managerokImage").style.opacity = 0.33;
+      gemById("managercancelImage").src = cancelImage;
+      gemById("managerokImage").src = okImage;
+      for(var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
+        document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
     }
 
     function loadAjax(urlvar, cmdvar, showvar, isajaxvar) {
@@ -1993,7 +1983,8 @@ function downloadAsFile(data) {
         //Freeing RAM
         if (!CacheCategoriesInRAM && id != 3){
           for (var k = RootCategoryEnum[CurrentCategory].min; k <= RootCategoryEnum[CurrentCategory].max; k++) {
-            FunctionsEnum[k] = null;
+            if(!FunctionsEnum[k].protect)
+              FunctionsEnum[k] = null;
             }
           FlagCategoryIsLoaded[CurrentCategory] = false;
           gemById("FunctionsMenuTable").innerHTML = "";
