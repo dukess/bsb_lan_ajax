@@ -514,6 +514,20 @@ display: none;
       width: 12vw;
     }
 }
+
+.Management4HomePage {
+  width:50%;
+  max-width:100%;
+  display: inline-block;
+  }
+
+@media (max-width: 1000px) {
+.Management4HomePage {
+  display: block;
+  border: 10px solid transparent;
+  width:100%;
+  }
+}
   </style>
   <title>BSB-LAN Web AJAX</title>
 </head>
@@ -889,6 +903,7 @@ display: none;
     var functionsListOnFrontPage = []; // Array of integers: list of functions for displaying on home page
     var monitorUpdateInterval = 60000; // update displaying values on home page every ... ms.
     var quickManageFunctionsList = []; // Array of integers: list of functions for managing on home page
+    var displayWelcomeText = true; // Display short review about program functions on start page
 
 // internal variables
     var monitorTimerID = 0;
@@ -1797,6 +1812,7 @@ function downloadAsFile(data) {
         var outtext = "";
         for(var k = 0; k < functionsenum.length; k++) {
             outtext += `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div></div>`;
+//            outtext += `<div style="float: left;">${functionsenum[k]}.&nbsp;</div><div style="float: left;"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div><br>`;
         }
         sel.innerHTML = outtext;
 //Show cached values
@@ -1834,20 +1850,6 @@ function downloadAsFile(data) {
               outtext += insertinterfaceelement(funcenum[k], "manager");
             outtext += `</div>`;
         }
-        outtext += `
-            <div class="divTableRow">
-             <div class="divTableFuncListLeftCell">
-              <div style="display:block; float:left;">
-               <input value='Cancel' type='image' class="okCancelIcons" id="managercancelImage" onclick='CancelChanges("manager")'>
-              </div>
-             </div>
-             <div class="divTableFuncListLeftCell">
-              <div style="display:block; float:right;">
-               <input value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges()'>
-              </div>
-             </div>
-            </div>`;
-
         sel.innerHTML = outtext;
 
         for(var k = 0; k < funcenum.length; k++) {
@@ -2051,15 +2053,23 @@ function downloadAsFile(data) {
     }
 
     function DisplayHomePage() {
-      var outtext = `<b>${UIStrings.MENU_TEXT_HFK}:</b> ${UIStrings.MENU_DESC_HFK}
+      var outtext = displayWelcomeText?`<b>${UIStrings.MENU_TEXT_HFK}:</b> ${UIStrings.MENU_DESC_HFK}
 <br><b>${UIStrings.MENU_TEXT_CFG}:</b> ${UIStrings.MENU_DESC_CFG}
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
-`;
+`:``;
       outtext += `<br>`;
-      if(functionsListOnFrontPage.length > 0) outtext += `<div style="width:50%; min-width:500px; display: inline-block;" align="center"><div align="center">Monitor</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
-      if(quickManageFunctionsList.length > 0) {outtext += `<div style="width:50%; min-width:500px; display: inline-block;" align="center"><div align="center">Management</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
+      if(functionsListOnFrontPage.length > 0) outtext += `<div class="Management4HomePage" align="center"><div align="center">Monitor</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
+//      if(functionsListOnFrontPage.length > 0 && quickManageFunctionsList.length > 0) outtext += `<div class style="height:10px"></div>`;
+      if(quickManageFunctionsList.length > 0) {outtext += `<div class="Management4HomePage" align="center"><div align="center">Management</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
           <p></p>
-
+            <div style="display:block; width:60%;">
+              <div style="display:block; float:left;">
+               <input value='Cancel' type='image' class="okCancelIcons" id="managercancelImage" onclick='CancelChanges("manager")'>
+              </div>
+              <div style="display:block; float:right;">
+               <input value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges()'>
+              </div>
+            </div>
       </div>`;
       }
       gemById("HomePage").innerHTML = outtext;
