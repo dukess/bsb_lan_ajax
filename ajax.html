@@ -448,7 +448,16 @@ width:auto;
       display: table-cell;
       border: 5px solid transparent;
       text-align: start;
-    word-wrap: break-word;
+      word-wrap: break-word;
+//    outline: 1px dotted blue;
+    vertical-align: middle;
+    }
+
+    .rootCell {
+      display: table-cell;
+      border: 5px solid transparent;
+      text-align: start;
+      white-space: nowrap;
 //    outline: 1px dotted blue;
     vertical-align: middle;
     }
@@ -781,73 +790,36 @@ display: none;
           <input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0)'>
           <input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden onchange='UploadConfig(this)' />
           <br>
-          <div class="divTable" id="CategoryForSaving" style="text-align: left;">
+          <div class="divTable" id="CategoryForSavingAndLoading" style="text-align: left;">
           </div>
         </div>
         <div class="divTableCell" id="LeftMenuTableCell" style="display: none;">
-          <div class="divTable" style="display: grid; width: 100%;">
-            <div class="divTableBody1" style="display: table-row-group; margin: auto">
-              <div class="divTableRow" style="display: table-row;">
-                <div class="divTableCell" style="display: table-cell;">
-
-
-<div class="divTableCatMenuBody" style="">
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell" id="menurubber21cell">
-      <input value='Back' type='image' class="menubutton" id="menurubberimage21" onclick='syncDateTime()'>
-      <br><output class="menudesc" id="menurubber21celltext"></output>
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell" id="menurubber22cell">
-      <input value='Update' type='image' class="menubutton" id="menurubberimage22" onclick='resetController();'>
-        <br><output class="menudesc" id="menurubber22celltext"></output>
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-    </div>
-  </div>
-  <div class="divTableCatMenuRow">
-    <div class="divTableCatMenuCell">
-
-    </div>
-  </div>
-</div>
-</div>
-          <div class="divTableCell" style="display: table-cell; width: 10vw">
-</div>
-          <div class="divTableCell" id="RootTable" style="display: table-cell; margin: auto">
-</div>
-</div>
-</div>
-</div>
+          <div class="divTable" style="width: 100%;">
+            <div class="divTableRow">
+              <div class="divTableCell" style="width: 40%; min-width: 0; word-break: break-all; text-align: center;">
+                <br>
+                <br>
+                <div id="menurubber21cell" style="display: block; width: fit-content; margin: auto;">
+                  <input value='Back' type='image' class="menubutton" id="menurubberimage21" onclick='syncDateTime()'>
+                  <br><output class="menudesc" id="menurubber21celltext"></output>
+                </div>
+                <br>
+                <br>
+                <div id="menurubber22cell" style="display: block; width: fit-content; margin: auto;">
+                  <input value='Update' type='image' class="menubutton" id="menurubberimage22" onclick='resetController();'>
+                  <br><output class="menudesc" id="menurubber22celltext"></output>
+                </div>
+              </div>
+              <div class="divTableCell" style="display: table-cell; width: auto;">
+                <div class="divTableCell" id="RootTable" style="display: table-cell; margin: auto">
+                </div>
+              </div>
+              <div class="divTableCell" style="display: table-cell; width: 40%; min-width: 0; word-break: break-all;">
+              </div>
+            </div>
           </div>
-          <div class="divTableCell" id="RightMenuTableCell" style="display: none; text-align:center;">
+        </div>
+        <div class="divTableCell" id="RightMenuTableCell" style="display: none; text-align:center;">
 <div class="divTableCatMenuBody" style="display:inline-table;">
   <div class="divTableCatMenuRow">
     <div class="divTableCatMenuCell">
@@ -880,7 +852,7 @@ display: none;
     </div>
   </div>
 </div>
-    <div  id="FunctionsMenuTable"  style="display: grid;">
+    <div  id="FunctionsMenuTable"  style="display: block;">
     </div>
 
 
@@ -1263,17 +1235,17 @@ function downloadAsFile(data) {
 
         var  outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>`;
         var outtext1 = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br><div class="funcTable textBtnGroup">
-        <div class="funcRow"><div class="funcCell"></div><div class="funcCell"><label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}"></label></div><div class="funcCell"><button onclick="gemById('catrootcheckboxall').checked=!gemById('catrootcheckboxall').checked; gemById('catrootcheckboxall').onchange();">All</button></div><div class='funcCell centered'>` + RootCategoryEnum[0].min + " - " + RootCategoryEnum[RootCategoryEnum.length - 1].max + `</div></div>`;
+        <div class="funcRow"><div class="rootCell"></div><div class="rootCell"><label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}"></label></div><div class="rootCell"><button onclick="gemById('catrootcheckboxall').checked=!gemById('catrootcheckboxall').checked; gemById('catrootcheckboxall').onchange();">All</button></div><div class='rootCell centered'>` + RootCategoryEnum[0].min + " - " + RootCategoryEnum[RootCategoryEnum.length - 1].max + `</div></div>`;
       outtext += `<div class="funcTable textBtnGroup">`;
 
       for (var i = 0; i < RootCategoryEnum.length; i++) {
-        outtext += `<div class="funcRow"><div class="funcCell">${i}.</div><div class="funcCell"><button onclick="LoadCategoryEnum(${i});">` + translateString(RootCategoryEnum[i].name) + "</button></div><div class='funcCell'></div><div class='funcCell centered'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div></div>";
-        outtext1 += `<div class="funcRow"><div class="funcCell">${i}.</div><div class="funcCell"><label><input id="catrootcheckbox${i}" type="checkbox" checked></label></div><div class="funcCell"><button onclick="gemById('catrootcheckbox${i}').checked=!gemById('catrootcheckbox${i}').checked">`+ translateString(RootCategoryEnum[i].name) + `</button></div><div class='funcCell centered'>` + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + `</div></div>`;
+        outtext += `<div class="funcRow"><div class="rootCell">${i}.</div><div class="rootCell"><button onclick="LoadCategoryEnum(${i});">` + translateString(RootCategoryEnum[i].name) + "</button></div><div class='rootCell'></div><div class='rootCell centered'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div></div>";
+        outtext1 += `<div class="funcRow"><div class="rootCell">${i}.</div><div class="rootCell"><label><input id="catrootcheckbox${i}" type="checkbox" checked></label></div><div class="rootCell"><button onclick="gemById('catrootcheckbox${i}').checked=!gemById('catrootcheckbox${i}').checked">`+ translateString(RootCategoryEnum[i].name) + `</button></div><div class='rootCell centered'>` + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + `</div></div>`;
       }
       outtext += "</div>";
       outtext1 += "</div>";
       gemById("RootTable").innerHTML = outtext;
-      gemById("CategoryForSaving").innerHTML = outtext1;
+      gemById("CategoryForSavingAndLoading").innerHTML = outtext1;
     }
 
     function configpageshow(htmltext, command) {
@@ -1679,14 +1651,17 @@ function downloadAsFile(data) {
     function gameIsChanged(funkid) {
       var elem = ListOfChanges[funkid];
       var setvalue = null;
+      var desc = null;
       switch (FunctionsEnum[funkid].dataType) {
         case 0:
           setvalue = elem.value;
+          desc = elem.value;
           break;
         case 1:
           for (var i = 0; i < elem.options.length; i++) {
             if (elem.options[i].selected == true) {
               setvalue = elem.options[i].value;
+              desc = elem.options[i].text;
             }
           }
           break;
@@ -1694,6 +1669,7 @@ function downloadAsFile(data) {
           break;
         case 4:
           setvalue = elem.value;
+          desc = elem.value;
           break;
         case 5:
             if(funkid >= 500 && funkid <= 620){
@@ -1706,6 +1682,7 @@ function downloadAsFile(data) {
                 }
               }
             setvalue = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
+            desc = "1. " + val[0] + "-" + val[1] + ", 2. " + val[2] + "-" + val[3] + " 3. " + val[4] + "-" + val[5];
             }
             //else
             //  sel.innerHTML = jsontext[k].value;
@@ -1737,20 +1714,29 @@ function downloadAsFile(data) {
             }
           }
           setvalue = temp;
+          desc = temp;
           break;
         case 7:
           setvalue = elem.value;
+          desc = elem.value;
           break;
         case 99:
           setvalue = elem.value;
+          desc = elem.value;
           break;
         default:
           break;
       }
 
     if(setvalue != null){
+    var unit;
+      if(typeof FunctionsEnum[funkid].unit === "undefined")
+        unit =  "";
+      else
+        unit =  " " +  translateString(FunctionsEnum[funkid].unit);
       note({
-            content: "Изменён параметр " + funkid + " на значение " + setvalue,
+/*            content: "Изменён параметр " + funkid + " на значение " + setvalue  + unit, */
+            content: "Изменён параметр " + funkid + " (" + translateString(FunctionsEnum[funkid].name) + ") на значение " + desc + unit,
             type: "info",
             time: 3
       });
