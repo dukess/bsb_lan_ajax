@@ -1428,7 +1428,7 @@ function downloadAsFile(data) {
             outtext += `<div style="display: table; margin: 0 auto; text-align: center;"><div class="divTableFuncListBody">`;
             for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
               if (FunctionsEnum[k] == null) continue;
-              outtext += `<div class="divTableFuncListRow">`;
+              outtext += `<div class="divTableFuncListRow" id="func${k}">`;
               outtext += insertinterfaceelement(k, "func");
               outtext += `</div>`;
             }
@@ -1511,6 +1511,7 @@ function downloadAsFile(data) {
         gemById(prefix + func + "space").title="Error: " + error;
         gemById(prefix + func + "value").style.opacity = 0.33;
         readonly = true;
+        if(error == 32) gemById(prefix + func).style.display = "none"; //param not supported
         }
         else
         {
