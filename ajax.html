@@ -1222,7 +1222,7 @@
           for (var k = 0; k < RootCategoryEnum.length; k++) {
             if (gemById("catrootcheckbox" + k).checked) {
               for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
-                if (FunctionsEnum[i] != null && !('value' in FunctionsEnum[i])) {
+                if (FunctionsEnum[i] != null &&  !('value' in FunctionsEnum[i]) && !FunctionsEnum[i].readonly) {
                   j++;
                   cmdlist += i;
                   configBuildStage = i;
@@ -1249,6 +1249,7 @@
       var currentcat = 0;
       var text = "{\n";
       for (var k in FunctionsEnum) {
+        if (FunctionsEnum[i].readonly) continue; //do not save read-only parameters
         var allowtonext = false;
         do {
           if (RootCategoryEnum[currentcat].max < k) {
