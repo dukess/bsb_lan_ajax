@@ -1288,7 +1288,7 @@ var excludesImage = new Image().src =
       var currentcat = 0;
       var text = "{\n";
       for (var k in FunctionsEnum) {
-        if (FunctionsEnum[i].error != 32) continue; //save only non-exist parameters
+        if (FunctionsEnum[k].error != 32) continue; //save only non-exist parameters
         var allowtonext = false;
         do {
           if (RootCategoryEnum[currentcat].max < k) {
