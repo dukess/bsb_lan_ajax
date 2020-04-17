@@ -851,7 +851,8 @@
             <br><output id="SaveLoadConfigLogFunc"></output>
             <br><output id="SaveLoadConfigLog"></output>
             <br>
-            <input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0)'>
+            <input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0, 1)'>
+            <input value='Download' type='button' class="menubutton" id="menurubberimage43" onclick='DownloadConfig(0, 2)'>
             <input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden onchange='UploadConfig(this)' />
             <br>
             <div class="divTable" id="CategoryForSavingAndLoading" style="text-align: left;">
@@ -1175,7 +1176,7 @@
               }
               if (value != null) {
                 gemById("SaveLoadConfigLogFunc").textContent = "Function #" + k;
-                loadAjax(baseURL, 'WS' + k + '=' + value, uploadParamNotify, false);
+                loadAjax(baseURL, 'WS' + k + '=' + value, uploadParamNotify, null, false);
               }
             }
           }
@@ -1200,16 +1201,16 @@
     }
 
 
-    function DownloadConfig(stage) {
+    function DownloadConfig(stage, variant) {
       switch (stage) {
         case 0:
           configBuildStage = -1;
           for (var k = 0; k < RootCategoryEnum.length; k++) {
             if (gemById("catrootcheckbox" + k).checked) {
               if (FlagCategoryIsLoaded[k]) {
-                catlistload4configdump(null, 'JK=' + k);
+                catlistload4configdump(null, 'JK=' + k, variant);
               } else {
-                loadAjax(baseURL, 'JK=' + k, catlistload4configdump, true);
+                loadAjax(baseURL, 'JK=' + k, catlistload4configdump, variant, true);
                 configBuildStage = k;
               }
             }
@@ -1222,7 +1223,8 @@
           for (var k = 0; k < RootCategoryEnum.length; k++) {
             if (gemById("catrootcheckbox" + k).checked) {
               for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
-                if (FunctionsEnum[i] != null &&  !('value' in FunctionsEnum[i]) && !FunctionsEnum[i].readonly) {
+                if (FunctionsEnum[i] != null &&  !('value' in FunctionsEnum[i])) {
+                  if(variant == 1 && FunctionsEnum[i].readonly) continue;
                   j++;
                   cmdlist += i;
                   configBuildStage = i;
@@ -1239,7 +1241,10 @@
           if (j > 0) loadValues4BuildConfig(cmdlist);
           break;
         case 2:
-          BuildConfig4Download();
+        switch(variant){
+        case 1: BuildConfig4Download(); break;
+        case 2: BuildNonSupportedParametersList4Download(); break;
+        }
           break;
       }
     }
@@ -1271,16 +1276,45 @@
         } while (!allowtonext)
       }
       text += "\n}";
-      downloadAsFile(text);
+      downloadAsFile("config.json", text);
     }
 
-    function downloadAsFile(data) {
+    function BuildNonSupportedParametersList4Download() {
+      var isNotFirstElement = false;
+      var currentcat = 0;
+      var text = "{\n";
+      for (var k in FunctionsEnum) {
+        if (FunctionsEnum[i].error != 32) continue; //save only non-exist parameters
+        var allowtonext = false;
+        do {
+          if (RootCategoryEnum[currentcat].max < k) {
+            currentcat++;
+            continue;
+          } else {
+            allowtonext = true;
+            if (!gemById("catrootcheckbox" + currentcat).checked) continue;
+          }
+          if (isNotFirstElement) {
+            text += `,\n`;
+          } else {
+            isNotFirstElement = true;
+          }
+          text += `"${k}": {\n`;
+          text += `"parameternotsupported": 1\n`;
+          text += `}`;
+        } while (!allowtonext)
+      }
+      text += "\n}";
+      downloadAsFile("excludes.json", text);
+    }
+
+    function downloadAsFile(fileName, data) {
       let a = document.createElement("a");
       let file = new Blob([data], {
         type: 'application/json'
       });
       a.href = URL.createObjectURL(file);
-      a.download = "config.json";
+      a.download = fileName;
       a.click();
       //          document.body.removeChild(a);
     }
@@ -1472,11 +1506,11 @@
       return false;
     }
 
-    function catlistload4configdump(jsontext, command) {
+    function catlistload4configdump(jsontext, command, variant) {
       var result = catlistloader(jsontext, command);
       var res = command.split("=");
       gemById("SaveLoadConfigLogCat").textContent = "Category #" + res[1] + ": " + (result ? "ok" : "failed");
-      if (configBuildStage == res[1]) DownloadConfig(1);
+      if (configBuildStage == res[1]) DownloadConfig(1, variant);
     }
 
     function catlistshow(jsontext, command) {
@@ -1521,12 +1555,12 @@
       }
     }
 
-    function insertvaluesinram(jsontext, command) {
+    function insertvaluesinram(jsontext, command, variant) {
       for (var k in jsontext) {
         FunctionsEnum[k].value = jsontext[k].value;
         if (FunctionsEnum[k].dataType == 0) FunctionsEnum[k].unit = jsontext[k].unit; // For numerical values only
         gemById("SaveLoadConfigLogFunc").textContent = "Function #" + k + ": ok";
-        if (k == configBuildStage) DownloadConfig(2);
+        if (k == configBuildStage) DownloadConfig(2, variant);
       }
     }
 
@@ -1881,7 +1915,7 @@
           type: "info",
           time: 3
         });
-        loadAjax(baseURL, 'WS' + funkid + '=' + setvalue, nullshow, false);
+        loadAjax(baseURL, 'WS' + funkid + '=' + setvalue, nullshow, null, false);
         FunctionsEnum[funkid].value = setvalue;
       }
 
@@ -1899,7 +1933,7 @@
           type: "info",
           time: 3
         });
-      }, false);
+      }, null, false);
     }
 
     function resetController() {
@@ -1909,15 +1943,15 @@
           type: "info",
           time: 3
         });
-      }, false);
+      }, null, false);
     }
 
     function loadValues(functionsenum) {
-      loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesincatlistshow, true);
+      loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesincatlistshow, null, true);
     }
 
-    function loadValues4BuildConfig(functionsenum) {
-      loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinram, true);
+    function loadValues4BuildConfig(functionsenum, variant) {
+      loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinram, variant, true);
     }
 
     function loadMonitorValues(functionsenum) {
@@ -1933,7 +1967,7 @@
               FunctionsListOnFrontPageFlag = true;
             }
             loadMonitorValues(functionsenum);
-          }, true);
+          }, null, true);
           return;
         }
         var sel = gemById("monitorTable");
@@ -1947,7 +1981,7 @@
         //Show cached values
         insertvaluesinmonitorlistshow(null, null);
         //Show current values
-        loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, true);
+        loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, null, true);
       }
     }
 
@@ -1967,7 +2001,7 @@
                 FunctionsquickManageListOnFrontPageFlag = true;
               }
               loadManagementValues(funcenum);
-            }, true);
+            }, null, true);
           return;
         }
         var sel = gemById("managementTable");
@@ -1985,7 +2019,7 @@
         }
 
         loadAjax(baseURL, 'JQ=' + funcenum,
-          insertvaluesinmanagementlistshow, true);
+          insertvaluesinmanagementlistshow, null, true);
       }
       gemById("managercancelImage").src = cancelImage;
       gemById("managerokImage").src = okImage;
@@ -1993,11 +2027,12 @@
         document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
     }
 
-    function loadAjax(urlvar, cmdvar, showvar, isajaxvar) {
+    function loadAjax(urlvar, cmdvar, showvar, paramforshowvar, isajaxvar) {
       AJAXRequests.push({
         url: urlvar,
         command: cmdvar,
         show: showvar,
+        paramforshow: paramforshowvar,
         isajax: isajaxvar
       });
       if (AJAXRequests.length > 1) {
@@ -2029,7 +2064,7 @@
             if (request.status == 200) {
               if (AJAXRequests[0].isajax) {
                 try {
-                  AJAXRequests[0].show(JSON.parse(request.responseText), AJAXRequests[0].command);
+                  AJAXRequests[0].show(JSON.parse(request.responseText), AJAXRequests[0].command, AJAXRequests[0].paramforshow);
                 } catch (e) {
                   note({
                     content: "Error: AJAX parsing failed.",
@@ -2044,7 +2079,7 @@
                   console.log(e.stack);
                 }
               } else
-                AJAXRequests[0].show(request.responseText, AJAXRequests[0].command);
+                AJAXRequests[0].show(request.responseText, AJAXRequests[0].command, AJAXRequests[0].paramforshow);
             } else if (request.status == 404) {
               note({
                 content: "Error 404: file not found!",
@@ -2083,12 +2118,12 @@
       if (FlagCategoryIsLoaded[catnum]) {
         catlistshow(null, 'JK=' + catnum);
       } else
-        loadAjax(baseURL, 'JK=' + catnum, catlistshow, true);
+        loadAjax(baseURL, 'JK=' + catnum, catlistshow, null, true);
     }
 
     function LoadRootCategoryEnum() {
       if (RootCategoryEnum == null) {
-        loadAjax(baseURL, 'JK=ALL', rootlistshow, true);
+        loadAjax(baseURL, 'JK=ALL', rootlistshow, null, true);
       } else
         rootlistshow(null, null);
     }
@@ -2144,7 +2179,7 @@
 
     function LoadElement(place, command) {
       if (ShowSelectedMode(1))
-        loadAjax(baseURL, command, configpageshow, false);
+        loadAjax(baseURL, command, configpageshow, null, false);
     }
 
     function LoadExternalElement(place, url) {
