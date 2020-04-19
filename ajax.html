@@ -1219,6 +1219,7 @@ var excludesImage = new Image().src =
               }
             }
           }
+          if (configBuildStage == -1) DownloadConfig(1, variant);
           break;
         case 1:
           configBuildStage = -1;
@@ -1243,6 +1244,7 @@ var excludesImage = new Image().src =
             }
           }
           if (j > 0) loadValues4BuildConfig(cmdlist, variant);
+          if (configBuildStage == -1) DownloadConfig(2, variant);
           break;
         case 2:
         switch(variant){
@@ -1320,7 +1322,7 @@ var excludesImage = new Image().src =
       a.href = URL.createObjectURL(file);
       a.download = fileName;
       a.click();
-      //          document.body.removeChild(a);
+      a.remove();
     }
 
     function rootlistshow(jsontext, command) {
