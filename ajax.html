@@ -2470,7 +2470,9 @@
         x.domain(d3.extent(data, function(d) {
           return d.Date;
         }));
-        y.domain([0, d3.max(data, function(d) {
+        y.domain([d3.min(data, function(d) {
+          return d.Value;
+        }), d3.max(data, function(d) {
           return d.Value;
         })]);
 
@@ -2620,7 +2622,7 @@
                   else break; //position found
                 }
 
-                outputFormat = d3.time.format("%H:%M:%S");
+                outputFormat = d3.time.format("%d.%m %H:%M:%S");
                 d3.select(this).select('text')
                   .text(d.values[idx].Value + " (" + outputFormat(d.values[idx].Date) + ")");
 
