@@ -1057,7 +1057,7 @@
 
     function LoadUIStrings() {
       DisplayHomePage();
-      SetMainMenuUIString("menurubber", 1, "Home");
+      SetMainMenuUIString("menurubber", 1, UIStrings.EXTIF_HOME_TEXT);
       SetMainMenuUIString("menurubber", 2, UIStrings.MENU_TEXT_HFK);
       SetMainMenuUIString("menurubber", 3, UIStrings.MENU_TEXT_SNS);
       SetMainMenuUIString("menurubber", 4, UIStrings.MENU_TEXT_DLG);
@@ -1067,14 +1067,18 @@
       SetMainMenuUIString("menurubber", 8, UIStrings.MENU_TEXT_HWT);
       SetMainMenuUIString("menurubber", 9, UIStrings.MENU_TEXT_FAQ);
       SetMainMenuUIString("menurubber", 10, UIStrings.STR20_TEXT);
-      SetMainMenuUIString("menurubber", 11, "About");
-      SetMainMenuUIString("menurubber", 12, "Save/Load");
-      SetMainMenuUIString("menurubber", 21, "Set clock");
-      SetMainMenuUIString("menurubber", 22, "Reset");
-      SetMainMenuUIString("menurubber", 31, "Back");
-      SetMainMenuUIString("menurubber", 32, "Update");
-      SetMainMenuUIString("menurubber", 33, "Cancel");
-      SetMainMenuUIString("menurubber", 34, "Save");
+      SetMainMenuUIString("menurubber", 11, ${UIStrings.EXTIF_ABOUT_TEXT});
+      SetMainMenuUIString("menurubber", 12, ${UIStrings.EXTIF_SAVELOAD_TEXT});
+      SetMainMenuUIString("menurubber", 21, ${UIStrings.EXTIF_SETCLOCK_TEXT});
+      SetMainMenuUIString("menurubber", 22, ${UIStrings.EXTIF_RESET_TEXT});
+      SetMainMenuUIString("menurubber", 31, ${UIStrings.EXTIF_BACK_TEXT});
+      SetMainMenuUIString("menurubber", 32, ${UIStrings.EXTIF_UPDATE_TEXT});
+      SetMainMenuUIString("menurubber", 33, ${UIStrings.EXTIF_CANCEL_TEXT});
+      SetMainMenuUIString("menurubber", 34, ${UIStrings.EXTIF_SAVE_TEXT});
+      SetMainMenuUIString("menurubber", 22, ${UIStrings.EXTIF_RESET_TEXT});
+      SetMainMenuUIString("menurubber", 41, ${UIStrings.EXTIF_DOWNLOADCONF_TEXT});
+      SetMainMenuUIString("menurubber", 42, ${UIStrings.EXTIF_UPLOADCONF_TEXT});
+      SetMainMenuUIString("menurubber", 43, ${UIStrings.EXTIF_DOWNLOADEXCL_TEXT});
       //If no selectLanguage selector - create it
       var elem = gemById("LanguageDropdownId");
       if (elem.innerHTML == "") {
@@ -1166,7 +1170,7 @@
           for (var k in contents) {
             while (k > RootCategoryEnum[j].max) {
               j++;
-              gemById("SaveLoadConfigLogCat").textContent = "Category #" + j;
+              gemById("SaveLoadConfigLogCat").textContent = UIStrings.EXTIF_CATNO_TEXT + j;
             }
             if (gemById("catrootcheckbox" + j).checked) {
               var value = contents[k].value;
@@ -1186,7 +1190,7 @@
                   break;
               }
               if (value != null) {
-                gemById("SaveLoadConfigLogFunc").textContent = "Function #" + k;
+                gemById("SaveLoadConfigLogFunc").textContent = UIStrings.EXTIF_FUNCNO_TEXT + k;
                 loadAjax(baseURL, 'WS' + k + '=' + value, uploadParamNotify, null, false);
               }
             }
@@ -1195,7 +1199,7 @@
       };
 
       reader.onerror = function(event) {
-        console.error("Файл не может быть прочитан! код " + event.target.error.code);
+        console.error(UIStrings.EXTIF_CANTREADFILE_TEXT + " " + event.target.error.code);
       };
       if (fileName.files[0]) {
         reader.readAsText(fileName.files[0]);
@@ -1205,7 +1209,7 @@
     function uploadParamNotify(jsontext, command) {
       var res = command.split("=");
       note({
-        content: "Изменён параметр " + res[0].slice(1) + " на значение " + res[1],
+        content: UIStrings.EXTIF_CHANGEPARAM1_TEXT " "+ res[0].slice(1) + " " + UIStrings.EXTIF_CHANGEPARAM2_TEXT + " " + res[1] + " " + UIStrings.EXTIF_CHANGEPARAM3_TEXT,
         type: "info",
         time: 3
       });
@@ -1352,7 +1356,7 @@
       var outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>`;
       var outtext1 =
         `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br><div class="funcTable textBtnGroup">
-        <div class="funcRow"><div class="rootCell"></div><div class="rootCell"><label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}"></label></div><div class="rootCell"><button onclick="gemById('catrootcheckboxall').checked=!gemById('catrootcheckboxall').checked; gemById('catrootcheckboxall').onchange();">All</button></div><div class='rootCell centered'>` +
+        <div class="funcRow"><div class="rootCell"></div><div class="rootCell"><label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}"></label></div><div class="rootCell"><button onclick="gemById('catrootcheckboxall').checked=!gemById('catrootcheckboxall').checked; gemById('catrootcheckboxall').onchange();">${UIStrings.EXTIF_ALLCAT_TEXT}</button></div><div class='rootCell centered'>` +
         RootCategoryEnum[0].min + " - " + RootCategoryEnum[RootCategoryEnum.length - 1].max + `</div></div>`;
       outtext += `<div class="funcTable textBtnGroup">`;
 
@@ -1517,7 +1521,7 @@
         }
       } else {
         note({
-          content: "Error: Category not exist!",
+          content: UIStrings.EXTIF_CATNOTEXIST_TEXT,
           type: "error",
           time: 5
         });
@@ -1529,7 +1533,7 @@
     function catlistload4configdump(jsontext, command, variant) {
       var result = catlistloader(jsontext, command);
       var res = command.split("=");
-      gemById("SaveLoadConfigLogCat").textContent = "Category #" + res[1] + ": " + (result ? "ok" : "failed");
+      gemById("SaveLoadConfigLogCat").textContent = UIStrings.EXTIF_CATNO_TEXT + res[1] + ": " + (result ? UIStrings.EXTIF_OK_TEXT : UIStrings.EXTIF_FAILED_TEXT);
       if (configBuildStage == res[1]) DownloadConfig(1, variant);
     }
 
@@ -1580,7 +1584,7 @@
         FunctionsEnum[k].value = jsontext[k].value;
         FunctionsEnum[k].error = jsontext[k].error;
         if (FunctionsEnum[k].dataType == 0) FunctionsEnum[k].unit = jsontext[k].unit; // For numerical values only
-        gemById("SaveLoadConfigLogFunc").textContent = "Function #" + k + ": ok";
+        gemById("SaveLoadConfigLogFunc").textContent =  UIStrings.EXTIF_FUNCNO_TEXT + k + ": " +  UIStrings.EXTIF_OK_TEXT;
         if (k == configBuildStage) DownloadConfig(2, variant);
       }
     }
@@ -1595,7 +1599,7 @@
       if (error) {
         gemById(prefix + func + "text").style.opacity = 0.33;
         gemById(prefix + func + "space").classList.add("MarkErrors");
-        gemById(prefix + func + "space").title = "Error: " + error;
+        gemById(prefix + func + "space").title = UIStrings.EXTIF_ERROR_TEXT + ": " + error;
         gemById(prefix + func + "value").style.opacity = 0.33;
         readonly = true;
       } else {
@@ -1935,7 +1939,7 @@
           unit = " " + translateString(FunctionsEnum[funkid].unit);
         note({
           /*            content: "Изменён параметр " + funkid + " на значение " + setvalue  + unit, */
-          content: "Изменён параметр " + funkid + " (" + translateString(FunctionsEnum[funkid].name) + ") на значение " + desc + unit,
+          content: UIStrings.EXTIF_CHANGEPARAM1_TEXT + " " + funkid + " (" + translateString(FunctionsEnum[funkid].name) + ") " + UIStrings.EXTIF_CHANGEPARAM2_TEXT + " " + desc + unit  + " " + UIStrings.EXTIF_CHANGEPARAM3_TEXT,
           type: "info",
           time: 3
         });
@@ -1953,7 +1957,7 @@
         "" : "0") + datetimeNow.getHours() + ":" + ((datetimeNow.getMinutes() > 9) ? "" : "0") + datetimeNow.getMinutes() + ":" + ((datetimeNow.getSeconds() > 9) ? "" : "0") + datetimeNow.getSeconds();
       loadAjax(baseURL, 'WS0=' + formatted_date, function() {
         note({
-          content: "Time set to:" + formatted_date,
+          content: UIStrings.EXTIF_SETTIME_TEXT + " :" + formatted_date,
           type: "info",
           time: 3
         });
@@ -1963,7 +1967,7 @@
     function resetController() {
       loadAjax(baseURL, 'N', function() {
         note({
-          content: "Reset",
+          content: UIStrings.EXTIF_RESET_TEXT,
           type: "info",
           time: 3
         });
@@ -2053,7 +2057,11 @@
           insertvaluesinmanagementlistshow, null, true);
       }
       gemById("managercancelImage").src = cancelImage;
+      gemById("managercancelImage").alt = UIStrings.EXTIF_CANCEL_TEXT;
+      gemById("managercancelImage").title = UIStrings.EXTIF_CANCEL_TEXT;
       gemById("managerokImage").src = okImage;
+      gemById("managerokImage").alt = UIStrings.EXTIF_SAVE_TEXT;
+      gemById("managerokImage").title = UIStrings.EXTIF_SAVE_TEXT;
       for (var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
         document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
     }
@@ -2098,7 +2106,7 @@
                   AJAXRequests[0].show(JSON.parse(request.responseText), AJAXRequests[0].command, AJAXRequests[0].paramforshow);
                 } catch (e) {
                   note({
-                    content: "Error: AJAX parsing failed.",
+                    content: UIStrings.EXTIF_AJAXERROR_TEXT ,
                     type: "error",
                     time: 5
                   });
@@ -2113,13 +2121,13 @@
                 AJAXRequests[0].show(request.responseText, AJAXRequests[0].command, AJAXRequests[0].paramforshow);
             } else if (request.status == 404) {
               note({
-                content: "Error 404: file not found!",
+                content: UIStrings.EXTIF_ERROR404_TEXT,
                 type: "error",
                 time: 5
               });
             } else
               note({
-                content: "Error: AJAX request failed.",
+                content: UIStrings.EXTIF_ERRORREQUEST_TEXT,
                 type: "error",
                 time: 5
               });
@@ -2195,7 +2203,7 @@
     function CheckForUnsavedChanges() {
       if (warnAboutExitWithoutSaveInt && Object.keys(ListOfChanges).length > 0) {
         note({
-          content: "Warn about exit without save. You Sure? " + warnAboutExitWithoutSaveInt,
+          content: UIStrings.EXTIF_WARNEXIT_TEXT + " " + warnAboutExitWithoutSaveInt,
           type: "warn",
           time: 5
         });
@@ -2249,10 +2257,10 @@
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
 ` : ``;
       outtext += `<br>`;
-      if (functionsListOnFrontPage.length > 0) outtext += `<div class="Management4HomePage" align="center"><div align="center">Monitor</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
+      if (functionsListOnFrontPage.length > 0) outtext += `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MONITOR_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
       //      if(functionsListOnFrontPage.length > 0 && quickManageFunctionsList.length > 0) outtext += `<div class style="height:10px"></div>`;
       if (quickManageFunctionsList.length > 0) {
-        outtext += `<div class="Management4HomePage" align="center"><div align="center">Management</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
+        outtext += `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MANAGEMENT_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
           <p></p>
             <div style="display:block; width:60%;">
               <div style="display:block; float:left;">
