@@ -2313,6 +2313,15 @@
       font-weight: bold;
       text-anchor: middle;
     }
+
+    .grid .tick {
+      stroke: lightgrey;
+      opacity: 0.5;
+    }
+
+    .grid path {
+      stroke-width: 0;
+    }
   </style>
 
   <script>
@@ -2471,9 +2480,11 @@
           return d.Date;
         }));
         y.domain([d3.min(data, function(d) {
-          return d.Value;
+          if (d.Value < 0) return Math.floor(d.Value / 5) * 5;
+          else return Math.ceil(d.Value / 5) * 5;
         }), d3.max(data, function(d) {
-          return d.Value;
+          if (d.Value < 0) return Math.floor(d.Value / 5) * 5;
+          else return Math.ceil(d.Value / 5) * 5;
         })]);
 
         // Nest the entries by symbol
@@ -2494,6 +2505,30 @@
         var color = d3.scale.category10(); // set the colour scale
 
         legendSpace = width / dataNest.length; // spacing for the legend
+
+        // Add the X Axis
+        svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+        // Add the Y Axis
+        svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis);
+
+        // Add the X Grid
+        svg.append("g")
+          .attr("class", "grid")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis.tickSize(-height, 0, 0)
+            .tickFormat(""));
+
+        // Add the Y Grid
+        svg.append("g")
+          .attr("class", "grid")
+          .call(yAxis.ticks(10).tickSize(-width, 0, 0)
+            .tickFormat(""));
 
         // Loop through each symbol / key
         dataNest.forEach(function(d, i) {
@@ -2629,17 +2664,6 @@
                 return "translate(" + mouse[0] + "," + pos.y + ")";
               });
           });
-
-        // Add the X Axis
-        svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
-
-        // Add the Y Axis
-        svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis);
 
       });
     }
