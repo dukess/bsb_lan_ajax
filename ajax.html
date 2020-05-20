@@ -854,9 +854,16 @@
             <br><output id="SaveLoadConfigLogFunc"></output>
             <br><output id="SaveLoadConfigLog"></output>
             <br>
-            <input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0, 1)'>
-            <input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden onchange='UploadConfig(this)' />
-            <input value='Create excludes list' type='image' class="menubutton" id="menurubberimage43" onclick='DownloadConfig(0, 2)'>
+
+            <div style="display: inline-block;">
+              <div class="divMenuCell" style="float:left;" id="menurubber41cell"><input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0, 1)'>
+                <br><output class="menudesc" id="menurubber41celltext" style="display:none;"></output></div>
+              <div class="divMenuCell" style="float:left;" id="menurubber42cell"><input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden
+                  onchange='UploadConfig(this)' />
+                <br><output class="menudesc" id="menurubber42celltext" style="display:none;"></output></div>
+              <div class="divMenuCell" style="float:left;" id="menurubber43cell"><input value='Create excludes list' type='image' class="menubutton" id="menurubberimage43" onclick='DownloadConfig(0, 2)'>
+                <br><output class="menudesc" id="menurubber43celltext" style="display:none;"></output></div>
+            </div>
             <br>
             <div class="divTable" id="CategoryForSavingAndLoading" style="text-align: left;">
             </div>
@@ -1209,7 +1216,7 @@
     function uploadParamNotify(jsontext, command) {
       var res = command.split("=");
       note({
-        content: UIStrings.EXTIF_CHANGEPARAM1_TEXT " "+ res[0].slice(1) + " " + UIStrings.EXTIF_CHANGEPARAM2_TEXT + " " + res[1] + " " + UIStrings.EXTIF_CHANGEPARAM3_TEXT,
+        content: UIStrings.EXTIF_CHANGEPARAM1_TEXT + " " + res[0].slice(1) + " " + UIStrings.EXTIF_CHANGEPARAM2_TEXT + " " + res[1] + " " + UIStrings.EXTIF_CHANGEPARAM3_TEXT,
         type: "info",
         time: 3
       });
@@ -1584,7 +1591,7 @@
         FunctionsEnum[k].value = jsontext[k].value;
         FunctionsEnum[k].error = jsontext[k].error;
         if (FunctionsEnum[k].dataType == 0) FunctionsEnum[k].unit = jsontext[k].unit; // For numerical values only
-        gemById("SaveLoadConfigLogFunc").textContent =  UIStrings.EXTIF_FUNCNO_TEXT + k + ": " +  UIStrings.EXTIF_OK_TEXT;
+        gemById("SaveLoadConfigLogFunc").textContent = UIStrings.EXTIF_FUNCNO_TEXT + k + ": " + UIStrings.EXTIF_OK_TEXT;
         if (k == configBuildStage) DownloadConfig(2, variant);
       }
     }
@@ -1939,7 +1946,7 @@
           unit = " " + translateString(FunctionsEnum[funkid].unit);
         note({
           /*            content: "Изменён параметр " + funkid + " на значение " + setvalue  + unit, */
-          content: UIStrings.EXTIF_CHANGEPARAM1_TEXT + " " + funkid + " (" + translateString(FunctionsEnum[funkid].name) + ") " + UIStrings.EXTIF_CHANGEPARAM2_TEXT + " " + desc + unit  + " " + UIStrings.EXTIF_CHANGEPARAM3_TEXT,
+          content: UIStrings.EXTIF_CHANGEPARAM1_TEXT + " " + funkid + " (" + translateString(FunctionsEnum[funkid].name) + ") " + UIStrings.EXTIF_CHANGEPARAM2_TEXT + " " + desc + unit + " " + UIStrings.EXTIF_CHANGEPARAM3_TEXT,
           type: "info",
           time: 3
         });
@@ -2106,7 +2113,7 @@
                   AJAXRequests[0].show(JSON.parse(request.responseText), AJAXRequests[0].command, AJAXRequests[0].paramforshow);
                 } catch (e) {
                   note({
-                    content: UIStrings.EXTIF_AJAXERROR_TEXT ,
+                    content: UIStrings.EXTIF_AJAXERROR_TEXT,
                     type: "error",
                     time: 5
                   });
@@ -2257,7 +2264,8 @@
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
 ` : ``;
       outtext += `<br>`;
-      if (functionsListOnFrontPage.length > 0) outtext += `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MONITOR_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
+      if (functionsListOnFrontPage.length > 0) outtext +=
+        `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MONITOR_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
       //      if(functionsListOnFrontPage.length > 0 && quickManageFunctionsList.length > 0) outtext += `<div class style="height:10px"></div>`;
       if (quickManageFunctionsList.length > 0) {
         outtext += `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MANAGEMENT_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
