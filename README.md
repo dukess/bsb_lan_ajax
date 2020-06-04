@@ -50,6 +50,7 @@ All above was included in bsb-lan project, so you do not need do anything.
 - Switching between categories without page reloading.
 - Configuration save/restore (very slow due BSB protocol limitation).
 - D3 library can be placed on SD card for standalone installations (without connection to Internet).
+- You can build list of unsupported params and save it to SD card with name 'notsupported.js'. Parameters in the list are never requested, except for the exception list building function.
 
 At this point time interface looks highly similar original bsb_lan.
 

@@ -1247,7 +1247,7 @@
             if (gemById("catrootcheckbox" + k).checked) {
               for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
                 if (FunctionsEnum[i] != null && !('value' in FunctionsEnum[i])) {
-                  if (variant == 1 && FunctionsEnum[i].readonly) continue;
+                  if (variant == 1 && (FunctionsEnum[i].readonly == 1 || FunctionsEnum[i].error == 32)) continue;
                   j++;
                   cmdlist += i;
                   configBuildStage = i;
@@ -1283,7 +1283,7 @@
       var text = "{\n";
       for (var k in FunctionsEnum) {
         if (FunctionsEnum[k].readonly) continue; //do not save read-only parameters
-        if (FunctionsEnum[k].error = 32) continue; //do not save unsupported parameters
+        if (FunctionsEnum[k].error == 32) continue; //do not save unsupported parameters
         var allowtonext = false;
         do {
           if (RootCategoryEnum[currentcat].max < k) {
@@ -1332,7 +1332,7 @@
         } while (!allowtonext)
       }
       text += "\n]";
-      downloadAsFile("excludes.json", text);
+      downloadAsFile("notsupported.js", text);
     }
 
     function downloadAsFile(fileName, data) {
@@ -1471,13 +1471,10 @@
 
     function insertinterfacevalues(func, prefix) {
       var jsonObject = FunctionsEnum[func];
-      gemById(prefix + func + "text").textContent = func + ". " + translateString(jsonObject.name);
+      gemById(prefix + func + "text").innerHTML = func + ". " + translateString(jsonObject.name);
       switch (jsonObject.dataType) {
         case 0:
-          //Get unit name from cache
-          if (typeof jsonObject.unit === 'string') {
-            gemById(prefix + func + "unit").innerHTML = translateString(jsonObject.unit);
-          }
+          gemById(prefix + func + "unit").innerHTML = translateString(jsonObject.unit);
           break;
         case 1:
         case 2:
@@ -1502,9 +1499,9 @@
         default:
           break;
       }
-      if (jsonObject.error == 32) {
+      if (jsonObject.error == 32) { //param not supported
         if (hideUnsupportedParams)
-          gemById(prefix + func).style.display = "none"; //param not supported
+          gemById(prefix + func).style.display = "none";
         else
           shadyIfError(prefix, func, jsonObject.error);
       }
@@ -1566,6 +1563,7 @@
       gemById("FunctionsMenuTable").innerHTML = outtext;
       for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
         if (FunctionsEnum[k] == null) continue;
+        if (FunctionsEnum[k].error == 32) shadyIfError("func", k, FunctionsEnum[k].error);
         insertinterfacevalues(k, "func");
         insertvalue(null, k, "func");
       }
@@ -1590,7 +1588,6 @@
       for (var k in jsontext) {
         FunctionsEnum[k].value = jsontext[k].value;
         FunctionsEnum[k].error = jsontext[k].error;
-        if (FunctionsEnum[k].dataType == 0) FunctionsEnum[k].unit = jsontext[k].unit; // For numerical values only
         gemById("SaveLoadConfigLogFunc").textContent = UIStrings.EXTIF_FUNCNO_TEXT + k + ": " + UIStrings.EXTIF_OK_TEXT;
         if (k == configBuildStage) DownloadConfig(2, variant);
       }
@@ -1627,12 +1624,6 @@
       } else {
         //cache current value and unit name
         jsonObject.value = currentValueObject.value;
-        if (jsonObject.dataType == 0) {
-          if (typeof currentValueObject.unit === 'string')
-            jsonObject.unit = currentValueObject.unit; // For numerical values only
-          else
-            jsonObject.unit = "";
-        }
         if (typeof currentValueObject.error === 'number') {
           jsonObject.error = currentValueObject.error;
         }
@@ -1748,7 +1739,6 @@
         } else {
           //cache current value and unit name
           FunctionsEnum[m].value = jsontext[m].value;
-          if (FunctionsEnum[m].dataType == 0) FunctionsEnum[m].unit = jsontext[m].unit; // For numerical values only
         }
         if (typeof FunctionsEnum[m] === "object") {
           var temp;
@@ -1784,7 +1774,6 @@
               outtext = jsontext[m].value;
               break;
           }
-          if (typeof jsontext[m].unit === 'string') outtext += "&nbsp;" + translateString(jsontext[m].unit);
           gemById("monitor" + m + "value").innerHTML = outtext;
         }
       }
@@ -2009,7 +1998,7 @@
         var outtext = "";
         for (var k = 0; k < functionsenum.length; k++) {
           outtext +=
-            `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div></div>`;
+            `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value">---</output>&nbsp;<output id="monitor${functionsenum[k]}unit">${translateString(FunctionsEnum[functionsenum[k]].unit)}</output></div></div>`;
           //            outtext += `<div style="float: left;">${functionsenum[k]}.&nbsp;</div><div style="float: left;"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div><br>`;
         }
         sel.innerHTML = outtext;
@@ -2025,6 +2014,7 @@
       FunctionsEnum[index].readonly = jsonObject.readonly;
       FunctionsEnum[index].dataType = jsonObject.dataType;
       FunctionsEnum[index].name = jsonObject.name;
+      FunctionsEnum[index].unit = jsonObject.unit;
       FunctionsEnum[index].possibleValues = jsonObject.possibleValues;
       if ('isswitch' in jsonObject) FunctionsEnum[index].isswitch = jsonObject.isswitch;
     }
@@ -2056,6 +2046,7 @@
         sel.innerHTML = outtext;
 
         for (var k = 0; k < funcenum.length; k++) {
+          if (FunctionsEnum[funcenum[k]].error == 32) shadyIfError("manager", funcenum[k], FunctionsEnum[funcenum[k]].error);
           insertinterfacevalues(funcenum[k], "manager");
           insertvalue(null, funcenum[k], "manager");
         }
