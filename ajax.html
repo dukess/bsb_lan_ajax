@@ -1648,9 +1648,8 @@
           gemById(prefix + func + "unit").innerHTML = translateString(currentValueObject.unit);
           break;
         case 1:
-          if (typeof currentValueObject.isswitch === 'number' && currentValueObject.isswitch == 1) {
             for (var i = 0; i < sel.options.length; i++) {
-              if (sel.options[i].value == currentValueObject.value || (sel.options[i].value != 0 && currentValueObject.value != 0)) {
+              if (sel.options[i].value == currentValueObject.value || (jsonObject.isswitch == 1 && sel.options[i].value != 0 && currentValueObject.value != 0)) {
                 sel.options[i].value = currentValueObject.value;
                 sel.options[i].selected = true;
               } else {
@@ -1658,16 +1657,6 @@
                 sel.options[i].disabled = readonly;
               }
             }
-          } else {
-            for (var i = 0; i < sel.options.length; i++) {
-              if (sel.options[i].value == currentValueObject.value)
-                sel.options[i].selected = true;
-              else {
-                sel.options[i].selected = false;
-                sel.options[i].disabled = readonly;
-              }
-            }
-          }
           break;
         case 2:
           var bitparam = parseInt(currentValueObject.value, 2);
@@ -2016,7 +2005,7 @@
       FunctionsEnum[index].name = jsonObject.name;
       FunctionsEnum[index].unit = jsonObject.unit;
       FunctionsEnum[index].possibleValues = jsonObject.possibleValues;
-      if ('isswitch' in jsonObject) FunctionsEnum[index].isswitch = jsonObject.isswitch;
+      if ('isswitch' in jsonObject) FunctionsEnum[index].isswitch = jsonObject.isswitch; else FunctionsEnum[index].isswitch = 0;
     }
 
     function loadManagementValues(funcenum) {
