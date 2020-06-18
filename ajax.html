@@ -202,7 +202,7 @@
 
     /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 
-    #LeftMenuTableCell {
+    #CategoryListTab {
       transition: margin-left .5s;
       padding: 20px;
     }
@@ -218,16 +218,6 @@
         font-size: 18px;
       }
     }
-
-
-    #icon_home {
-      height: 2em;
-      cursor: pointer;
-      display: inline;
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><path d='M1408 768v480q0 26-19 45t-45 19H960V928H704v384H320q-26 0-45-19t-19-45V768q0-1 .5-3t.5-3l575-474 575 474q1 2 1 6zm223-69l-62 74q-8 9-21 11h-3q-13 0-21-7L832 200 140 777q-12 8-24 7-13-2-21-11l-62-74q-8-10-7-23.5T37 654L756 55q32-26 76-26t76 26l244 204V64q0-14 9-23t23-9h192q14 0 23 9t9 23v408l219 182q10 8 11 21.5t-7 23.5z' fill='#626262'/><rect x='0' y='0' width='1664' height='1312' fill='rgba(0, 0, 0, 0)' /></svg>");
-    }
-
-
 
 
 
@@ -375,15 +365,6 @@
     }
 
     // Tables
-    .divTableBody9 {
-      display: table;
-      //      display: table-row-group;
-      //      display: grid;
-      //      height: 4.5vw;
-      margin: 0 auto;
-      width: auto;
-      //      width: 90vw;
-    }
 
     .divTableBody {
       display: table;
@@ -401,63 +382,15 @@
     }
 
     .divMenuCell {
-      display: table-cell;
+      display: inline-block;
       text-align: center;
       word-wrap: break-word;
-    }
-
-    .divTableMenuBody {
-      display: table-row-group;
-    }
-
-    .divTableMenuCell {
-      display: table-cell;
-      align: center;
-    }
-
-    .divTableResultCell {
-      display: none;
-      text-align: center;
-      margin: 0 auto;
-      border: 5px solid transparent;
-    }
-
-    .divTableCatMenuBody {
-      display: table-row-group;
-      width: 100%;
-    }
-
-    .divTableCatMenuRow {
-      display: table-row;
-    }
-
-    .divTableCatMenuCell {
-      display: table-cell;
-      width: 10%;
-      border: 5px solid transparent;
-      align: center;
-      text-align: center;
-      word-wrap: break-word;
-    }
-
-    .divTableFuncListBody {
-      display: table-row-group;
-      width: 100%;
-      margin: 0 auto;
     }
 
     .divTableFuncListRow {
       display: table-row;
       margin: 0 auto;
     }
-
-    .divTableFuncListLeftCell {
-      display: table-cell;
-      border: 5px solid transparent;
-      text-align: start;
-      word-wrap: break-word;
-    }
-
 
 
     .funcTable {
@@ -491,29 +424,21 @@
     }
 
 
-    .funcCelldelimiter {
-      //      border-bottom: 1px dotted blue;
-    }
-
-
     //    *[id^='menurubberimage'] {}
 
     .topMenuImage {
-      width: 8vw;
+    //  width: 8vw;
     }
 
-
-    .grid-item {
-      padding: .2em;
-      background: #009688;
-      border-radius: 5px;
-      border: 1px solid #fff;
-    }
 
     .centered {
       vertical-align: middle;
     }
 
+    .printResultTab {
+      display: none;
+      text-align: center;
+    }
 
     .textBtnGroup button {
       //  background-color: #4CAF50; /* Green background */
@@ -558,7 +483,7 @@
       }
 
       .topMenuImage {
-        width: 12vw;
+  //      width: 12vw;
       }
     }
 
@@ -580,6 +505,16 @@
       background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADhklEQVRoge2ZT2wMURzHv9+ZLTHbpf4dpMQNV5n+iUQTViNEJCJagoiDAykOThIklUhdRdMlEicOiESkJISthkizrd5xERSJpA66ndXanZ+DCmZmd+bNzk4k+rnte++37/PdN9l58waYZZb/G0bxJdLRoRe+vG0RYCOEplDWgFgGQf3MLHkIPlL4SogXGvFk3vrcMLthVzt3VQGszc0rbJtdEOwH0KhYPgbhdc1GnzGYGwvrECrAxNa1SzGdOEfwIIA5YSefYZqCqyXizPzs8LhqsXKAfHvLXgh6ASxSrfVhXCBdqezITZWiwAHENOvyDXqGwCF1t+AIcbm+aBzj4GAxyPhAAWS7aUxaiduAbK1OLzD3k0apk/2jlt9A3wBimnWTDYm7qvLJGw/++jy5Z4tKOQDcT5aMHX4rofl9S75Bz8T4y//JNkuzLvoNqhggv6l5X62v+UoIcWSivbmz0piyAb5ualkM8EL0WmpQmPm6wVxSrr9sAEJ6AJQtjJHFuq51l+v0DGBtaF0+c5P6JxDwkJVe53mn9wxgJ+Qoqr/DRslcm8Uurw5XAOmGBsG+2jupwgPS0aE7W10BCs9aWgEsj8VJjcbC+BvT2eheAWBjPD7q2BrTzjZXABtoikdHHQr9V4DAqnh01BHIameb17/QshhcQkKXm1eA+hhMwpJyNvhu5v51vALkY7cIzoSzwSvApxhEQiIuN/e/kPBVPDLqkHzpbHOvAGU0FpsQiA2Xm3sFyIF4dNQhxeXmCjBvfW4YwPtYjNR4Z7SNuFbA86E+n249D8rJ2jsFR4CeVHb4lLPd8z6g2egDMF1zq+BM6aJnvDo8AxiDuTEKrtbWKTgUXDEGhj549SXKFRXr9NP699IuEEvDTBrBudAvxkvE2XKdZbcSCx4OfRHyeNhZo0LAw5UOfSvuhVLZ3A0hLkevFQwKelPZ3O1KY3w3c/ULVx4V4E50WoG5Z9jGCb9BCoe7+i0A26rWCkZ/0tJ3c2io4Dcw0Haa/aNWsmTsoOBS9W4+cwl6kyVjZxB5IMQLjon25k4K+xD9qd1nAbv8rnknyg80qccjt0oJfTUhfQCmVOs9+EZBb3FqzhpVeaDal3zpdY0/T8y4H8AKxfJ3QlzTWJdJPnr+MaxDNK9Zu6EVnjY12RrTFJo/Tw/YiN/P13kAYwRei+AFKQNG28hoFK9ZZ5nlf+cHh2YMk/LEzMEAAAAASUVORK5CYII=) no-repeat 0 0/contain;
       width: 16px;
       height: 16px;
+    }
+
+    .verticalMenu {
+      position: fixed;
+    }
+    @media (max-height: 640px) {
+      .verticalMenu {
+        position: relative;
+        margin: 0 auto;
+      }
     }
   </style>
   <title>BSB-LAN Web AJAX</title>
@@ -762,9 +697,8 @@
     }(document);
   </script>
 
-  <div id="menurubber" class="divTableBody">
+  <div id="menurubber" style="display: block; margin: 0 auto; text-align: center;">
     <!-- using Color icons from https://icons8.com/icon/pack/science/color -->
-    <div class="divTableRow">
       <div class="divMenuCell" id="menurubber1cell">
         <input type="image" class="menubutton topMenuImage" id="menurubberimage1" onclick="GoHome();"
           src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjRThFQUY2IiBkPSJNNDIgMzlMNiAzOSA2IDIzIDI0IDYgNDIgMjN6Ij48L3BhdGg+PHBhdGggZmlsbD0iI0M1Q0FFOSIgZD0iTTM5IDIxTDM0IDE2IDM0IDkgMzkgOXpNNiAzOUg0MlY0NEg2eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNCNzFDMUMiIGQ9Ik0yNCA0LjNMNCAyMi45IDYgMjUuMSAyNCA4LjQgNDIgMjUuMSA0NCAyMi45eiI+PC9wYXRoPjxwYXRoIGZpbGw9IiNEODQzMTUiIGQ9Ik0xOCAyOEgzMFY0NEgxOHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMDE1NzlCIiBkPSJNMjEgMTdIMjdWMjNIMjF6Ij48L3BhdGg+PHBhdGggZmlsbD0iI0ZGOEE2NSIgZD0iTTI3LjUsMzUuNWMtMC4zLDAtMC41LDAuMi0wLjUsMC41djJjMCwwLjMsMC4yLDAuNSwwLjUsMC41UzI4LDM4LjMsMjgsMzh2LTJDMjgsMzUuNywyNy44LDM1LjUsMjcuNSwzNS41eiI+PC9wYXRoPjwvc3ZnPg=="></input>
@@ -828,113 +762,99 @@
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAADdElEQVR4nO3cz2tUVxjG8eedOziQTKMbF9EG4pCF/gUFRZdiUyG4KbhwKTqmunVRxR/gxqUSAtm7sZsSEpEuC4r/QTfNJJJo7KoxGYOmc+/bhYpIm3jOuWd8c2aez3bOuTmc75ybOyEMQERERERERERE/UJiXGTs3ua3eTWfAPQ0VEYhMgLoYIxr7x7yBqrLIroIlblKns3+eWVgpfRVy0weu7exP89wDYJLAKplF5OYAtAHRZZdfX5hcDX0IsEBGtPrp1XlAYCh0Gv0iHWpVM62Lg4+CplcCZnUmNq4pCq/gpsPAENaFLON6Y1myGTvEzA61T4lonMAspAf2MMKEZ1oNYfmfCZ5BRi5/+ZANSv+AN/523mtKoeXJuuvXCd43YKqWXEL3Pyd7K2I3vCZ4HwCPjxqLqL/nnZ8df6RbHSlOfDCZbDzCcir+Rlw811U9xT5hOtg5wAC/T5sPf1HRcZdxzoHUMhY2HL6kTrvlc8v4eGAlfSrg64DfQLUAxbSr5z3KuiTMMWT5FPNcF1w/VgNx0fefxh/spLj7rMttNYK45X5Sy7AcF0w/+MA9tU+fYQ5eaiK7w5kGH+4idW2Gq7OX3K3oOvHap9t/kd7a4Kfj9YMVlROcgE+3nb+z4kdXtutkguwk7RuPu8lF+DJSr7ta78vb//abpVcgLvPtvD63X/f63+/Vdx5+s5gReUkF6C1VmD84SYeLXTQ3lK0txTzCx388MsmXiX2BAQk+BgKAKttxU+/vbVeRhTJnYBewwDGGMAYAxhjAGPJPQW1mjv/qb0x3f5KK4mDJ8AYAxhjAGMMYIwBjDGAMQYwxgDGGMAYAxhjAGMMYIwBjDGAMQYwxgDGGMAYAxhjAGMMYIwBjCX3XxGp/dfDl/AEGGMAYwxgjAGMMYAxBuiOddeBDNAdTt+WBTBAl8iC60gG6AKFzruOZYD4OnlemXUdzACxCWaWLw++dB3OAHGtoSq3fSYwQDyFiJ5bPF//y2cSA8SRKzDp+73RQIJ/jt6F1lTl7NJk/XHIZJ6AcB0AM6pyJHTzAZ4AH20Ay4C0FDqX55VZn6ed7XQlgApuLjW/udWNa/ea6Lcgbr6fqAG4+f6iBeDmh4kSgJsfrnQAbn45pQJw88sLDsDNjyMoADc/Hu8A3Py4vAJw8w01pjZuWq+BiIiol/wLDhTrAmYSEBUAAAAASUVORK5CYII="></input>
         <br><output class="menudesc" id="menurubber11celltext"></output>
       </div>
-    </div>
+
   </div>
   <br>
   <div id="printResult">
-    <div class="divTable" style="display: table; width: 100%;">
-      <div class="divTableBody1" style="display: table-row-group;">
-        <div class="divTableRow" style="display: table-row;">
-          <div class="divTableCell" id="AboutMenuTableCell" style="display: none; text-align:center;">
-            About<br>
-            Developed: Sergey Dukachev (mailto:github@dukess.ru)<br>
-            Popup alerts: https://web3r.ru/js-css-alerts<br>
-            Icons: https://icons8.com/icons/color<br>
-            Loader: https://www.w3schools.com/howto/howto_css_loader.asp<br>
-            DropDown list: https://www.w3schools.com/howto/howto_js_dropdown.asp<br>
-            With gratitude to my family.<br>
-            In memoriam Konstantin Korneev.<br>
-          </div>
-          <div class="divTableCell" id="HomePage" style="display: table-cell; text-align:center;">
-            Init...
-          </div>
-          <div class="divTableCell" id="SaveLoadConfig" style="display: none; text-align:center;">
-            <br>
-            <br><output id="SaveLoadConfigLogCat"></output>
-            <br><output id="SaveLoadConfigLogFunc"></output>
-            <br><output id="SaveLoadConfigLog"></output>
-            <br>
+    <div class="printResultTab" id="AboutTab">
+      About<br>
+      Developed: Sergey Dukachev (mailto:github@dukess.ru)<br>
+      Popup alerts: https://web3r.ru/js-css-alerts<br>
+      Icons: https://icons8.com/icons/color<br>
+      Loader: https://www.w3schools.com/howto/howto_css_loader.asp<br>
+      DropDown list: https://www.w3schools.com/howto/howto_js_dropdown.asp<br>
+      Page scrolling: https://kalapasa.ru/stati/javascript/prokrutka-stranitsy-vverkh-na-javascript/<br>
+      With gratitude to my family.<br>
+      In memoriam Konstantin Korneev.<br>
+    </div>
+    <div class="printResultTab" id="HomePageTab" style="display: block;">
+      Init...
+    </div>
+    <div class="printResultTab" id="SaveLoadConfigTab">
+      <br>
+      <br><output id="SaveLoadConfigLogCat"></output>
+      <br><output id="SaveLoadConfigLogFunc"></output>
+      <br><output id="SaveLoadConfigLog"></output>
+      <br>
 
-            <div style="display: inline-block;">
-              <div class="divMenuCell" style="float:left;" id="menurubber41cell"><input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0, 1)'>
-                <br><output class="menudesc" id="menurubber41celltext" style="display:none;"></output></div>
-              <div class="divMenuCell" style="float:left;" id="menurubber42cell"><input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden
-                  onchange='UploadConfig(this)' />
-                <br><output class="menudesc" id="menurubber42celltext" style="display:none;"></output></div>
-              <div class="divMenuCell" style="float:left;" id="menurubber43cell"><input value='Create excludes list' type='image' class="menubutton" id="menurubberimage43" onclick='DownloadConfig(0, 2)'>
-                <br><output class="menudesc" id="menurubber43celltext" style="display:none;"></output></div>
-            </div>
-            <br>
-            <div class="divTable" id="CategoryForSavingAndLoading" style="text-align: left;">
-            </div>
-          </div>
-          <div class="divTableCell" id="LeftMenuTableCell" style="display: none;">
-            <div class="divTable" style="width: 100%;">
-              <div class="divTableRow">
-                <div class="divTableCell" style="width: 40%; min-width: 0; word-break: break-all; text-align: center;">
-                  <br>
-                  <br>
-                  <div id="menurubber21cell" style="display: block; width: fit-content; margin: auto;">
-                    <input value='Back' type='image' class="menubutton" id="menurubberimage21" onclick='syncDateTime()'>
-                    <br><output class="menudesc" id="menurubber21celltext"></output>
-                  </div>
-                  <br>
-                  <br>
-                  <div id="menurubber22cell" style="display: block; width: fit-content; margin: auto;">
-                    <input value='Update' type='image' class="menubutton" id="menurubberimage22" onclick='resetController();'>
-                    <br><output class="menudesc" id="menurubber22celltext"></output>
-                  </div>
-                </div>
-                <div class="divTableCell" style="display: table-cell; width: auto;">
-                  <div class="divTableCell" id="RootTable" style="display: table-cell; margin: auto">
-                  </div>
-                </div>
-                <div class="divTableCell" style="display: table-cell; width: 40%; min-width: 0; word-break: break-all;">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="divTableCell" id="RightMenuTableCell" style="display: none; text-align:center;">
-            <div class="divTableCatMenuBody" style="display:inline-table;">
-              <div class="divTableCatMenuRow">
-                <div class="divTableCatMenuCell">
-                </div>
-                <div class="divTableCatMenuCell" id="menurubber31cell">
-                  <input value='Back' type='image' class="menubutton" id="menurubberimage31" onclick='ReturnToRoot()'>
-                  <br><output class="menudesc" id="menurubber31celltext"></output>
-                </div>
-                <div class="divTableCatMenuCell">
-                </div>
-                <div class="divTableCatMenuCell" id="menurubber32cell">
-                  <input value='Update' type='image' class="menubutton" id="menurubberimage32" onclick='ReloadParams();'>
-                  <br><output class="menudesc" id="menurubber32celltext"></output>
-                </div>
-                <div class="divTableCatMenuCell">
-                </div>
-                <div class="divTableCatMenuCell">
-                </div>
-                <div class="divTableCatMenuCell" id="menurubber33cell">
-                  <input value='Cancel' type='image' class="menubutton okCancelIcons" id="menurubberimage33" onclick='CancelChanges("func")'>
-                  <br><output class="menudesc" id="menurubber33celltext"></output>
-                </div>
-                <div class="divTableCatMenuCell">
-                </div>
-                <div class="divTableCatMenuCell" id="menurubber34cell">
-                  <input value='Save' type='image' class="menubutton okCancelIcons" id="menurubberimage34" onclick='ApplyChanges()'>
-                  <br><output class="menudesc" id="menurubber34celltext"></output>
-                </div>
-                <div class="divTableCatMenuCell">
-                </div>
-              </div>
-            </div>
-            <div id="FunctionsMenuTable" style="display: block;">
-            </div>
-
-
-          </div>
-        </div>
+      <div style="display: inline-block;">
+        <div class="divMenuCell" style="float:left;" id="menurubber41cell"><input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0, 1)'>
+          <br><output class="menudesc" id="menurubber41celltext" style="display:none;"></output></div>
+        <div class="divMenuCell" style="float:left;" id="menurubber42cell"><input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden
+            onchange='UploadConfig(this)' />
+          <br><output class="menudesc" id="menurubber42celltext" style="display:none;"></output></div>
+        <div class="divMenuCell" style="float:left;" id="menurubber43cell"><input value='Create excludes list' type='image' class="menubutton" id="menurubberimage43" onclick='DownloadConfig(0, 2)'>
+          <br><output class="menudesc" id="menurubber43celltext" style="display:none;"></output></div>
+      </div>
+      <br>
+      <div class="divTable" id="CategoryForSavingAndLoading" style="text-align: left;">
       </div>
     </div>
+    <div class="printResultTab" id="CategoryListTab">
+      <div style=" display: inline-block; width: 30%; min-width: fit-content; word-break: break-all; text-align: center;">
+      <br>
+      <br>
+      <div id="menurubber21cell" style="display: block; margin: auto;">
+        <input value='Back' type='image' class="menubutton" id="menurubberimage21" onclick='syncDateTime()'>
+        <br><output class="menudesc" id="menurubber21celltext"></output>
+      </div>
+      <br>
+      <br>
+      <div id="menurubber22cell" style="display: block; margin: auto;">
+        <input value='Update' type='image' class="menubutton" id="menurubberimage22" onclick='resetController();'>
+        <br><output class="menudesc" id="menurubber22celltext"></output>
+      </div>
+    </div>
+    <div id="RootTable" style="display: inline-block; width: auto; margin: auto;">
+    </div>
+    <div style="display: inline-block; width: 30%; min-width: 0; word-break: break-all;">
+    </div>
+  </div>
+  <div class="printResultTab" id="CategoryContentTab">
+    <div style="display: inline-block; width: 30%; min-width: 120px; word-break: break-all; text-align: center;">
+      <div class="verticalMenu" style="display: block; width: 20%; min-width: 120px;">
+    <br>
+    <br>
+    <div id="menurubber31cell" style="display: block; margin: auto;">
+      <input value='Back' type='image' class="menubutton" id="menurubberimage31" onclick='ReturnToRoot()'>
+      <br><output class="menudesc" id="menurubber31celltext"></output>
+    </div>
+    <br>
+    <br>
+    <div id="menurubber32cell" style="display: block; margin: auto;">
+      <input value='Update' type='image' class="menubutton" id="menurubberimage32" onclick='ReloadParams();'>
+      <br><output class="menudesc" id="menurubber32celltext"></output>
+    </div>
+    <br>
+    <br>
+    <div id="menurubber34cell" style="display: block; margin: auto;">
+      <input value='Save' type='image' class="menubutton okCancelIcons" id="menurubberimage34" onclick='ApplyChanges();'>
+      <br><output class="menudesc" id="menurubber34celltext"></output>
+    </div>
+    <br>
+    <br>
+    <div id="menurubber33cell" style="display: block; margin: auto;">
+      <input value='Cancel' type='image' class="menubutton okCancelIcons" id="menurubberimage33" onclick='CancelChanges("func");'>
+      <br><output class="menudesc" id="menurubber33celltext"></output>
+    </div>
+  </div>
+</div>
+  <div id="FunctionsMenuTable" style="display: inline-block; width: auto; margin: 0 auto;">
+  </div>
+  <div style="display: inline-block; width: 30%; min-width: 0; word-break: break-all;">
+  </div>
+
+  </div>
   </div>
   <script type="text/javascript">
     // settings
@@ -1102,7 +1022,7 @@
           }
           elem.innerHTML = outtext;
         }
-        gemById("HomePage").style.textAlign = "start";
+        gemById("HomePageTab").style.textAlign = "start";
       }
       LoadRootCategoryEnum();
       if (CurrentCategory != null)
@@ -1360,21 +1280,28 @@
         FlagCategoryIsLoaded = new Array(i);
       }
 
-      var outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>`;
+      var outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br><div style="display: flex; float: left;">`;
+      var splittabletext = `<div class="funcTable textBtnGroup">`;
       var outtext1 =
-        `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br><div class="funcTable textBtnGroup">
-        <div class="funcRow"><div class="rootCell"></div><div class="rootCell"><label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}"></label></div><div class="rootCell"><button onclick="gemById('catrootcheckboxall').checked=!gemById('catrootcheckboxall').checked; gemById('catrootcheckboxall').onchange();">${UIStrings.EXTIF_ALLCAT_TEXT}</button></div><div class='rootCell centered'>` +
+        `<br><h2 align="center">${UIStrings.MENU_TEXT_HFK}</h2><br>` + splittabletext +
+        `<div class="funcRow"><div class="rootCell"></div><div class="rootCell"><label><input id="catrootcheckboxall" type="checkbox" checked onchange="for (var i = 0; i < RootCategoryEnum.length; i++) {gemById('catrootcheckbox' + i).checked = gemById('catrootcheckboxall').checked;}"></label></div><div class="rootCell"><button onclick="gemById('catrootcheckboxall').checked=!gemById('catrootcheckboxall').checked; gemById('catrootcheckboxall').onchange();">${UIStrings.EXTIF_ALLCAT_TEXT}</button></div><div class='rootCell centered'>` +
         RootCategoryEnum[0].min + " - " + RootCategoryEnum[RootCategoryEnum.length - 1].max + `</div></div>`;
-      outtext += `<div class="funcTable textBtnGroup">`;
-
+      outtext += splittabletext;
+      // two columns
+      //        splittabletext=`</div>` + splittabletext;
       for (var i = 0; i < RootCategoryEnum.length; i++) {
+        /*        if(i > RootCategoryEnum.length/2) {
+                  outtext += splittabletext;
+                  splittabletext = "";
+                }
+        */
         outtext += `<div class="funcRow"><div class="rootCell">${i}.</div><div class="rootCell"><button onclick="LoadCategoryEnum(${i});">` + translateString(RootCategoryEnum[i].name) +
           "</button></div><div class='rootCell'></div><div class='rootCell centered'>" + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + "</div></div>";
         outtext1 +=
           `<div class="funcRow"><div class="rootCell">${i}.</div><div class="rootCell"><label><input id="catrootcheckbox${i}" type="checkbox" checked></label></div><div class="rootCell"><button onclick="gemById('catrootcheckbox${i}').checked=!gemById('catrootcheckbox${i}').checked">` +
           translateString(RootCategoryEnum[i].name) + `</button></div><div class='rootCell centered'>` + RootCategoryEnum[i].min + " - " + RootCategoryEnum[i].max + `</div></div>`;
       }
-      outtext += "</div>";
+      outtext += "</div></div>";
       outtext1 += "</div>";
       gemById("RootTable").innerHTML = outtext;
       gemById("CategoryForSavingAndLoading").innerHTML = outtext1;
@@ -1552,14 +1479,14 @@
       //Interface generator
       outtext = `<br><h2 id='categorytitle${res[1]}'></h2><br>`;
       gemById("FunctionsMenuTable").innerHTML = "";
-      outtext += `<div style="display: table; margin: 0 auto; text-align: center;"><div class="divTableFuncListBody">`;
+      outtext += `<div class="funcTable">`;
       for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
         if (FunctionsEnum[k] == null) continue;
         outtext += `<div class="divTableFuncListRow" id="func${k}">`;
         outtext += insertinterfaceelement(k, "func");
         outtext += `</div>`;
       }
-      outtext += "</div></div>";
+      outtext += "</div>";
       gemById("FunctionsMenuTable").innerHTML = outtext;
       for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
         if (FunctionsEnum[k] == null) continue;
@@ -1648,15 +1575,15 @@
           gemById(prefix + func + "unit").innerHTML = translateString(currentValueObject.unit);
           break;
         case 1:
-            for (var i = 0; i < sel.options.length; i++) {
-              if (sel.options[i].value == currentValueObject.value || (jsonObject.isswitch == 1 && sel.options[i].value != 0 && currentValueObject.value != 0)) {
-                sel.options[i].value = currentValueObject.value;
-                sel.options[i].selected = true;
-              } else {
-                sel.options[i].selected = false;
-                sel.options[i].disabled = readonly;
-              }
+          for (var i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value == currentValueObject.value || (jsonObject.isswitch == 1 && sel.options[i].value != 0 && currentValueObject.value != 0)) {
+              sel.options[i].value = currentValueObject.value;
+              sel.options[i].selected = true;
+            } else {
+              sel.options[i].selected = false;
+              sel.options[i].disabled = readonly;
             }
+          }
           break;
         case 2:
           var bitparam = parseInt(currentValueObject.value, 2);
@@ -2005,7 +1932,8 @@
       FunctionsEnum[index].name = jsonObject.name;
       FunctionsEnum[index].unit = jsonObject.unit;
       FunctionsEnum[index].possibleValues = jsonObject.possibleValues;
-      if ('isswitch' in jsonObject) FunctionsEnum[index].isswitch = jsonObject.isswitch; else FunctionsEnum[index].isswitch = 0;
+      if ('isswitch' in jsonObject) FunctionsEnum[index].isswitch = jsonObject.isswitch;
+      else FunctionsEnum[index].isswitch = 0;
     }
 
     function loadManagementValues(funcenum) {
@@ -2154,6 +2082,16 @@
         rootlistshow(null, null);
     }
 
+//Scrolling
+    var timeOut;
+    function goUp() {
+       var top = Math.max(document.body.scrollTop,document.documentElement.scrollTop);
+       if(top > 0) {
+          window.scrollBy(0,-100);
+          timeOut = setTimeout('goUp()',20);
+       } else clearTimeout(timeOut);
+    }
+
     function ShowSelectedMode(id) {
       clearTimeout(monitorTimerID); //disable update when Home Page is hidden or just started
       monitorTimerID = 0;
@@ -2161,11 +2099,12 @@
       //warnings about unsaved changes.
       if (!CheckForUnsavedChanges()) return false;
 
-      gemById("HomePage").style.display = (id == 1) ? "table-cell" : "none";
-      gemById("LeftMenuTableCell").style.display = (id == 2) ? "grid" : "none";
-      gemById("RightMenuTableCell").style.display = (id == 3) ? "table-cell" : "none";
-      gemById("AboutMenuTableCell").style.display = (id == 4) ? "table-cell" : "none";
-      gemById("SaveLoadConfig").style.display = (id == 5) ? "table-cell" : "none";
+      gemById("HomePageTab").style.display = (id == 1) ? "block" : "none";
+      gemById("CategoryListTab").style.display = (id == 2) ? "flex" : "none";
+      gemById("CategoryContentTab").style.display = (id == 3) ? "flex" : "none";
+      gemById("AboutTab").style.display = (id == 4) ? "block" : "none";
+      gemById("SaveLoadConfigTab").style.display = (id == 5) ? "block" : "none";
+      goUp();
       if (CurrentCategory != null) {
         gemById("FunctionsMenuTable").style.display = "none";
         //Freeing RAM
@@ -2234,7 +2173,7 @@
       if (!ShowSelectedMode(1)) return;
       var displaychartclassname = "displaychart";
       var outtext = `<A HREF='${DatalogURL}'>${UIStrings.MENU_TEXT_DTD}</A><div class="${displaychartclassname}" align="center"></div>`;
-      gemById("HomePage").innerHTML = outtext;
+      gemById("HomePageTab").innerHTML = outtext;
       drawGraph("div." + displaychartclassname, DatalogURL);
     }
 
@@ -2251,16 +2190,16 @@
         outtext += `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MANAGEMENT_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
           <p></p>
             <div style="display:block; width:60%;">
-              <div style="display:block; float:left;">
+              <div style="float:left;">
                <input value='Cancel' type='image' class="okCancelIcons" id="managercancelImage" onclick='CancelChanges("manager")'>
               </div>
-              <div style="display:block; float:right;">
+              <div style="float:right;">
                <input value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges()'>
               </div>
             </div>
       </div>`;
       }
-      gemById("HomePage").innerHTML = outtext;
+      gemById("HomePageTab").innerHTML = outtext;
       if (functionsListOnFrontPage.length > 0) {
         loadMonitorValues(functionsListOnFrontPage);
       }
