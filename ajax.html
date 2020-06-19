@@ -509,6 +509,7 @@
 
     .verticalMenu {
       position: fixed;
+      margin: 0 auto;
     }
     @media (max-height: 640px) {
       .verticalMenu {
@@ -960,7 +961,7 @@
       LoadScript('notsupported.js', function() {
         for (var i = 0; i < listOfNotSupportedParams.length; i++) {
           if (FunctionsEnum[listOfNotSupportedParams[i]] == undefined) FunctionsEnum[listOfNotSupportedParams[i]] = {};
-          FunctionsEnum[listOfNotSupportedParams[i]].error = 32;
+          FunctionsEnum[listOfNotSupportedParams[i]].error = 7;
         }
       }, null);
       LoadScript('settings.js', SettingsInit, SettingsInit);
@@ -1167,7 +1168,7 @@
             if (gemById("catrootcheckbox" + k).checked) {
               for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
                 if (FunctionsEnum[i] != null && !('value' in FunctionsEnum[i])) {
-                  if (variant == 1 && (FunctionsEnum[i].readonly == 1 || FunctionsEnum[i].error == 32)) continue;
+                  if (variant == 1 && (FunctionsEnum[i].readonly == 1 || FunctionsEnum[i].error == 7)) continue;
                   j++;
                   cmdlist += i;
                   configBuildStage = i;
@@ -1203,7 +1204,7 @@
       var text = "{\n";
       for (var k in FunctionsEnum) {
         if (FunctionsEnum[k].readonly) continue; //do not save read-only parameters
-        if (FunctionsEnum[k].error == 32) continue; //do not save unsupported parameters
+        if (FunctionsEnum[k].error == 7) continue; //do not save unsupported parameters
         var allowtonext = false;
         do {
           if (RootCategoryEnum[currentcat].max < k) {
@@ -1233,7 +1234,7 @@
       var currentcat = 0;
       var text = "listOfNotSupportedParams = [\n";
       for (var k in FunctionsEnum) {
-        if (FunctionsEnum[k].error != 32) continue; //save only non-exist parameters
+        if (FunctionsEnum[k].error != 7) continue; //save only non-exist parameters
         var allowtonext = false;
         do {
           if (RootCategoryEnum[currentcat].max < k) {
@@ -1426,7 +1427,7 @@
         default:
           break;
       }
-      if (jsonObject.error == 32) { //param not supported
+      if (jsonObject.error == 7) { //param not supported
         if (hideUnsupportedParams)
           gemById(prefix + func).style.display = "none";
         else
@@ -1490,7 +1491,7 @@
       gemById("FunctionsMenuTable").innerHTML = outtext;
       for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
         if (FunctionsEnum[k] == null) continue;
-        if (FunctionsEnum[k].error == 32) shadyIfError("func", k, FunctionsEnum[k].error);
+        if (FunctionsEnum[k].error == 7) shadyIfError("func", k, FunctionsEnum[k].error);
         insertinterfacevalues(k, "func");
         insertvalue(null, k, "func");
       }
@@ -1708,7 +1709,7 @@
           //full update
           for (var i = RootCategoryEnum[catnum].min; i <= RootCategoryEnum[catnum].max; i++) {
             if (FunctionsEnum[i] != null) {
-              if (FunctionsEnum[i].error == 32) continue;
+              if (FunctionsEnum[i].error == 7) continue;
               j++;
               cmdlist += i;
               if (j == JSONOptionsPerRequest) {
@@ -1743,7 +1744,7 @@
           //exclude changes
           for (var i = RootCategoryEnum[catnum].min; i <= RootCategoryEnum[catnum].max; i++) {
             if (FunctionsEnum[i] != null) {
-              if (FunctionsEnum[i].error == 32) continue;
+              if (FunctionsEnum[i].error == 7) continue;
               if (typeof ListOfChanges[i] === 'undefined') {
                 j++;
                 cmdlist += i;
@@ -1963,7 +1964,7 @@
         sel.innerHTML = outtext;
 
         for (var k = 0; k < funcenum.length; k++) {
-          if (FunctionsEnum[funcenum[k]].error == 32) shadyIfError("manager", funcenum[k], FunctionsEnum[funcenum[k]].error);
+          if (FunctionsEnum[funcenum[k]].error == 7) shadyIfError("manager", funcenum[k], FunctionsEnum[funcenum[k]].error);
           insertinterfacevalues(funcenum[k], "manager");
           insertvalue(null, funcenum[k], "manager");
         }
