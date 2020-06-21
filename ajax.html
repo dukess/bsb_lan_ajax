@@ -488,17 +488,10 @@
     }
 
     .Management4HomePage {
-      width: 50%;
-      max-width: 100%;
       display: inline-block;
-    }
-
-    @media (max-width: 1000px) {
-      .Management4HomePage {
-        display: block;
-        border: 10px solid transparent;
-        width: 100%;
-      }
+      word-wrap: break-word;
+      min-width: fit-content;
+      border: 10px solid transparent;
     }
 
     .MarkErrors {
@@ -2183,23 +2176,20 @@
 <br><b>${UIStrings.MENU_TEXT_CFG}:</b> ${UIStrings.MENU_DESC_CFG}
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
 ` : ``;
-      outtext += `<br>`;
+      outtext += `<br><div style="display:block; width:100%; text-align: center;">`;
       if (functionsListOnFrontPage.length > 0) outtext +=
-        `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MONITOR_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="monitorTable"></div></div>`;
+        `<div class="Management4HomePage"><p><b>${UIStrings.EXTIF_MONITOR_TEXT}</b></p><div id="monitorTable"></div></div>`;
       //      if(functionsListOnFrontPage.length > 0 && quickManageFunctionsList.length > 0) outtext += `<div class style="height:10px"></div>`;
       if (quickManageFunctionsList.length > 0) {
-        outtext += `<div class="Management4HomePage" align="center"><div align="center">${UIStrings.EXTIF_MANAGEMENT_TEXT}</div><br><div class="divTableFuncMonitorListBody" align="center" id="managementTable"></div>
+        outtext += `<div class="Management4HomePage"><p><b>${UIStrings.EXTIF_MANAGEMENT_TEXT}</b></p><div id="managementTable"></div>
           <p></p>
-            <div style="display:block; width:60%;">
-              <div style="float:left;">
-               <input value='Cancel' type='image' class="okCancelIcons" id="managercancelImage" onclick='CancelChanges("manager")'>
-              </div>
-              <div style="float:right;">
-               <input value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges()'>
-              </div>
+            <div style="display:block; width:75%; margin: 0 auto;">
+               <input style="float:left;" value='Cancel' type='image' class="okCancelIcons" id="managercancelImage" onclick='CancelChanges("manager")'>
+               <input style="float:right;" value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges()'>
             </div>
       </div>`;
       }
+      outtext += `</div>`;
       gemById('HomePageTab').innerHTML = outtext;
       if (functionsListOnFrontPage.length > 0) {
         loadMonitorValues(functionsListOnFrontPage);
