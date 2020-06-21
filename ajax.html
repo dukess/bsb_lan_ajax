@@ -2179,11 +2179,10 @@
       outtext += `<br><div style="display:block; width:100%; text-align: center;">`;
       if (functionsListOnFrontPage.length > 0) outtext +=
         `<div class="Management4HomePage"><p><b>${UIStrings.EXTIF_MONITOR_TEXT}</b></p><div id="monitorTable"></div></div>`;
-      //      if(functionsListOnFrontPage.length > 0 && quickManageFunctionsList.length > 0) outtext += `<div class style="height:10px"></div>`;
       if (quickManageFunctionsList.length > 0) {
         outtext += `<div class="Management4HomePage"><p><b>${UIStrings.EXTIF_MANAGEMENT_TEXT}</b></p><div id="managementTable"></div>
           <p></p>
-            <div style="display:block; width:75%; margin: 0 auto;">
+            <div style="display:block; width:75%; min-width: fit-content; margin: 0 auto;">
                <input style="float:left;" value='Cancel' type='image' class="okCancelIcons" id="managercancelImage" onclick='CancelChanges("manager")'>
                <input style="float:right;" value='Save' type='image' class="okCancelIcons" id="managerokImage" onclick='ApplyChanges()'>
             </div>
