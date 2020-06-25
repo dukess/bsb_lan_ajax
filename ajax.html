@@ -961,6 +961,10 @@
     }
 
     function SettingsInit() {
+      // no reason for interval less than [double time of request to bus (~300 ms) multiplied by length of array] sec.
+      if (monitorUpdateInterval < (quickManageFunctionsList.length + functionsListOnFrontPage.length) * 300 * 2)
+        monitorUpdateInterval = (quickManageFunctionsList.length + functionsListOnFrontPage.length) * 300 * 2;
+
       if (externaldevelop)
         baseURL = externalbaseURL;
       LoadScript('languages.js', LanguageInit, LanguageInit);
@@ -1915,7 +1919,9 @@
         //Show cached values
         insertvaluesinmonitorlistshow(null, null);
         //Show current values
-        loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, null, true);
+        if (monitorTimerID == 0 || !('value' in FunctionsEnum[functionsenum[0]]))
+          loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, null, true);
+
       }
     }
 
@@ -1928,6 +1934,8 @@
       FunctionsEnum[index].possibleValues = jsonObject.possibleValues;
       if ('isswitch' in jsonObject) FunctionsEnum[index].isswitch = jsonObject.isswitch;
       else FunctionsEnum[index].isswitch = 0;
+      if ('error' in jsonObject) FunctionsEnum[index].error = jsonObject.error;
+      else FunctionsEnum[index].error = 0;
     }
 
     function loadManagementValues(funcenum) {
@@ -1957,13 +1965,14 @@
         sel.innerHTML = outtext;
 
         for (var k = 0; k < funcenum.length; k++) {
-          if (FunctionsEnum[funcenum[k]].error == 7) shadyIfError("manager", funcenum[k], FunctionsEnum[funcenum[k]].error);
+          if (FunctionsEnum[funcenum[k]].error > 0) shadyIfError("manager", funcenum[k], FunctionsEnum[funcenum[k]].error);
           insertinterfacevalues(funcenum[k], "manager");
           insertvalue(null, funcenum[k], "manager");
         }
 
-        loadAjax(baseURL, 'JQ=' + funcenum,
-          insertvaluesinmanagementlistshow, null, true);
+        if (monitorTimerID == 0 || !('value' in FunctionsEnum[funcenum[0]]))
+          loadAjax(baseURL, 'JQ=' + funcenum,
+            insertvaluesinmanagementlistshow, null, true);
       }
       gemById("managercancelImage").src = cancelImage;
       gemById("managercancelImage").alt = UIStrings.EXTIF_CANCEL_TEXT;
@@ -2087,9 +2096,6 @@
     }
 
     function ShowSelectedMode(id) {
-      clearTimeout(monitorTimerID); //disable update when Home Page is hidden or just started
-      monitorTimerID = 0;
-
       //warnings about unsaved changes.
       if (!CheckForUnsavedChanges()) return false;
 
@@ -2190,16 +2196,12 @@
       }
       outtext += `</div>`;
       gemById('HomePageTab').innerHTML = outtext;
-      if (functionsListOnFrontPage.length > 0) {
-        loadMonitorValues(functionsListOnFrontPage);
-      }
-      if (quickManageFunctionsList.length > 0) {
-        loadManagementValues(quickManageFunctionsList);
-      }
+      loadMonitorValues(functionsListOnFrontPage);
+      loadManagementValues(quickManageFunctionsList);
       if (functionsListOnFrontPage.length > 0 || quickManageFunctionsList.length > 0) {
-        if (monitorUpdateInterval < functionsListOnFrontPage.length * 300 * 2) monitorUpdateInterval = (quickManageFunctionsList.length + functionsListOnFrontPage.length) * 300 *
-          2; // no reason for interval less than [double time of request to bus (~300 ms) multiplied by length of array] sec.
         if (monitorTimerID == 0) monitorTimerID = setTimeout(function ticktak() {
+          monitorTimerID = 0;
+          if (gemById('HomePageTab').style.display == "none") return;
           loadMonitorValues(functionsListOnFrontPage);
           loadManagementValues(quickManageFunctionsList);
           monitorTimerID = setTimeout(ticktak, monitorUpdateInterval);
