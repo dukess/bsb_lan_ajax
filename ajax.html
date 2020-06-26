@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <head>
   <meta charset="utf-8">
   <style>
@@ -956,6 +958,7 @@
           if (FunctionsEnum[listOfNotSupportedParams[i]] == undefined) FunctionsEnum[listOfNotSupportedParams[i]] = {};
           FunctionsEnum[listOfNotSupportedParams[i]].error = 7;
         }
+        listOfNotSupportedParams = []; //free RAM
       }, null);
       LoadScript('settings.js', SettingsInit, SettingsInit);
     }
@@ -1933,9 +1936,7 @@
       FunctionsEnum[index].unit = jsonObject.unit;
       FunctionsEnum[index].possibleValues = jsonObject.possibleValues;
       if ('isswitch' in jsonObject) FunctionsEnum[index].isswitch = jsonObject.isswitch;
-      else FunctionsEnum[index].isswitch = 0;
       if ('error' in jsonObject) FunctionsEnum[index].error = jsonObject.error;
-      else FunctionsEnum[index].error = 0;
     }
 
     function loadManagementValues(funcenum) {
@@ -2597,3 +2598,4 @@
   </script>
 
 </body>
+</html>
