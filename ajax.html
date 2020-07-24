@@ -777,27 +777,41 @@
       Init...
     </div>
     <div class="printResultTab" id="SaveLoadConfigTab">
-      <br>
-      <br><output id="SaveLoadConfigLogCat"></output>
-      <br><output id="SaveLoadConfigLogFunc"></output>
-      <br><output id="SaveLoadConfigLog"></output>
-      <br>
-
-      <div style="display: inline-block;">
-        <div class="divMenuCell" style="float:left;" id="menurubber41cell"><input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0, 1)'>
-          <br><output class="menudesc" id="menurubber41celltext" style="display:none;"></output></div>
-        <div class="divMenuCell" style="float:left;" id="menurubber42cell"><input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'><input type="file" id="file4upload" multiple="false" hidden
-            onchange='UploadConfig(this)' />
-          <br><output class="menudesc" id="menurubber42celltext" style="display:none;"></output></div>
-        <div class="divMenuCell" style="float:left;" id="menurubber43cell"><input value='Create excludes list' type='image' class="menubutton" id="menurubberimage43" onclick='DownloadConfig(0, 2)'>
-          <br><output class="menudesc" id="menurubber43celltext" style="display:none;"></output></div>
+      <div style="display: inline-block; width: 25%; min-width: fit-content; word-break: break-all; text-align: center;">
+        <br>
+        <br>
+        <div id="menurubber41cell" style="display: block; margin: auto;">
+          <input value='Download' type='image' class="menubutton" id="menurubberimage41" onclick='DownloadConfig(0, 1)'>
+          <br><output class="menudesc" id="menurubber41celltext"></output>
+        </div>
+        <br>
+        <br>
+        <div id="menurubber42cell" style="display: block; margin: auto;">
+          <input value='Upload' type='image' class="menubutton" id="menurubberimage42" onclick='file4upload.click()'>
+          <input type="file" id="file4upload" multiple="false" hidden onchange='UploadConfig(this)' />
+          <br><output class="menudesc" id="menurubber42celltext"></output>
+        </div>
+        <br>
+        <br>
+        <div id="menurubber43cell" style="display: block; margin: auto;">
+          <input value='Create excludes list' type='image' class="menubutton" id="menurubberimage43" onclick='DownloadConfig(0, 2)'>
+          <br><output class="menudesc" id="menurubber43celltext"></output>
+        </div>
       </div>
-      <br>
-      <div class="divTable" id="CategoryForSavingAndLoading" style="text-align: left;">
+      <div style="display: inline-block; width: auto; margin: auto;">
+        <br>
+        <br><output id="SaveLoadConfigLogCat"></output>
+        <br><output id="SaveLoadConfigLogFunc"></output>
+        <br><output id="SaveLoadConfigLog"></output>
+        <br>
+        <div class="divTable" id="CategoryForSavingAndLoading">
+        </div>
+      </div>
+      <div style="display: inline-block; width: 25%; min-width: 0; word-break: break-all;">
       </div>
     </div>
     <div class="printResultTab" id="CategoryListTab">
-      <div style=" display: inline-block; width: 30%; min-width: fit-content; word-break: break-all; text-align: center;">
+      <div style=" display: inline-block; width: 25%; min-width: fit-content; word-break: break-all; text-align: center;">
       <br>
       <br>
       <div id="menurubber21cell" style="display: block; margin: auto;">
@@ -813,11 +827,11 @@
     </div>
     <div id="RootTable" style="display: inline-block; width: auto; margin: auto;">
     </div>
-    <div style="display: inline-block; width: 30%; min-width: 0; word-break: break-all;">
+    <div style="display: inline-block; width: 25%; min-width: 0; word-break: break-all;">
     </div>
   </div>
   <div class="printResultTab" id="CategoryContentTab">
-    <div style="display: inline-block; width: 30%; min-width: 120px; word-break: break-all; text-align: center;">
+    <div style="display: inline-block; width: 25%; min-width: 120px; word-break: break-all; text-align: center;">
       <div class="verticalMenu" style="display: block; width: 20%; min-width: 120px;">
     <br>
     <br>
@@ -847,7 +861,7 @@
 </div>
   <div id="FunctionsMenuTable" style="display: inline-block; width: auto; margin: 0 auto;">
   </div>
-  <div style="display: inline-block; width: 30%; min-width: 0; word-break: break-all;">
+  <div style="display: inline-block; width: 25%; min-width: 0; word-break: break-all;">
   </div>
 
   </div>
@@ -1226,7 +1240,7 @@
         } while (!allowtonext)
       }
       text += "\n}";
-      downloadAsFile("config.json", text);
+      downloadAsFile("config.json", 'application/json', text);
     }
 
     function BuildNonSupportedParametersList4Download() {
@@ -1249,17 +1263,17 @@
           } else {
             isNotFirstElement = true;
           }
-          text += `${k},\n`;
+          text += `${k}`;
         } while (!allowtonext)
       }
       text += "\n]";
-      downloadAsFile("notsupported.js", text);
+      downloadAsFile("notsupported.js", "text/javascript", text);
     }
 
-    function downloadAsFile(fileName, data) {
+    function downloadAsFile(fileName, mimetype, data) {
       let a = document.createElement("a");
       let file = new Blob([data], {
-        type: 'application/json'
+        type: mimetype
       });
       a.href = URL.createObjectURL(file);
       a.download = fileName;
@@ -2114,7 +2128,7 @@
       gemById("CategoryListTab").style.display = (id == 2) ? "flex" : "none";
       gemById("CategoryContentTab").style.display = (id == 3) ? "flex" : "none";
       gemById("AboutTab").style.display = (id == 4) ? "block" : "none";
-      gemById("SaveLoadConfigTab").style.display = (id == 5) ? "block" : "none";
+      gemById("SaveLoadConfigTab").style.display = (id == 5) ? "flex" : "none";
       goUp();
       if (CurrentCategory != null) {
         gemById("FunctionsMenuTable").style.display = "none";
