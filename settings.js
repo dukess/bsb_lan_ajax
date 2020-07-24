@@ -7,4 +7,4 @@ functionsListOnFrontPage = [8700, 8741, 8740, 8830, 9005, 8310, 8311, 8314, 8316
 monitorUpdateInterval = 60000; //Update values of functions for displaying on front (home) page every ... ms. Default - 60000 ms.
 quickManageFunctionsList = [700, 1600, 1601]; //Quick access to manage these functions.
 displayWelcomeText = true; //Display short review about program functions on start page
-hideUnsupportedParams = true; //hide unsupported params (error 7 in BSB-Lan or error 32 on JSON). true - hide (default), false - show. You can show it for debug purposes or other reason. You can build list of unsupported params and save it to SD card with name 'notsupported.js'. Parameters in the list are never requested, except for the exception list building function.
+hideUnsupportedParams = true; //hide unsupported params (error 7 in BSB-Lan). true - hide (default), false - show. You can show it for debug purposes or other reason. You can build list of unsupported params and save it to SD card with name 'notsupported.js'. Parameters in the list are never requested, except for the exception list building function. This allows categories to be loaded faster.

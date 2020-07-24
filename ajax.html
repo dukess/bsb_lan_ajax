@@ -1491,7 +1491,12 @@
       gemById("FunctionsMenuTable").innerHTML = outtext;
       for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
         if (FunctionsEnum[k] == null) continue;
-        if (FunctionsEnum[k].error == 7) shadyIfError("func", k, FunctionsEnum[k].error);
+        if (FunctionsEnum[k].error == 7) {
+          if (hideUnsupportedParams)
+            gemById("func" + k).style.display = "none";
+          else
+            shadyIfError("func", k, FunctionsEnum[k].error);
+          }
         insertinterfacevalues(k, "func");
         insertvalue(null, k, "func");
       }
@@ -1567,7 +1572,12 @@
 
       var sel = gemById(prefix + func + "control");
 
+      if (jsonObject.error == 7) { //param not supported
+        if (hideUnsupportedParams)
+          gemById(prefix + func).style.display = "none";
+      }
       shadyIfError(prefix, func, error);
+
       switch (jsonObject.dataType) {
         case 0:
           if (currentValueObject.value.length > 0 && isNaN(currentValueObject.value)) sel.type = "text";
