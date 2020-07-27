@@ -900,7 +900,7 @@
     var FlagCategoryIsLoaded = null; // Флаг загруженности категории в перечне.
     var d3libraryloaded = false;
     var configBuildStage = -1;
-    var listOfNotSupportedParams = [];
+    var listOfUnsupportedParams = [];
 
     gemById("menurubberimage31").src = backImage;
     gemById("menurubberimage32").src = updateImage;
@@ -968,11 +968,11 @@
     function InterfaceInit() {
       // For synchronous loading of scripts (Arduino has a limit of simultaneous connections)
       LoadScript('notsupported.js', function() {
-        for (var i = 0; i < listOfNotSupportedParams.length; i++) {
-          if (FunctionsEnum[listOfNotSupportedParams[i]] == undefined) FunctionsEnum[listOfNotSupportedParams[i]] = {};
-          FunctionsEnum[listOfNotSupportedParams[i]].error = 7;
+        for (var i = 0; i < listOfUnsupportedParams.length; i++) {
+          if (FunctionsEnum[listOfUnsupportedParams[i]] == undefined) FunctionsEnum[listOfUnsupportedParams[i]] = {};
+          FunctionsEnum[listOfUnsupportedParams[i]].error = 7;
         }
-        listOfNotSupportedParams = []; //free RAM
+        listOfUnsupportedParams = []; //free RAM
       }, null);
       LoadScript('settings.js', SettingsInit, SettingsInit);
     }
@@ -1246,7 +1246,7 @@
     function BuildNonSupportedParametersList4Download() {
       var isNotFirstElement = false;
       var currentcat = 0;
-      var text = "listOfNotSupportedParams = [\n";
+      var text = "listOfUnsupportedParams = [\n";
       for (var k in FunctionsEnum) {
         if (FunctionsEnum[k].error != 7) continue; //save only non-exist parameters
         var allowtonext = false;
