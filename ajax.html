@@ -1336,6 +1336,14 @@
 
     function insertinterfaceelement(func, prefix) {
       var jsonObject = FunctionsEnum[func];
+      if (typeof jsonObject === 'undefined') { //non-exist prognr was requested
+        note({
+          content: UIStrings.EXTIF_FUNCNO_TEXT + func + " " + UIStrings.EXTIF_NOTEXIST_TEXT ,
+          type: "warn",
+          time: 5
+        });
+        return "";
+      }
       var dataType = jsonObject.dataType;
       var multiple = "multiple";
       var outtext = "";
@@ -1413,6 +1421,7 @@
 
     function insertinterfacevalues(func, prefix) {
       var jsonObject = FunctionsEnum[func];
+      if (typeof jsonObject === 'undefined') return; //non-exist prognr was requested
       gemById(prefix + func + "text").innerHTML = func + ". " + translateString(jsonObject.name);
       switch (jsonObject.dataType) {
         case 0:
@@ -1564,6 +1573,8 @@
 
     function insertvalue(currentValueObject, func, prefix) {
       var jsonObject = FunctionsEnum[func];
+      if (typeof jsonObject === 'undefined') return; //non-exist prognr was requested
+
       // get value from cache, if exist
       if (currentValueObject == null) {
         if (typeof jsonObject.value === 'undefined') return;
@@ -1673,6 +1684,7 @@
       for (var k = 0; k < functionsListOnFrontPage.length; k++) {
         var outtext = "";
         var m = functionsListOnFrontPage[k];
+        if (typeof FunctionsEnum[m] === 'undefined') continue; //non-exist prognr was requested
         // get value from cache, if exist
         if (jsontext == null && command == null) {
           if (typeof FunctionsEnum[m].value === 'undefined') continue;
@@ -1926,6 +1938,7 @@
           loadAjax(baseURL, 'JC=' + functionsenum, function(jsontext, command) {
             if (jsontext != null) {
               for (var k in jsontext) {
+                if (typeof jsontext[k] === 'undefined') continue; //non-exist prognr was requested
                 setFunctionsEnum(k, jsontext[k]);
                 FunctionsEnum[k].protect = true; //protect function against RAM freeing
               }
@@ -1937,7 +1950,9 @@
         }
         var sel = gemById("monitorTable");
         var outtext = "";
+        var reallyexistparameter = -1;
         for (var k = 0; k < functionsenum.length; k++) {
+          if (typeof FunctionsEnum[functionsenum[k]] === 'undefined') continue; else reallyexistparameter = k;//non-exist prognr was requested
           outtext +=
             `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value">---</output>&nbsp;<output id="monitor${functionsenum[k]}unit">${translateString(FunctionsEnum[functionsenum[k]].unit)}</output></div></div>`;
           //            outtext += `<div style="float: left;">${functionsenum[k]}.&nbsp;</div><div style="float: left;"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div><br>`;
@@ -1946,7 +1961,7 @@
         //Show cached values
         insertvaluesinmonitorlistshow(null, null);
         //Show current values
-        if (monitorTimerID == 0 || !('value' in FunctionsEnum[functionsenum[0]]))
+        if (monitorTimerID == 0 || !('value' in FunctionsEnum[functionsenum[reallyexistparameter]]))
           loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, null, true);
 
       }
@@ -1990,6 +2005,7 @@
         sel.innerHTML = outtext;
 
         for (var k = 0; k < funcenum.length; k++) {
+          if (typeof FunctionsEnum[funcenum[k]] === 'undefined') continue; //non-exist prognr was requested
           if (FunctionsEnum[funcenum[k]].error > 0) shadyIfError("manager", funcenum[k], FunctionsEnum[funcenum[k]].error);
           insertinterfacevalues(funcenum[k], "manager");
           insertvalue(null, funcenum[k], "manager");
