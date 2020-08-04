@@ -1095,7 +1095,7 @@
       if (prefix == "func")
         LoadValuesInCategory(CurrentCategory, 1);
       else
-        loadManagementValues(quickManageFunctionsList);
+        loadManagementValues(1);
       ListOfChanges = new Object();
     }
 
@@ -1931,11 +1931,11 @@
       loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinram, variant, true);
     }
 
-    function loadMonitorValues(functionsenum) {
+    function loadMonitorValues(stage) {
       var temp = "";
-      if (functionsenum.length > 0) {
-        if (!FunctionsListOnFrontPageFlag) {
-          loadAjax(baseURL, 'JC=' + functionsenum, function(jsontext, command) {
+      if (functionsListOnFrontPage.length > 0) {
+        if(stage == 0) {
+          loadAjax(baseURL, 'JC=' + functionsListOnFrontPage, function(jsontext, command) {
             if (jsontext != null) {
               for (var k in jsontext) {
                 if (typeof jsontext[k] === 'undefined') continue; //non-exist prognr was requested
@@ -1944,25 +1944,25 @@
               }
               FunctionsListOnFrontPageFlag = true;
             }
-            loadMonitorValues(functionsenum);
+            loadMonitorValues(1);
           }, null, true);
           return;
         }
         var sel = gemById("monitorTable");
         var outtext = "";
         var reallyexistparameter = -1;
-        for (var k = 0; k < functionsenum.length; k++) {
-          if (typeof FunctionsEnum[functionsenum[k]] === 'undefined') continue; else reallyexistparameter = k;//non-exist prognr was requested
+        for (var k = 0; k < functionsListOnFrontPage.length; k++) {
+          if (typeof FunctionsEnum[functionsListOnFrontPage[k]] === 'undefined') continue; else reallyexistparameter = k;//non-exist prognr was requested
           outtext +=
-            `<div class="divTableRow"><div class="divTableCell" align="left">${functionsenum[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value">---</output>&nbsp;<output id="monitor${functionsenum[k]}unit">${translateString(FunctionsEnum[functionsenum[k]].unit)}</output></div></div>`;
+            `<div class="divTableRow"><div class="divTableCell" align="left">${functionsListOnFrontPage[k]}.&nbsp;</div><div class="divTableCell" align="left"><output id="monitor${functionsListOnFrontPage[k]}name">${translateString(FunctionsEnum[functionsListOnFrontPage[k]].name)}</output>:&nbsp;<output id="monitor${functionsListOnFrontPage[k]}value">---</output>&nbsp;<output id="monitor${functionsListOnFrontPage[k]}unit">${translateString(FunctionsEnum[functionsListOnFrontPage[k]].unit)}</output></div></div>`;
           //            outtext += `<div style="float: left;">${functionsenum[k]}.&nbsp;</div><div style="float: left;"><output id="monitor${functionsenum[k]}name">${translateString(FunctionsEnum[functionsenum[k]].name)}</output>:&nbsp;<output id="monitor${functionsenum[k]}value"></output>&nbsp;<output id="monitor${functionsenum[k]}unit"></output></div><br>`;
         }
         sel.innerHTML = outtext;
         //Show cached values
         insertvaluesinmonitorlistshow(null, null);
         //Show current values
-        if (monitorTimerID == 0 || !('value' in FunctionsEnum[functionsenum[reallyexistparameter]]))
-          loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinmonitorlistshow, null, true);
+        if (monitorTimerID == 0 || !('value' in FunctionsEnum[functionsListOnFrontPage[reallyexistparameter]]))
+          loadAjax(baseURL, 'JQ=' + functionsListOnFrontPage, insertvaluesinmonitorlistshow, null, true);
 
       }
     }
@@ -1978,11 +1978,11 @@
       if ('error' in jsonObject) FunctionsEnum[index].error = jsonObject.error;
     }
 
-    function loadManagementValues(funcenum) {
+    function loadManagementValues(stage) {
       var temp = "";
-      if (funcenum.length > 0) {
+      if (quickManageFunctionsList.length > 0) {
         if (!FunctionsquickManageListOnFrontPageFlag) {
-          loadAjax(baseURL, 'JC=' + funcenum,
+          loadAjax(baseURL, 'JC=' + quickManageFunctionsList,
             function(jsontext, command) {
               if (jsontext != null) {
                 for (var k in jsontext) {
@@ -1991,28 +1991,28 @@
                 }
                 FunctionsquickManageListOnFrontPageFlag = true;
               }
-              loadManagementValues(funcenum);
+              loadManagementValues(1);
             }, null, true);
           return;
         }
         var sel = gemById("managementTable");
         var outtext = "";
-        for (var k = 0; k < funcenum.length; k++) {
+        for (var k = 0; k < quickManageFunctionsList.length; k++) {
           outtext += `<div class="divTableRow">`;
-          outtext += insertinterfaceelement(funcenum[k], "manager");
+          outtext += insertinterfaceelement(quickManageFunctionsList[k], "manager");
           outtext += `</div>`;
         }
         sel.innerHTML = outtext;
 
-        for (var k = 0; k < funcenum.length; k++) {
-          if (typeof FunctionsEnum[funcenum[k]] === 'undefined') continue; //non-exist prognr was requested
-          if (FunctionsEnum[funcenum[k]].error > 0) shadyIfError("manager", funcenum[k], FunctionsEnum[funcenum[k]].error);
-          insertinterfacevalues(funcenum[k], "manager");
-          insertvalue(null, funcenum[k], "manager");
+        for (var k = 0; k < quickManageFunctionsList.length; k++) {
+          if (typeof FunctionsEnum[quickManageFunctionsList[k]] === 'undefined') continue; //non-exist prognr was requested
+          if (FunctionsEnum[quickManageFunctionsList[k]].error > 0) shadyIfError("manager", quickManageFunctionsList[k], FunctionsEnum[quickManageFunctionsList[k]].error);
+          insertinterfacevalues(quickManageFunctionsList[k], "manager");
+          insertvalue(null, quickManageFunctionsList[k], "manager");
         }
 
-        if (monitorTimerID == 0 || !('value' in FunctionsEnum[funcenum[0]]))
-          loadAjax(baseURL, 'JQ=' + funcenum,
+        if (monitorTimerID == 0 || !('value' in FunctionsEnum[quickManageFunctionsList[0]]))
+          loadAjax(baseURL, 'JQ=' + quickManageFunctionsList,
             insertvaluesinmanagementlistshow, null, true);
       }
       gemById("managercancelImage").src = cancelImage;
@@ -2224,10 +2224,15 @@
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
 ` : ``;
       outtext += `<br><div style="display:block; width:100%; text-align: center;">`;
-      if (functionsListOnFrontPage.length > 0) outtext +=
-        `<div class="Management4HomePage"><p><b>${UIStrings.EXTIF_MONITOR_TEXT}</b></p><div id="monitorTable"></div></div>`;
+      if (functionsListOnFrontPage.length > 0) { outtext +=
+        `<div class="Management4HomePage"><p style="display: flex; align-items: center; justify-content: center;"><b>${UIStrings.EXTIF_MONITOR_TEXT}</b>&nbsp;&nbsp;&nbsp;&nbsp;` +
+        `<input type="image" class="menubutton topMenuImage" src="`+ updateImage + `" style="width: 24px;" onclick="loadMonitorValues(0);"></input>` +
+        `</p><div id="monitorTable"></div></div>`;
+      }
       if (quickManageFunctionsList.length > 0) {
-        outtext += `<div class="Management4HomePage"><p><b>${UIStrings.EXTIF_MANAGEMENT_TEXT}</b></p><div id="managementTable"></div>
+        outtext += `<div class="Management4HomePage"><p style="display: flex; align-items: center; justify-content: center;"><b>${UIStrings.EXTIF_MANAGEMENT_TEXT}</b>&nbsp;&nbsp;&nbsp;&nbsp;` +
+        `<input type="image" class="menubutton topMenuImage" src="`+ updateImage + `" style="width: 24px;" onclick="loadManagementValues(0);"></input>` +
+        `</p><div id="managementTable"></div>
           <p></p>
             <div style="display:block; width:75%; min-width: fit-content; margin: 0 auto;">
                <input style="float:left;" value='Cancel' type='image' class="okCancelIcons" id="managercancelImage" onclick='CancelChanges("manager")'>
@@ -2237,14 +2242,14 @@
       }
       outtext += `</div>`;
       gemById('HomePageTab').innerHTML = outtext;
-      loadMonitorValues(functionsListOnFrontPage);
-      loadManagementValues(quickManageFunctionsList);
+      loadMonitorValues(0);
+      loadManagementValues(0);
       if (functionsListOnFrontPage.length > 0 || quickManageFunctionsList.length > 0) {
         if (monitorTimerID == 0) monitorTimerID = setTimeout(function ticktak() {
           monitorTimerID = 0;
           if (gemById('HomePageTab').style.display == "none") return;
-          loadMonitorValues(functionsListOnFrontPage);
-          loadManagementValues(quickManageFunctionsList);
+          loadMonitorValues(1);
+          loadManagementValues(1);
           monitorTimerID = setTimeout(ticktak, monitorUpdateInterval);
         }, monitorUpdateInterval);
       }
