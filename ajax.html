@@ -1950,7 +1950,8 @@
                 }
                 loadMonitorValues(1);
               }, null, true);
-            }
+            } else
+              loadMonitorValues(1);
             break;
           case 1:
             var sel = gemById("monitorTable");
@@ -2007,7 +2008,8 @@
                   }
                   loadManagementValues(1);
                 }, null, true);
-            }
+            } else
+              loadManagementValues(1);
             break;
           case 1:
             var sel = gemById("managementTable");
