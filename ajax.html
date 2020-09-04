@@ -1972,8 +1972,8 @@
               loadMonitorValues(2);
             break;
           case 2:
-            loadAjax(baseURL, 'JQ=' + functionsListOnFrontPage, insertvaluesinmonitorlistshow, null, true);
             clearTimeout(monitorTimerID);
+            loadAjax(baseURL, 'JQ=' + functionsListOnFrontPage, insertvaluesinmonitorlistshow, null, true);
             StartMonitorTimer();
             break;
         }
@@ -2040,9 +2040,9 @@
               document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
             break;
           case 2:
+            clearTimeout(monitorTimerID);
             loadAjax(baseURL, 'JQ=' + quickManageFunctionsList,
               insertvaluesinmanagementlistshow, null, true);
-            clearTimeout(monitorTimerID);
             StartMonitorTimer();
             break;
         }
