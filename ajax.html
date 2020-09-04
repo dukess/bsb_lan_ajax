@@ -1972,7 +1972,6 @@
               loadMonitorValues(2);
             break;
           case 2:
-            clearTimeout(monitorTimerID);
             loadAjax(baseURL, 'JQ=' + functionsListOnFrontPage, insertvaluesinmonitorlistshow, null, true);
             StartMonitorTimer();
             break;
@@ -2040,7 +2039,6 @@
               document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
             break;
           case 2:
-            clearTimeout(monitorTimerID);
             loadAjax(baseURL, 'JQ=' + quickManageFunctionsList,
               insertvaluesinmanagementlistshow, null, true);
             StartMonitorTimer();
@@ -2244,7 +2242,8 @@
     }
 
     function StartMonitorTimer() {
-      if (monitorTimerID == 0) monitorTimerID = setTimeout(function ticktak() {
+      clearTimeout(monitorTimerID);
+      monitorTimerID = setTimeout(function ticktak() {
         monitorTimerID = 0;
         if (gemById('HomePageTab').style.display == "none") return;
         loadMonitorValues(2);
