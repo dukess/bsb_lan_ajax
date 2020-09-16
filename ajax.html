@@ -2224,6 +2224,72 @@
         gemById(place).innerHTML = `<object type="text/html" data="${url}" style="width: 100%; height: 89vh;"></object>`;
     }
 
+    function DisplayConfig(stage) {
+              loadAjax(baseURL, 'JI',
+                function(jsontext, command) {
+                  if (jsontext != null) {
+                    var sel = gemById("OtherPageTab");
+                    var outtext =`<br><h2 align="center">${UIStrings.MENU_TEXT_CFG}</h2><br>`;
+                    outtext+=`${UIStrings.STR6220_TEXT}: ` + jsontext.version + "<br>";
+                    outtext+=`Uptime: ` + Math.floor(jsontext.uptime/84600000) + " "+ Math.floor(jsontext.uptime/3600000)%24 + ":"+ Math.floor(jsontext.uptime/60000)%60 + ":"+ Math.floor(jsontext.uptime/1000)%60 + "."+ jsontext.uptime%1000 + "<br>";
+                    outtext+=`freeram: ` + jsontext.freeram + "<br>";
+                    outtext+=`MAC: ` + jsontext.MAC + "<br>";
+                    outtext+=`freespace: ` + jsontext.freespace + "blocks<br>";
+                    outtext+=`bus: ` + jsontext.bus + "<br>";
+                    outtext+=`buswritable: ` + jsontext.buswritable + "<br>";
+                    outtext+=`busaddr: ` + jsontext.busaddr + "<br>";
+                    outtext+=`busdest: ` + jsontext.busdest + "<br>";
+                    outtext+=`monitor: ` + jsontext.monitor + "<br>";
+                    outtext+=`verbose: ` + jsontext.verbose + "<br>";
+                    outtext+=`onewirebus: ` + jsontext.onewirebus + "<br>";
+                    outtext+=`dhtbus: `;
+                    var not_first_time = false;
+                    for (var j in jsontext.dhtbus){
+                      if(not_first_time)
+                        outtext+= ", ";
+                      else
+                        not_first_time = true;
+                      outtext+= jsontext.dhtbus[j].pin;
+                    }
+                    outtext+= "<br>";
+                    outtext+=`protectedGPIO: `;
+                    not_first_time = false;
+                    for (j in jsontext.protectedGPIO){
+                      if(not_first_time)
+                        outtext+= ", ";
+                      else
+                        not_first_time = true;
+                      outtext+= jsontext.protectedGPIO[j].pin;
+                    }
+                    outtext+= "<br>";
+
+                    outtext+=`averages: `;
+                    not_first_time = false;
+                    for (j in jsontext.averages){
+                      if(not_first_time)
+                        outtext+= ", ";
+                      else
+                        not_first_time = true;
+                      outtext+= jsontext.averages[j].parameter;
+                    }
+                    outtext+= "<br>";
+
+                    outtext+=`logged: `;
+                    not_first_time = false;
+                    for (j in jsontext.logged){
+                      if(not_first_time)
+                        outtext+= ", ";
+                      else
+                        not_first_time = true;
+                      outtext+= jsontext.logged[j].parameter;
+                    }
+                    outtext+= "<br>";
+                    outtext+=`loginterval: ` + jsontext.loginterval + "<br>";
+//                    outtext+=` : ` + jsontext. + "<br>";
+                    sel.innerHTML = outtext;
+                  }
+                }, null, true);
+    }
 
     function DisplayChart() {
       if (!ShowSelectedMode(6)) return;
@@ -2297,11 +2363,12 @@
     }else if(params[0] == "chart"){  //display chart and datalog
       DisplayChart();
     }else if(params[0] == "config"){ //show config
-      LoadElement('OtherPageTab', 'WC');
+      if (ShowSelectedMode(6));
+        DisplayConfig();
     }else if(params[0] == "scan"){ //scan for new parameters
       LoadElement('OtherPageTab', 'WQ');
     }else if(params[0] == "sensors"){ //user-defined sensors
-      LoadElement('OtherPageTab', 'WT')
+      LoadElement('OtherPageTab', 'WT');
     }else if(params[0] == "setclock"){ //set date and time to heater
       syncDateTime();
     }else if(params[0] == "manual"){ //manual pages

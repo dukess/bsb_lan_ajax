@@ -12,7 +12,7 @@
 
 ## Requirements
 - Hardware: same as for BSB_lan project. SD card needed.
-- Software: modern browser with JavaScript, CSS2(3?) support. Tested on Firefox, Google Chrome, Yandex browser (Chromium core).
+- Software: modern browser with HTML5, JavaScript, CSS2(3?) support. Tested on Firefox, Google Chrome, Yandex browser (Chromium core).
 
 ## How to install/run.
 - <s>Patch BSB_lan.ino by patch.</s>
