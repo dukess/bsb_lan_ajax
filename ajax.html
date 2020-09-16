@@ -2236,9 +2236,11 @@
                     outtext+=`MAC: ` + jsontext.MAC + "<br>";
                     outtext+=`freespace: ` + jsontext.freespace + "blocks<br>";
                     outtext+=`bus: ` + jsontext.bus + "<br>";
-                    outtext+=`buswritable: ` + jsontext.buswritable + "<br>";
+                    if(jsontext.bus == "PPS")
+                      outtext+=`buswritable: ` + jsontext.buswritable + "<br>";
                     outtext+=`busaddr: ` + jsontext.busaddr + "<br>";
-                    outtext+=`busdest: ` + jsontext.busdest + "<br>";
+                    if(jsontext.bus == "LPB")
+                      outtext+=`busdest: ` + jsontext.busdest + "<br>";
                     outtext+=`monitor: ` + jsontext.monitor + "<br>";
                     outtext+=`verbose: ` + jsontext.verbose + "<br>";
                     outtext+=`onewirebus: ` + jsontext.onewirebus + "<br>";
