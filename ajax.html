@@ -520,7 +520,7 @@
   <title>BSB-LAN Web AJAX</title>
 </head>
 
-<body onload="InterfaceInit();"  onhashchange="HashWasChanged();">
+<body onload="InterfaceInit();" onhashchange="HashWasChanged();">
   <div id="loader"></div>
   <!-- HTML Formatter: https://serblog.ru/demo/format-html/ -->
   <script type="text/javascript">
@@ -1086,9 +1086,29 @@
     }
 
     function ApplyChanges() {
+      var counter = 0;
+      var data = "{";
       for (var k in ListOfChanges) {
-        gameIsChanged(k);
+        var setvalue = gameIsChanged(k);
+        if (setvalue != null) {
+          if (counter) data += ",\n";
+          data += "{\"parameter\":\"" + k + "\", \"value\":\"" + setvalue + "\", \"type\":\"1\"}";
+          console.log("Trying to set parameter #" + k + " with value " + setvalue);
+          counter++;
+
+          if (counter == 3) { //more - less responsible; less - more responsible
+            counter = 0;
+            data += "}";
+            loadAjax(baseURL, 'JS', data, uploadParamNotifyJSON, null, false);
+            data = "{";
+          }
+          FunctionsEnum[k].value = setvalue;
+        }
         delete ListOfChanges[k];
+      }
+      if (counter) {
+        data += "}";
+        loadAjax(baseURL, 'JS', data, uploadParamNotifyJSON, null, false);
       }
       for (var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
         document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
@@ -1114,6 +1134,8 @@
       reader.onload = function(event) {
         var contents = JSON.parse(event.target.result);
         if (contents != null) {
+          var data = "{";
+          var counter = 0;
           var j = 0;
           for (var k in contents) {
             while (k > RootCategoryEnum[j].max) {
@@ -1139,9 +1161,27 @@
               }
               if (value != null) {
                 gemById("SaveLoadConfigLogFunc").textContent = UIStrings.EXTIF_FUNCNO_TEXT + k;
-                loadAjax(baseURL, 'WS' + k + '=' + value, uploadParamNotify, null, false);
+                // do not forget delete uploadParamNotify function after deleting line below
+                //                loadAjax(baseURL, 'WS' + k + '=' + value, "", uploadParamNotify, null, false);
+                //                loadAjax(baseURL, 'JS', "{\"parameter\":\"" + k + ""\", \"value\":\"" + value +""\", \"type\":\"1\"}", uploadParamNotifyJSON, null, false);
+                if (counter) data += ",\n";
+                data += "{\"parameter\":\"" + k + "\", \"value\":\"" + value + "\", \"type\":\"1\"}";
+                console.log("Trying to set parameter #" + k + " with value " + value);
+                counter++;
+
+                if (counter == 10) {
+                  counter = 0;
+                  data += "}";
+                  loadAjax(baseURL, 'JS', data, uploadParamNotifyJSON, null, false);
+                  data = "{";
+                }
+
               }
             }
+          }
+          if (counter) {
+            data += "}";
+            loadAjax(baseURL, 'JS', data, uploadParamNotifyJSON, null, false);
           }
         }
       };
@@ -1163,6 +1203,47 @@
       });
     }
 
+    function uploadParamNotifyJSON(jsontext, command) {
+      var contents = JSON.parse(jsontext);
+      for (var i in contents) {
+        switch (contents[i].status) {
+          case 0:
+            console.error("Parameter #" + i + ": set error");
+            note({
+              content: UIStrings.EXTIF_FUNCNO_TEXT + i + ": " + UIStrings.MENU_TEXT_ER3,
+              type: "error",
+              time: 5
+            });
+            break;
+          case 1:
+            console.log("Parameter #" + i + ": set OK!");
+            /*          note({
+                        content: UIStrings.EXTIF_FUNCNO_TEXT  + i + ": OK!",
+                        type: "info",
+                        time: 1
+                      });
+            */
+            break;
+          case 2:
+            console.warn("Parameter #" + i + ": read only");
+            note({
+              content: UIStrings.EXTIF_FUNCNO_TEXT + i + ": " + UIStrings.MENU_TEXT_BRO,
+              type: "warn",
+              time: 3
+            });
+            break;
+          default:
+            console.warn("Parameter #" + i + ": wrong answer");
+            note({
+              content: UIStrings.EXTIF_FUNCNO_TEXT + " " + i + " " + UIStrings.EXTIF_JSONERROR_TEXT,
+              type: "warn",
+              time: 3
+            });
+            break;
+        }
+      }
+    }
+
 
     function DownloadConfig(stage, variant) {
       switch (stage) {
@@ -1173,7 +1254,7 @@
               if (FlagCategoryIsLoaded[k]) {
                 catlistload4configdump(null, 'JK=' + k, variant);
               } else {
-                loadAjax(baseURL, 'JK=' + k, catlistload4configdump, variant, true);
+                loadAjax(baseURL, 'JK=' + k, "", catlistload4configdump, variant, true);
                 configBuildStage = k;
               }
             }
@@ -1885,7 +1966,6 @@
         default:
           break;
       }
-
       if (setvalue != null) {
         var unit;
         if (typeof FunctionsEnum[funkid].unit === "undefined")
@@ -1898,10 +1978,8 @@
           type: "info",
           time: 3
         });
-        loadAjax(baseURL, 'WS' + funkid + '=' + setvalue, nullshow, null, false);
-        FunctionsEnum[funkid].value = setvalue;
       }
-
+      return setvalue;
     }
 
     function nullshow() {}
@@ -1910,7 +1988,7 @@
       var datetimeNow = new Date();
       var formatted_date = ((datetimeNow.getDate() > 9) ? "" : "0") + datetimeNow.getDate() + "." + ((datetimeNow.getMonth() > 8) ? "" : "0") + (datetimeNow.getMonth() + 1) + "." + datetimeNow.getFullYear() + "_" + ((datetimeNow.getHours() > 9) ?
         "" : "0") + datetimeNow.getHours() + ":" + ((datetimeNow.getMinutes() > 9) ? "" : "0") + datetimeNow.getMinutes() + ":" + ((datetimeNow.getSeconds() > 9) ? "" : "0") + datetimeNow.getSeconds();
-      loadAjax(baseURL, 'WS0=' + formatted_date, function() {
+      loadAjax(baseURL, 'WS0=' + formatted_date, "", function() {
         note({
           content: UIStrings.EXTIF_SETTIME_TEXT + " :" + formatted_date,
           type: "info",
@@ -1920,7 +1998,7 @@
     }
 
     function resetController() {
-      loadAjax(baseURL, 'N', function() {
+      loadAjax(baseURL, 'N', "", function() {
         note({
           content: UIStrings.EXTIF_RESET_TEXT,
           type: "info",
@@ -1930,11 +2008,11 @@
     }
 
     function loadValues(functionsenum) {
-      loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesincatlistshow, null, true);
+      loadAjax(baseURL, 'JQ=' + functionsenum, "", insertvaluesincatlistshow, null, true);
     }
 
     function loadValues4BuildConfig(functionsenum, variant) {
-      loadAjax(baseURL, 'JQ=' + functionsenum, insertvaluesinram, variant, true);
+      loadAjax(baseURL, 'JQ=' + functionsenum, "", insertvaluesinram, variant, true);
     }
 
     function loadMonitorValues(stage) {
@@ -1943,7 +2021,7 @@
         switch (stage) {
           case 0:
             if (!FunctionsListOnFrontPageFlag) {
-              loadAjax(baseURL, 'JC=' + functionsListOnFrontPage, function(jsontext, command) {
+              loadAjax(baseURL, 'JC=' + functionsListOnFrontPage, "", function(jsontext, command) {
                 if (jsontext != null) {
                   for (var k in jsontext) {
                     if (typeof jsontext[k] === 'undefined') continue; //non-exist prognr was requested
@@ -1976,7 +2054,7 @@
               loadMonitorValues(2);
             break;
           case 2:
-            loadAjax(baseURL, 'JQ=' + functionsListOnFrontPage, insertvaluesinmonitorlistshow, null, true);
+            loadAjax(baseURL, 'JQ=' + functionsListOnFrontPage, "", insertvaluesinmonitorlistshow, null, true);
             break;
         }
       }
@@ -1999,7 +2077,7 @@
         switch (stage) {
           case 0:
             if (!FunctionsquickManageListOnFrontPageFlag) {
-              loadAjax(baseURL, 'JC=' + quickManageFunctionsList,
+              loadAjax(baseURL, 'JC=' + quickManageFunctionsList, "",
                 function(jsontext, command) {
                   if (jsontext != null) {
                     for (var k in jsontext) {
@@ -2042,17 +2120,18 @@
               document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
             break;
           case 2:
-            loadAjax(baseURL, 'JQ=' + quickManageFunctionsList,
+            loadAjax(baseURL, 'JQ=' + quickManageFunctionsList, "",
               insertvaluesinmanagementlistshow, null, true);
             break;
         }
       }
     }
 
-    function loadAjax(urlvar, cmdvar, showvar, paramforshowvar, isajaxvar) {
+    function loadAjax(urlvar, cmdvar, payloadvar, showvar, paramforshowvar, isajaxvar) {
       AJAXRequests.push({
         url: urlvar,
         command: cmdvar,
+        data: payloadvar,
         show: showvar,
         paramforshow: paramforshowvar,
         isajax: isajaxvar
@@ -2128,11 +2207,20 @@
       if (externaldevelop) {
         request.open('POST', AJAXRequests[0].url, true);
         request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        request.send("urri=" + AJAXRequests[0].command);
+        if (AJAXRequests[0].data.length > 0)
+          request.send("command=" + AJAXRequests[0].command + "&payload=" + AJAXRequests[0].data);
+        else
+          request.send("command=" + AJAXRequests[0].command);
       } else {
-        request.open('GET', AJAXRequests[0].url + AJAXRequests[0].command, true);
-        request.setRequestHeader('Content-Type', 'application/x-www-form-url');
-        request.send();
+        if (AJAXRequests[0].data.length > 0) {
+          request.open('POST', AJAXRequests[0].url + AJAXRequests[0].command, true);
+          request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          request.send(AJAXRequests[0].data);
+        } else {
+          request.open('GET', AJAXRequests[0].url + AJAXRequests[0].command, true);
+          request.setRequestHeader('Content-Type', 'application/x-www-form-url');
+          request.send();
+        }
       }
     }
 
@@ -2141,28 +2229,27 @@
     }
 
     async function LoadCategoryEnum(catnum) {
-      if(FlagCategoryIsLoaded == null) {
+      if (FlagCategoryIsLoaded == null) {
         var loopcounter = 0;
-        while(FlagCategoryIsLoaded == null && loopcounter < 50){ //delay max 10 sec
-           await loopsleep(200);
+        while (FlagCategoryIsLoaded == null && loopcounter < 50) { //delay max 10 sec
+          await loopsleep(200);
         }
-        if(FlagCategoryIsLoaded == null) {
+        if (FlagCategoryIsLoaded == null) {
           LoadRootCategoryEnum();
           var loopcounter = 0;
-          while(FlagCategoryIsLoaded == null && loopcounter < 50){ //delay max 10 sec
-             await loopsleep(200);
+          while (FlagCategoryIsLoaded == null && loopcounter < 50) { //delay max 10 sec
+            await loopsleep(200);
           }
-        if(FlagCategoryIsLoaded == null) {
-        }
-        note({
-          content: UIStrings.EXTIF_ERRORREQUEST_TEXT,
-          type: "error",
-          time: 5
-        });
-        return;
+          if (FlagCategoryIsLoaded == null) {}
+          note({
+            content: UIStrings.EXTIF_ERRORREQUEST_TEXT,
+            type: "error",
+            time: 5
+          });
+          return;
         }
       }
-      if(catnum < 0 && catnum > FlagCategoryIsLoaded.length) {
+      if (catnum < 0 && catnum > FlagCategoryIsLoaded.length) {
         note({
           content: UIStrings.EXTIF_CATNOTEXIST_TEXT,
           type: "error",
@@ -2173,12 +2260,12 @@
       if (FlagCategoryIsLoaded[catnum]) {
         catlistshow(null, 'JK=' + catnum);
       } else
-        loadAjax(baseURL, 'JK=' + catnum, catlistshow, null, true);
+        loadAjax(baseURL, 'JK=' + catnum, "", catlistshow, null, true);
     }
 
     function LoadRootCategoryEnum() {
       if (RootCategoryEnum == null) {
-        loadAjax(baseURL, 'JK=ALL', rootlistshow, null, true);
+        loadAjax(baseURL, 'JK=ALL', "", rootlistshow, null, true);
       } else
         rootlistshow(null, null);
     }
@@ -2205,7 +2292,7 @@
       gemById("SaveLoadConfigTab").style.display = (id == 5) ? "flex" : "none";
       gemById('OtherPageTab').style.display = (id == 6) ? "block" : "none";
       goUp();
-      if(monitorTimerID == 0 && id == 1){
+      if (monitorTimerID == 0 && id == 1) {
         loadMonitorValues(2);
         loadManagementValues(2);
         StartMonitorTimer();
@@ -2249,7 +2336,7 @@
 
     function LoadElement(place, command) {
       if (ShowSelectedMode(6))
-        loadAjax(baseURL, command, configpageshow, null, false);
+        loadAjax(baseURL, command, "", configpageshow, null, false);
     }
 
     function LoadExternalElement(place, url) {
@@ -2258,75 +2345,76 @@
     }
 
     function DisplayConfig(stage) {
-              loadAjax(baseURL, 'JI',
-                function(jsontext, command) {
-                  if (jsontext != null) {
-                    var sel = gemById("OtherPageTab");
-                    var outtext =`<br><h2 align="center">${UIStrings.MENU_TEXT_CFG}</h2><br><div class="funcCell">`;
-                    outtext+=`${UIStrings.STR6220_TEXT}: ` + jsontext.version + "<br>";
-                    outtext+=`Uptime: ` + Math.floor(jsontext.uptime/84600000) + " "+ Math.floor(jsontext.uptime/3600000)%24 + ":"+ Math.floor(jsontext.uptime/60000)%60 + ":"+ Math.floor(jsontext.uptime/1000)%60 + "."+ jsontext.uptime%1000 + "<br>";
-                    outtext+=`freeram: ` + jsontext.freeram + "<br>";
-                    outtext+=`MAC: ` + jsontext.MAC + "<br>";
-                    outtext+=`freespace: ` + jsontext.freespace + "blocks<br>";
-                    outtext+=`bus: ` + jsontext.bus + "<br>";
-                    if(jsontext.bus == "PPS")
-                      outtext+=`buswritable: ` + jsontext.buswritable + "<br>";
-                    else{
-                      outtext+=`busaddr: ` + jsontext.busaddr + "<br>";
-                      if(jsontext.bus == "LPB")
-                        outtext+=`busdest: ` + jsontext.busdest + "<br>";
-                    }
-                    outtext+=`monitor: ` + jsontext.monitor + "<br>";
-                    outtext+=`verbose: ` + jsontext.verbose + "<br>";
-                    outtext+=`onewirebus: ` + jsontext.onewirebus + "<br>";
-                    outtext+=`dhtbus: `;
-                    var not_first_time = false;
-                    for (var j in jsontext.dhtbus){
-                      if(not_first_time)
-                        outtext+= ", ";
-                      else
-                        not_first_time = true;
-                      outtext+= jsontext.dhtbus[j].pin;
-                    }
-                    outtext+= "<br>";
-                    outtext+=`protectedGPIO: `;
-                    not_first_time = false;
-                    for (j in jsontext.protectedGPIO){
-                      if(not_first_time)
-                        outtext+= ", ";
-                      else
-                        not_first_time = true;
-                      outtext+= jsontext.protectedGPIO[j].pin;
-                    }
-                    outtext+= "<br>";
+      loadAjax(baseURL, 'JI', "",
+        function(jsontext, command) {
+          if (jsontext != null) {
+            var sel = gemById("OtherPageTab");
+            var outtext = `<br><h2 align="center">${UIStrings.MENU_TEXT_CFG}</h2><br><div class="funcCell">`;
+            outtext += `${UIStrings.STR6220_TEXT}: ` + jsontext.version + "<br>";
+            outtext += `Uptime: ` + Math.floor(jsontext.uptime / 84600000) + " " + Math.floor(jsontext.uptime / 3600000) % 24 + ":" + Math.floor(jsontext.uptime / 60000) % 60 + ":" + Math.floor(jsontext.uptime / 1000) % 60 + "." + jsontext.uptime %
+              1000 + "<br>";
+            outtext += `freeram: ` + jsontext.freeram + "<br>";
+            outtext += `MAC: ` + jsontext.MAC + "<br>";
+            outtext += `freespace: ` + jsontext.freespace + "blocks<br>";
+            outtext += `bus: ` + jsontext.bus + "<br>";
+            if (jsontext.bus == "PPS")
+              outtext += `buswritable: ` + jsontext.buswritable + "<br>";
+            else {
+              outtext += `busaddr: ` + jsontext.busaddr + "<br>";
+              if (jsontext.bus == "LPB")
+                outtext += `busdest: ` + jsontext.busdest + "<br>";
+            }
+            outtext += `monitor: ` + jsontext.monitor + "<br>";
+            outtext += `verbose: ` + jsontext.verbose + "<br>";
+            outtext += `onewirebus: ` + jsontext.onewirebus + "<br>";
+            outtext += `dhtbus: `;
+            var not_first_time = false;
+            for (var j in jsontext.dhtbus) {
+              if (not_first_time)
+                outtext += ", ";
+              else
+                not_first_time = true;
+              outtext += jsontext.dhtbus[j].pin;
+            }
+            outtext += "<br>";
+            outtext += `protectedGPIO: `;
+            not_first_time = false;
+            for (j in jsontext.protectedGPIO) {
+              if (not_first_time)
+                outtext += ", ";
+              else
+                not_first_time = true;
+              outtext += jsontext.protectedGPIO[j].pin;
+            }
+            outtext += "<br>";
 
-                    outtext+=`averages: `;
-                    not_first_time = false;
-                    for (j in jsontext.averages){
-                      if(not_first_time)
-                        outtext+= ", ";
-                      else
-                        not_first_time = true;
-                      outtext+= jsontext.averages[j].parameter;
-                    }
-                    outtext+= "<br>";
+            outtext += `averages: `;
+            not_first_time = false;
+            for (j in jsontext.averages) {
+              if (not_first_time)
+                outtext += ", ";
+              else
+                not_first_time = true;
+              outtext += jsontext.averages[j].parameter;
+            }
+            outtext += "<br>";
 
-                    outtext+=`logged: `;
-                    not_first_time = false;
-                    for (j in jsontext.logged){
-                      if(not_first_time)
-                        outtext+= ", ";
-                      else
-                        not_first_time = true;
-                      outtext+= jsontext.logged[j].parameter;
-                    }
-                    outtext+= "<br>";
-                    outtext+=`loginterval: ` + jsontext.loginterval + "<br>";
-//                    outtext+=` : ` + jsontext. + "<br>";
-                    outtext+= "</div>";
-                    sel.innerHTML = outtext;
-                  }
-                }, null, true);
+            outtext += `logged: `;
+            not_first_time = false;
+            for (j in jsontext.logged) {
+              if (not_first_time)
+                outtext += ", ";
+              else
+                not_first_time = true;
+              outtext += jsontext.logged[j].parameter;
+            }
+            outtext += "<br>";
+            outtext += `loginterval: ` + jsontext.loginterval + "<br>";
+            //                    outtext+=` : ` + jsontext. + "<br>";
+            outtext += "</div>";
+            sel.innerHTML = outtext;
+          }
+        }, null, true);
     }
 
     function DisplayChart() {
@@ -2379,50 +2467,50 @@
     }
 
 
-  function HashWasChanged(){
-    params = location.hash.substr(1).split("-");
-    noparams = false;
-    if(params[0] == location.hash.substr(1))
-      noparams = true;
+    function HashWasChanged() {
+      params = location.hash.substr(1).split("-");
+      noparams = false;
+      if (params[0] == location.hash.substr(1))
+        noparams = true;
 
-    if (params[0] == "home" || params[0] == "") { //Home page
-      if (ShowSelectedMode(1))
-        DisplayHomePage();
-    }else if(params[0] == "root"){ //List of categories
-      ShowSelectedMode(2);
-    }else if(params[0] == "category"){ //Category page
-      if(noparams == false)
-        LoadCategoryEnum(params[1]);
-    }else if(params[0] == "language"){ //switch language
-      if(noparams == false)
-        LanguageLoad(params[1], LoadUIStrings);
-    }else if(params[0] == "about"){ //About page
-      if (ShowSelectedMode(4));
-    }else if(params[0] == "chart"){  //display chart and datalog
-      DisplayChart();
-    }else if(params[0] == "config"){ //show config
-      if (ShowSelectedMode(6));
+      if (params[0] == "home" || params[0] == "") { //Home page
+        if (ShowSelectedMode(1))
+          DisplayHomePage();
+      } else if (params[0] == "root") { //List of categories
+        ShowSelectedMode(2);
+      } else if (params[0] == "category") { //Category page
+        if (noparams == false)
+          LoadCategoryEnum(params[1]);
+      } else if (params[0] == "language") { //switch language
+        if (noparams == false)
+          LanguageLoad(params[1], LoadUIStrings);
+      } else if (params[0] == "about") { //About page
+        if (ShowSelectedMode(4));
+      } else if (params[0] == "chart") { //display chart and datalog
+        DisplayChart();
+      } else if (params[0] == "config") { //show config
+        if (ShowSelectedMode(6));
         DisplayConfig();
-    }else if(params[0] == "scan"){ //scan for new parameters
-      LoadElement('OtherPageTab', 'WQ');
-    }else if(params[0] == "sensors"){ //user-defined sensors
-      LoadElement('OtherPageTab', 'WT');
-    }else if(params[0] == "setclock"){ //set date and time to heater
-      syncDateTime();
-    }else if(params[0] == "manual"){ //manual pages
-      if(noparams == false){
-        if(params[1] == "url")
-          LoadExternalElement('OtherPageTab', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/appendix_b.html');
-        else if(params[1] == "faq")
-          LoadExternalElement('OtherPageTab', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')
-        else
+      } else if (params[0] == "scan") { //scan for new parameters
+        LoadElement('OtherPageTab', 'WQ');
+      } else if (params[0] == "sensors") { //user-defined sensors
+        LoadElement('OtherPageTab', 'WT');
+      } else if (params[0] == "setclock") { //set date and time to heater
+        syncDateTime();
+      } else if (params[0] == "manual") { //manual pages
+        if (noparams == false) {
+          if (params[1] == "url")
+            LoadExternalElement('OtherPageTab', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/appendix_b.html');
+          else if (params[1] == "faq")
+            LoadExternalElement('OtherPageTab', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html')
+          else
+            LoadExternalElement('OtherPageTab', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html'); //howto hash
+        } else
           LoadExternalElement('OtherPageTab', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html'); //howto hash
-      } else
-        LoadExternalElement('OtherPageTab', 'https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html'); //howto hash
-    }else if(params[0] == "saveload"){ //save\load config
-      if (ShowSelectedMode(5));
+      } else if (params[0] == "saveload") { //save\load config
+        if (ShowSelectedMode(5));
+      }
     }
-  }
   </script>
 
   <!--
@@ -2505,7 +2593,8 @@
 
     function drawGraphInt(elementtype, datasource, width) {
       // Set the dimensions of the canvas / graph
-      if(width < 1050) width = 1000; else  width = width - 50;
+      if (width < 1050) width = 1000;
+      else width = width - 50;
       var margin = {
           top: 30,
           right: 20,
