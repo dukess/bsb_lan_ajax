@@ -2136,7 +2136,40 @@
       }
     }
 
-    function LoadCategoryEnum(catnum) {
+    function loopsleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function LoadCategoryEnum(catnum) {
+      if(FlagCategoryIsLoaded == null) {
+        var loopcounter = 0;
+        while(FlagCategoryIsLoaded == null && loopcounter < 50){ //delay max 10 sec
+           await loopsleep(200);
+        }
+        if(FlagCategoryIsLoaded == null) {
+          LoadRootCategoryEnum();
+          var loopcounter = 0;
+          while(FlagCategoryIsLoaded == null && loopcounter < 50){ //delay max 10 sec
+             await loopsleep(200);
+          }
+        if(FlagCategoryIsLoaded == null) {
+        }
+        note({
+          content: UIStrings.EXTIF_ERRORREQUEST_TEXT,
+          type: "error",
+          time: 5
+        });
+        return;
+        }
+      }
+      if(catnum < 0 && catnum > FlagCategoryIsLoaded.length) {
+        note({
+          content: UIStrings.EXTIF_CATNOTEXIST_TEXT,
+          type: "error",
+          time: 5
+        });
+        return;
+      }
       if (FlagCategoryIsLoaded[catnum]) {
         catlistshow(null, 'JK=' + catnum);
       } else
@@ -2229,7 +2262,7 @@
                 function(jsontext, command) {
                   if (jsontext != null) {
                     var sel = gemById("OtherPageTab");
-                    var outtext =`<br><h2 align="center">${UIStrings.MENU_TEXT_CFG}</h2><br>`;
+                    var outtext =`<br><h2 align="center">${UIStrings.MENU_TEXT_CFG}</h2><br><div class="funcCell">`;
                     outtext+=`${UIStrings.STR6220_TEXT}: ` + jsontext.version + "<br>";
                     outtext+=`Uptime: ` + Math.floor(jsontext.uptime/84600000) + " "+ Math.floor(jsontext.uptime/3600000)%24 + ":"+ Math.floor(jsontext.uptime/60000)%60 + ":"+ Math.floor(jsontext.uptime/1000)%60 + "."+ jsontext.uptime%1000 + "<br>";
                     outtext+=`freeram: ` + jsontext.freeram + "<br>";
@@ -2238,9 +2271,11 @@
                     outtext+=`bus: ` + jsontext.bus + "<br>";
                     if(jsontext.bus == "PPS")
                       outtext+=`buswritable: ` + jsontext.buswritable + "<br>";
-                    outtext+=`busaddr: ` + jsontext.busaddr + "<br>";
-                    if(jsontext.bus == "LPB")
-                      outtext+=`busdest: ` + jsontext.busdest + "<br>";
+                    else{
+                      outtext+=`busaddr: ` + jsontext.busaddr + "<br>";
+                      if(jsontext.bus == "LPB")
+                        outtext+=`busdest: ` + jsontext.busdest + "<br>";
+                    }
                     outtext+=`monitor: ` + jsontext.monitor + "<br>";
                     outtext+=`verbose: ` + jsontext.verbose + "<br>";
                     outtext+=`onewirebus: ` + jsontext.onewirebus + "<br>";
@@ -2288,6 +2323,7 @@
                     outtext+= "<br>";
                     outtext+=`loginterval: ` + jsontext.loginterval + "<br>";
 //                    outtext+=` : ` + jsontext. + "<br>";
+                    outtext+= "</div>";
                     sel.innerHTML = outtext;
                   }
                 }, null, true);
@@ -2298,7 +2334,7 @@
       var displaychartclassname = "displaychart";
       var outtext = `<A HREF='${DatalogURL}'>${UIStrings.MENU_TEXT_DTD}</A><div class="${displaychartclassname}" align="center"></div>`;
       gemById('OtherPageTab').innerHTML = outtext;
-      drawGraph("div." + displaychartclassname, DatalogURL);
+      drawGraph("div." + displaychartclassname, DatalogURL, gemById('OtherPageTab').offsetWidth);
     }
 
     function StartMonitorTimer() {
@@ -2446,7 +2482,7 @@
       return objDate.toLocaleString(defaultLanguage, rettype);
     }
 
-    function drawGraph(elementtype, datasource) {
+    function drawGraph(elementtype, datasource, width) {
       if (!d3libraryloaded) {
         d3libraryloaded = true;
         // You can load the d3.js library from CDN
@@ -2455,27 +2491,28 @@
         //    LoadScript("d3.v3.min.js", function() {drawGraphInt(elementtype, datasource);}, function(){d3libraryloaded = false;}});
         // Try to load from Arduino web server. If failed try to load d3.js library from CDN
         LoadScript("d3.v3.min.js", function() {
-          drawGraphInt(elementtype, datasource);
+          drawGraphInt(elementtype, datasource, width);
         }, function() {
           LoadScript("http://d3js.org/d3.v3.min.js", function() {
-            drawGraphInt(elementtype, datasource);
+            drawGraphInt(elementtype, datasource, width);
           }, function() {
             d3libraryloaded = false;
           });
         });
       } else
-        drawGraphInt(elementtype, datasource);
+        drawGraphInt(elementtype, datasource, width);
     }
 
-    function drawGraphInt(elementtype, datasource) {
+    function drawGraphInt(elementtype, datasource, width) {
       // Set the dimensions of the canvas / graph
+      if(width < 1050) width = 1000; else  width = width - 50;
       var margin = {
           top: 30,
           right: 20,
           bottom: 70,
           left: 50
         },
-        width = 1000 - margin.left - margin.right,
+        width = width - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
 
