@@ -2292,6 +2292,10 @@
       gemById("SaveLoadConfigTab").style.display = (id == 5) ? "flex" : "none";
       gemById('OtherPageTab').style.display = (id == 6) ? "block" : "none";
       goUp();
+      if (id != 6) {
+        gemById('OtherPageTab').innerHTML = ""; //remove parasite styles
+      }
+
       if (monitorTimerID == 0 && id == 1) {
         loadMonitorValues(2);
         loadManagementValues(2);
