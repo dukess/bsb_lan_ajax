@@ -943,10 +943,15 @@
     }
 
     function translateString(instring) {
-      if (typeof UIStrings[instring] === 'undefined')
-        return instring;
-      else
-        return UIStrings[instring];
+      var matchresult = instring.match(textRegexp);
+      if (matchresult != null) {
+        for (var k in matchresult) {
+          var temp;
+          if (typeof UIStrings[matchresult[k]] === 'string')
+            instring = instring.replace(matchresult[k], UIStrings[matchresult[k]]);
+        }
+      }
+    return instring;
     }
 
     function LanguageLoad(langcode, onLoadCallBack) {
