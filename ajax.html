@@ -2721,11 +2721,9 @@
           return d.Date;
         }));
         y.domain([d3.min(data, function(d) {
-          if (d.Value < 0) return Math.floor(d.Value / 5) * 5;
-          else return Math.ceil(d.Value / 5) * 5;
+          return Math.floor(d.Value / 5) * 5;
         }), d3.max(data, function(d) {
-          if (d.Value < 0) return Math.floor(d.Value / 5) * 5;
-          else return Math.ceil(d.Value / 5) * 5;
+          return Math.ceil(d.Value / 5) * 5;
         })]);
 
         // Nest the entries by symbol
@@ -2765,7 +2763,14 @@
           .call(xAxis.tickSize(-height, 0, 0)
             .tickFormat(""));
 
-        // Add the Y Grid
+        // Add the Y Grid -  -  -  -  -
+        svg.append("g")
+          .attr("class", "grid")
+          .style("stroke-dasharray", "1 3")
+          .call(yAxis.ticks(20).tickSize(-width, 0, 0)
+            .tickFormat(""));
+
+        // Add the Y Grid  ------------
         svg.append("g")
           .attr("class", "grid")
           .call(yAxis.ticks(10).tickSize(-width, 0, 0)
