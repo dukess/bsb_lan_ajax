@@ -1,0 +1,20 @@
+name: GZip HTML
+on:
+  push:
+jobs:
+  gzipper:
+    name: GZip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - name: Compress HTML
+        run: for file in `ls -1 *.htm*`; do gzip -n -9 -k -f $file; done
+      - name: Copy files to repo
+        uses: test-room-7/action-update-file@v1
+        with:
+           file-path: |
+             *.htm*
+           commit-msg: Add gzipped files
+           github-token: ${{ secrets.GITHUB_TOKEN }}
+           
