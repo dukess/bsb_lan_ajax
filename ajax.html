@@ -907,6 +907,7 @@
     var d3libraryloaded = false;
     var configBuildStage = -1;
     var listOfUnsupportedParams = [];
+    var MonitorAndManagementValuesLoadingComplete = false; //set to true when monitor and management values fully loaded
 
     gemById("menurubberimage31").src = backImage;
     gemById("menurubberimage32").src = updateImage;
@@ -2302,9 +2303,11 @@
       }
 
       if (monitorTimerID == 0 && id == 1) {
-        loadMonitorValues(2);
-        loadManagementValues(2);
-        StartMonitorTimer();
+        if(MonitorAndManagementValuesLoadingComplete){
+          loadMonitorValues(2);
+          loadManagementValues(2);
+          StartMonitorTimer();
+        }
       };
       if (CurrentCategory != null) {
         gemById("FunctionsMenuTable").style.display = "none";
@@ -2472,6 +2475,7 @@
       gemById('HomePageTab').innerHTML = outtext;
       loadMonitorValues(0);
       loadManagementValues(0);
+      MonitorAndManagementValuesLoadingComplete = true;
       StartMonitorTimer();
     }
 
