@@ -1,7 +1,7 @@
 # AJAX web interface for <A HREF="https://github.com/fredlcore/bsb_lan/">BSB_lan</A> project
 
 ## Benefits:
-- Saving flash memory for future features and functions (more than 39kB for German language and more than 150kB for multi-byte alphabets). You can still use Arduino Mega with interface board v.2 (deprecated, last official release with v.2 support is <A HREF="https://github.com/fredlcore/bsb_lan/releases/tag/v0.44">0.44</A> but it works with 1.0.19). You do not need Arduino Due, but it certainly supported too.
+- Saving flash memory for future features and functions (more than 39kB for German language and more than 150kB for multi-byte alphabets). You can still use Arduino Mega with interface board v.2 (deprecated, last official release with v.2 support is <A HREF="https://github.com/fredlcore/bsb_lan/releases/tag/v0.44">0.44</A> but it works with 1.1). You do not need Arduino Due, but it certainly supported too.
 - Modern interface (Oh, yeah)
 - More comfort experience on mobile device.
 - Easy for customization and expansion.
