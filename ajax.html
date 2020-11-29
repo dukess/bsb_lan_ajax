@@ -1275,7 +1275,8 @@
             if (gemById("catrootcheckbox" + k).checked) {
               for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
                 if (FunctionsEnum[i] != null && !('value' in FunctionsEnum[i])) {
-                  if (variant == 1 && (FunctionsEnum[i].readonly == 1 || FunctionsEnum[i].error == 7)) continue;
+//                  if (variant == 1 && (FunctionsEnum[i].readonly == 1 || FunctionsEnum[i].error == 7)) continue;
+                  if (variant == 1 && (FunctionsEnum[i].error == 7)) continue;
                   j++;
                   cmdlist += i;
                   configBuildStage = i;
@@ -1310,7 +1311,7 @@
       var currentcat = 0;
       var text = "{\n";
       for (var k in FunctionsEnum) {
-        if (FunctionsEnum[k].readonly) continue; //do not save read-only parameters
+//        if (FunctionsEnum[k].readonly) continue; //do not save read-only parameters
         if (FunctionsEnum[k].error == 7) continue; //do not save unsupported parameters
         var allowtonext = false;
         do {
@@ -1665,24 +1666,25 @@
 
 
     function insertvalue(currentValueObject, func, prefix) {
-      var jsonObject = FunctionsEnum[func];
-      if (typeof jsonObject === 'undefined') return; //non-exist prognr was requested
-
       // get value from cache, if exist
       if (currentValueObject == null) {
-        if (typeof jsonObject.value === 'undefined') return;
-        currentValueObject = jsonObject;
+        if (typeof FunctionsEnum[func].value === 'undefined') return;
       } else {
         //cache current value and unit name
-        jsonObject.value = currentValueObject.value;
+        FunctionsEnum[func].value = currentValueObject.value;
         if (typeof currentValueObject.error === 'number') {
-          jsonObject.error = currentValueObject.error;
+          FunctionsEnum[func].error = currentValueObject.error;
+        }
+        if (typeof currentValueObject.readonly === 'number') {
+          FunctionsEnum[func].readonly = currentValueObject.readonly;
+        } else {
+          FunctionsEnum[func].readonly = 0;
         }
       }
-      var readonly = false;
-      if (typeof currentValueObject.readonly === 'number') {
-        readonly = jsonObject.readonly;
-      }
+      var jsonObject = FunctionsEnum[func];
+      if (typeof jsonObject === 'undefined') return; //non-exist prognr was requested
+      currentValueObject = jsonObject;
+
       var error = 0;
       if (typeof currentValueObject.error === 'number') {
         error = currentValueObject.error;
@@ -1700,7 +1702,7 @@
         case 0:
           if (currentValueObject.value.length > 0 && isNaN(currentValueObject.value)) sel.type = "text";
           sel.value = currentValueObject.value;
-          sel.readOnly = readonly;
+          sel.readOnly = jsonObject.readonly;
           gemById(prefix + func + "unit").innerHTML = translateString(currentValueObject.unit);
           break;
         case 1:
@@ -1710,7 +1712,7 @@
               sel.options[i].selected = true;
             } else {
               sel.options[i].selected = false;
-              sel.options[i].disabled = readonly;
+              sel.options[i].disabled = jsonObject.readonly;
             }
           }
           break;
@@ -1721,16 +1723,16 @@
             sel.options[i].selected = false;
             if (parseInt(sel.options[i].value) > 255) {
               if ((parseInt(sel.options[i].value) & bitparam) == parseInt(sel.options[i].value)) sel.options[i].selected = true;
-              else sel.options[i].disabled = readonly;
+              else sel.options[i].disabled = jsonObject.readonly;
             } else {
               if (((parseInt(sel.options[i].value) + (parseInt(sel.options[i].value) << 8)) & bitparam) != (parseInt(sel.options[i].value) + (parseInt(sel.options[i].value) << 8))) sel.options[i].selected = true;
-              else sel.options[i].disabled = readonly;
+              else sel.options[i].disabled = jsonObject.readonly;
             }
           }
           break;
         case 4:
           sel.value = currentValueObject.value;
-          sel.readOnly = readonly;
+          sel.readOnly = jsonObject.readonly;
           break;
         case 5:
           if (func >= 500 && func <= 620) {
@@ -1742,12 +1744,12 @@
                   gemById(prefix + func + "control" + "-" + n).value = "23:59";
                 } else if (matchresult[n] == "--:--") {} else
                   gemById(prefix + func + "control" + "-" + n).value = matchresult[n];
-                gemById(prefix + func + "control" + "-" + n).readOnly = readonly;
+                gemById(prefix + func + "control" + "-" + n).readOnly = jsonObject.readonly;
               }
             }
           } else {
             sel.innerHTML = currentValueObject.value;
-            sel.readOnly = readonly;
+            sel.readOnly = jsonObject.readonly;
           }
           break;
         case 6:
@@ -1760,13 +1762,13 @@
               gemById(prefix + func + "control" + "-d").options[parseInt(matchresult[0], 10)].selected = true;
               gemById(prefix + func + "control" + "-m").options[parseInt(matchresult[1], 10)].selected = true;
             }
-            gemById(prefix + func + "control" + "-d").readOnly = readonly;
-            gemById(prefix + func + "control" + "-m").readOnly = readonly;
+            gemById(prefix + func + "control" + "-d").readOnly = jsonObject.readonly;
+            gemById(prefix + func + "control" + "-m").readOnly = jsonObject.readonly;
           }
           break;
         case 7:
           sel.value = currentValueObject.value;
-          sel.readOnly = readonly;
+          sel.readOnly = jsonObject.readonly;
           break;
         default:
           break;
@@ -2502,8 +2504,15 @@
       } else if (params[0] == "chart") { //display chart and datalog
         DisplayChart();
       } else if (params[0] == "config") { //show config
-        if (ShowSelectedMode(6));
-        DisplayConfig();
+// HTML config with WEB Config
+        if(externaldevelop){
+          LoadElement('OtherPageTab', 'C');
+        } else {
+          LoadElement('OtherPageTab', 'WC');
+        }
+// JSON config
+//        if (ShowSelectedMode(6));
+//        DisplayConfig();
       } else if (params[0] == "scan") { //scan for new parameters
         LoadElement('OtherPageTab', 'WQ');
       } else if (params[0] == "sensors") { //user-defined sensors
