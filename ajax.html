@@ -1717,17 +1717,17 @@
           }
           break;
         case 2:
-          var bitparam = parseInt(currentValueObject.value, 2);
-          bitparam = (bitparam << 8) + 255;
+          var bitmask = 0;
+          var bitvalue = parseInt(currentValueObject.value, 2);
           for (var i = 0; i < sel.options.length; i++) {
             sel.options[i].selected = false;
-            if (parseInt(sel.options[i].value) > 255) {
-              if ((parseInt(sel.options[i].value) & bitparam) == parseInt(sel.options[i].value)) sel.options[i].selected = true;
-              else sel.options[i].disabled = jsonObject.readonly;
-            } else {
-              if (((parseInt(sel.options[i].value) + (parseInt(sel.options[i].value) << 8)) & bitparam) != (parseInt(sel.options[i].value) + (parseInt(sel.options[i].value) << 8))) sel.options[i].selected = true;
-              else sel.options[i].disabled = jsonObject.readonly;
+            var val = parseInt(sel.options[i].value);
+            bitmask = val & 0xff;
+            val = (val >> 8) & 0xff;
+            if((bitvalue & bitmask) == (val & bitmask)){
+              sel.options[i].selected = true;
             }
+            sel.options[i].disabled = jsonObject.readonly;
           }
           break;
         case 4:
