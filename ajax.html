@@ -482,6 +482,9 @@
       opacity: 0.33;
     }
 
+    .ResetIcons {
+      opacity: 0.33;
+    }
     @media (max-width: 1200px) {
       .hideme {
         display: none;
@@ -535,6 +538,9 @@
         gemById("loader").style.display = "none";
     }
     ShowLoader(true);
+
+    var resetImage = new Image().src =
+      "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIgImh0dHA6Ly93d3cudzMub3JnL1RSLzIwMDEvUkVDLVNWRy0yMDAxMDkwNC9EVEQvc3ZnMTAuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNDQuMDAwMDAwcHQiIGhlaWdodD0iMzQ0LjAwMDAwMHB0IiB2aWV3Qm94PSIwIDAgMzQ0LjAwMDAwMCAzNDQuMDAwMDAwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCBtZWV0Ij4NCg0KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMzQ0LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIgZmlsbD0iIzI1NzE4MCIgc3Ryb2tlPSJub25lIj4NCjxwYXRoIGQ9Ik0xNDY1IDMzNjUgYy03MjUgLTExOCAtMTI4NCAtNjgzIC0xMzkxIC0xNDA5IC0yMiAtMTQ5IC0xNSAtNDI5IDE1IC01NjYgMzIgLTE1MCA4MCAtMjg1IDE0NiAtNDE1IDIzMyAtNDYyIDY0MiAtNzc0IDExNTggLTg4NyA4OSAtMTkgMTMyIC0yMiAzMjcgLTIyIDI0NyAwIDMyNiAxMSA1MjIgNzQgNDg5IDE1OSA4OTkgNTY5IDEwNTggMTA1OCA2MyAxOTYgNzQgMjc1IDc0IDUyMiAwIDE5NSAtMyAyMzggLTIyIDMyNyAtOTcgNDQ2IC0zNDMgODExIC03MTIgMTA1OCAtMTcxIDExNSAtMzc0IDIwMCAtNTg4IDI0NiAtMTI5IDI4IC00NTMgMzUgLTU4NyAxNHogbTU0NCAtNDQ2IGMyNDUgLTE0NSAzNDEgLTIwNiAzNDEgLTIxOSAwIC0xMyAtOTEgLTcxIC0zMjIgLTIwNyAtMzk4IC0yMzQgLTM2NiAtMjE3IC0zODQgLTIwMiAtMTAgOCAtMTQgMzcgLTE0IDExNiBsMCAxMDUgLTQyIC03IGMtMzA1IC01MSAtNTYxIC0yODcgLTYzOCAtNTg5IC0yOCAtMTA5IC0yOCAtMjgzIDAgLTM5MSA5MSAtMzU1IDQwMSAtNTk1IDc3MCAtNTk1IDI3NSAwIDUxNCAxMjggNjY1IDM1NiA4NiAxMjkgMTI1IDI2NSAxMjUgNDM5IDAgMTIyIC0xNCAxOTUgLTYwIDMwOSAtNTEgMTI5IC0zNCAyMDMgNTcgMjU0IDEwNCA1NyAyMDYgMzAgMjU1IC02OCAyMzUgLTQ3MyA5OSAtMTA2OSAtMzIwIC0xNDAyIC00NjMgLTM2OCAtMTExOSAtMzMxIC0xNTM3IDg3IC01NTYgNTU3IC00MDQgMTQ5NiAzMDAgMTg0OCAxMTAgNTUgMjI2IDkyIDMzOSAxMDkgbDg2IDEyIDAgMTA3IGMwIDExNCA0IDEzOSAyNSAxMzkgNyAwIDE2NiAtOTAgMzU0IC0yMDF6Ii8+DQo8L2c+DQo8L3N2Zz4=";
 
     var clockImage = new Image().src =
       "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iOTYiIGhlaWdodD0iOTYiCnZpZXdCb3g9IjAgMCA0OCA0OCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48cGF0aCBmaWxsPSIjMDBhY2MxIiBkPSJNNDQsMjRjMCwxMS4wNDQtOC45NTYsMjAtMjAsMjBTNCwzNS4wNDQsNCwyNFMxMi45NTYsNCwyNCw0UzQ0LDEyLjk1Niw0NCwyNHoiPjwvcGF0aD48cGF0aCBmaWxsPSIjZWVlIiBkPSJNNDAsMjRjMCw4LjgzOC03LjE2MiwxNi0xNiwxNlM4LDMyLjgzOCw4LDI0UzE1LjE2Myw4LDI0LDhTNDAsMTUuMTYzLDQwLDI0eiI+PC9wYXRoPjxwYXRoIGQ9Ik0yMyAxMUgyNVYyNEgyM3oiPjwvcGF0aD48cGF0aCBkPSJNMjYuMDgyIDIyLjY1NEgyOC40MTlWMzEuODQ2SDI2LjA4MnoiIHRyYW5zZm9ybT0icm90YXRlKC00NS4wMDEgMjcuMjUgMjcuMjUpIj48L3BhdGg+PHBhdGggZD0iTTI3LDI0YzAsMS42NTctMS4zNDQsMy0zLDNjLTEuNjU3LDAtMy0xLjM0My0zLTNzMS4zNDMtMywzLTNDMjUuNjU2LDIxLDI3LDIyLjM0MywyNywyNCI+PC9wYXRoPjxwYXRoIGZpbGw9IiMwMGFjYzEiIGQ9Ik0yNSwyNGMwLDAuNTUxLTAuNDQ4LDEtMSwxcy0xLTAuNDQ5LTEtMWMwLTAuNTUzLDAuNDQ4LTEsMS0xUzI1LDIzLjQ0NywyNSwyNCI+PC9wYXRoPjwvc3ZnPg==";
@@ -856,6 +862,12 @@
             <input value='Cancel' type='image' class="menubutton okCancelIcons" id="menurubberimage33" onclick='CancelChanges("func");'>
             <br><output class="menudesc" id="menurubber33celltext"></output>
           </div>
+          <br>
+          <br>
+          <div id="menurubber35cell" style="display: block; margin: auto;">
+            <input value='Reset' type='image' class="menubutton ResetIcons" id="menurubberimage35" width="96" height="96" onclick='ResetProgrammValue();'>
+            <br><output class="menudesc" id="menurubber35celltext"></output>
+          </div>
         </div>
       </div>
       <div id="FunctionsMenuTable" style="display: inline-block; width: auto; margin: 0 auto;">
@@ -903,11 +915,13 @@
     var configBuildStage = -1;
     var listOfUnsupportedParams = [];
     var MonitorAndManagementValuesLoadingComplete = false; //set to true when monitor and management values fully loaded
+    var programnrForReset = -1;
 
     gemById("menurubberimage31").src = backImage;
     gemById("menurubberimage32").src = updateImage;
     gemById("menurubberimage33").src = cancelImage;
     gemById("menurubberimage34").src = okImage;
+    gemById("menurubberimage35").src = resetImage;
     gemById("menurubberimage21").src = clockImage;
     gemById("menurubberimage22").src = restartImage;
     gemById("menurubberimage41").src = downloadImage;
@@ -1086,6 +1100,7 @@
     }
 
     function ApplyChanges() {
+      selprogramnrForReset(-1);
       var counter = 0;
       var data = "{";
       for (var k in ListOfChanges) {
@@ -1116,6 +1131,7 @@
     }
 
     function CancelChanges(prefix) {
+      selprogramnrForReset(-1);
       for (var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
         document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
       if (prefix == "func")
@@ -1126,6 +1142,7 @@
     }
 
     function ReloadParams() {
+      selprogramnrForReset(-1);
       LoadValuesInCategory(CurrentCategory, 2);
     }
 
@@ -1244,6 +1261,26 @@
       }
     }
 
+    function resetParamNotifyJSON(jsontext, command) {
+      var contents = JSON.parse(jsontext);
+      for (var i in contents) {
+        if(contents[i].error){
+          console.error("Reset parameter #" + i + ": error " + contents[i].error);
+          note({
+            content: UIStrings.EXTIF_FUNCNO_TEXT + i + ": " + UIStrings.MENU_TEXT_ER3 + " " + contents[i].error,
+            type: "error",
+            time: 5
+          });
+        } else {
+          console.log("Reset parameter #" + i + ": set value " + contents[i].value);
+          note({
+            content: UIStrings.EXTIF_FUNCNO_TEXT + i + ": " + contents[i].value,
+            type: "info",
+            time: 5
+          });
+        }
+      }
+    }
 
     function DownloadConfig(stage, variant) {
       switch (stage) {
@@ -1442,19 +1479,19 @@
           if (jsonObject.precision !== undefined){
             precision = jsonObject.precision;
           }
-          outtext += `<input id="${prefix}${func}control" type="number" step="${precision}" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+          outtext += `<input id="${prefix}${func}control" type="number" step="${precision}" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
           break;
         case 1: // enum
           multiple = "";
         case 2: // multiple choices enum (bitwise flags)
-          outtext += `<select id="${prefix}${func}control" onChange="StackChanges(this, ${func});" ${multiple}>`;
+          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});" ${multiple}>`;
           for (var j in jsonObject.possibleValues) {
             outtext += `<option value="${jsonObject.possibleValues[j].enumValue}"></option>`;
           }
           outtext += `</select>`;
           break;
         case 3: // weekday
-          outtext += `<select id="${prefix}${func}control" onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
           for (var j = 1; j <= 7; j++) {
             var temp = translateString("STR_" + (499 + j) + "_TEXT");
             outtext += `<option value="${j}">${temp}</option>`;
@@ -1462,23 +1499,23 @@
           outtext += `</select>`;
           break;
         case 4: //time
-          outtext += `<input type="time" id="${prefix}${func}control" onChange="StackChanges(this, ${func});">`;
+          outtext += `<input type="time" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
           break;
         case 5: //date and time
           if (func >= 500 && func <= 620) {
             outtext +=
-              `1. <input type="time" id="${prefix}${func}control-0" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onChange="StackChanges(this, ${func})">`;
+              `1. <input type="time" id="${prefix}${func}control-0" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func})">`;
           } else
             outtext += `<output id="${prefix}${func}control"></output>`;
           break;
         case 6: //day and month
-          outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
           outtext += `<option value="0">--</option>`;
           for (var j = 1; j <= 31; j++) {
             outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
           }
           outtext += `</select>.`;
-          outtext += `<select id="${prefix}${func}control-m" onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control-m" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
           outtext += `<option value="0">--</option>`;
           for (var j = 1; j <= 12; j++) {
             outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
@@ -1486,10 +1523,10 @@
           outtext += `</select>`;
           break;
         case 7: //string
-          outtext += `<input type="text" id="${prefix}${func}control" onChange="StackChanges(this, '${func}');">`;
+          outtext += `<input type="text" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, '${func}');">`;
           break;
         case 8: // weekday, time hh:mm
-          outtext += `<select id="${prefix}${func}control-d" onChange="StackChanges(this, '${func}');">`;
+          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, '${func}');">`;
           for (var j = 1; j <= 7; j++) {
             var temp;
             if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
@@ -1499,10 +1536,10 @@
             outtext += `<option value="${j}">${temp}</option>`;
           }
           outtext += `</select>`;
-          outtext += `<input type="time" id="${prefix}${func}control-t" onChange="StackChanges(this, '${func}');">`;
+          outtext += `<input type="time" id="${prefix}${func}control-t" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, '${func}');">`;
           break;
         case 99: // string with unit name. Hack.
-          outtext += `<input id="${prefix}${func}control" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+          outtext += `<input id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
           break;
         default:
           break;
@@ -2137,6 +2174,25 @@
       }
     }
 
+    function selprogramnrForReset(prognr){
+      programnrForReset = prognr;
+      if(prognr == -1){
+        for (var i = 0; i < document.getElementsByClassName('ResetIcons').length; i++)
+          document.getElementsByClassName('ResetIcons')[i].style.opacity = 0.33;
+      } else {
+        for (var i = 0; i < document.getElementsByClassName('ResetIcons').length; i++)
+          document.getElementsByClassName('ResetIcons')[i].style.opacity = 1;
+      }
+    }
+
+    function ResetProgrammValue(){
+      if(programnrForReset == -1) return;
+      var data = "{{\"parameter\":\"" + programnrForReset + "\"}}";
+      console.log("Trying to reset parameter #" + programnrForReset);
+      loadAjax(baseURL, 'JR', data, resetParamNotifyJSON, null, false);
+      selprogramnrForReset(-1);
+    }
+
     function loadAjax(urlvar, cmdvar, payloadvar, showvar, paramforshowvar, isajaxvar) {
       AJAXRequests.push({
         url: urlvar,
@@ -2292,6 +2348,7 @@
     }
 
     function ShowSelectedMode(id) {
+      selprogramnrForReset(-1); //reset number of selected program
       //warnings about unsaved changes.
       if (!CheckForUnsavedChanges()) return false;
 
@@ -2485,6 +2542,7 @@
 
 
     function HashWasChanged() {
+      selprogramnrForReset(-1); //reset number of selected program
       params = location.hash.substr(1).split("-");
       noparams = false;
       if (params[0] == location.hash.substr(1))
