@@ -898,6 +898,7 @@
 
     // internal variables
     var monitorTimerID = 0;
+    var resetTimerID = 0;
     var ajaxurl = document.location.pathname;
     var baseURL = ajaxurl.substr(ajaxurl.indexOf('/'), ajaxurl.lastIndexOf('/') - ajaxurl.indexOf('/') + 1);
     var ListOfChanges = {};
@@ -1037,6 +1038,7 @@
       SetMainMenuUIString("menurubber", 32, UIStrings.EXTIF_UPDATE_TEXT);
       SetMainMenuUIString("menurubber", 33, UIStrings.EXTIF_CANCEL_TEXT);
       SetMainMenuUIString("menurubber", 34, UIStrings.EXTIF_SAVE_TEXT);
+      SetMainMenuUIString("menurubber", 35, UIStrings.STR6205_TEXT);
       SetMainMenuUIString("menurubber", 22, UIStrings.EXTIF_RESET_TEXT);
       SetMainMenuUIString("menurubber", 41, UIStrings.EXTIF_DOWNLOADCONF_TEXT);
       SetMainMenuUIString("menurubber", 42, UIStrings.EXTIF_UPLOADCONF_TEXT);
@@ -1479,19 +1481,19 @@
           if (jsonObject.precision !== undefined){
             precision = jsonObject.precision;
           }
-          outtext += `<input id="${prefix}${func}control" type="number" step="${precision}" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+          outtext += `<input id="${prefix}${func}control" type="number" step="${precision}" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
           break;
         case 1: // enum
           multiple = "";
         case 2: // multiple choices enum (bitwise flags)
-          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});" ${multiple}>`;
+          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});" ${multiple}>`;
           for (var j in jsonObject.possibleValues) {
             outtext += `<option value="${jsonObject.possibleValues[j].enumValue}"></option>`;
           }
           outtext += `</select>`;
           break;
         case 3: // weekday
-          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
           for (var j = 1; j <= 7; j++) {
             var temp = translateString("STR_" + (499 + j) + "_TEXT");
             outtext += `<option value="${j}">${temp}</option>`;
@@ -1499,23 +1501,23 @@
           outtext += `</select>`;
           break;
         case 4: //time
-          outtext += `<input type="time" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
+          outtext += `<input type="time" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
           break;
         case 5: //date and time
           if (func >= 500 && func <= 620) {
             outtext +=
-              `1. <input type="time" id="${prefix}${func}control-0" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func})">`;
+              `1. <input type="time" id="${prefix}${func}control-0" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func})">`;
           } else
             outtext += `<output id="${prefix}${func}control"></output>`;
           break;
         case 6: //day and month
-          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
           outtext += `<option value="0">--</option>`;
           for (var j = 1; j <= 31; j++) {
             outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
           }
           outtext += `</select>.`;
-          outtext += `<select id="${prefix}${func}control-m" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control-m" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
           outtext += `<option value="0">--</option>`;
           for (var j = 1; j <= 12; j++) {
             outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
@@ -1523,10 +1525,10 @@
           outtext += `</select>`;
           break;
         case 7: //string
-          outtext += `<input type="text" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, '${func}');">`;
+          outtext += `<input type="text" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, '${func}');">`;
           break;
         case 8: // weekday, time hh:mm
-          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, '${func}');">`;
+          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, '${func}');">`;
           for (var j = 1; j <= 7; j++) {
             var temp;
             if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
@@ -1536,10 +1538,10 @@
             outtext += `<option value="${j}">${temp}</option>`;
           }
           outtext += `</select>`;
-          outtext += `<input type="time" id="${prefix}${func}control-t" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, '${func}');">`;
+          outtext += `<input type="time" id="${prefix}${func}control-t" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, '${func}');">`;
           break;
         case 99: // string with unit name. Hack.
-          outtext += `<input id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+          outtext += `<input id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
           break;
         default:
           break;
@@ -2175,6 +2177,13 @@
     }
 
     function selprogramnrForReset(prognr){
+      if(prognr == -2){
+        clearTimeout(resetTimerID);
+        resetTimerID = setTimeout(function ticktak() {
+          selprogramnrForReset(-1);
+        }, 5000); //5 sec
+        return;
+      }
       programnrForReset = prognr;
       if(prognr == -1){
         for (var i = 0; i < document.getElementsByClassName('ResetIcons').length; i++)
@@ -2183,6 +2192,8 @@
         for (var i = 0; i < document.getElementsByClassName('ResetIcons').length; i++)
           document.getElementsByClassName('ResetIcons')[i].style.opacity = 1;
       }
+      clearTimeout(resetTimerID);
+      resetTimerID = 0;
     }
 
     function ResetProgrammValue(){
