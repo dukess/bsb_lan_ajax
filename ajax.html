@@ -1267,6 +1267,7 @@
 
     function resetParamNotifyJSON(jsontext, command) {
       var contents = JSON.parse(jsontext);
+      var resetlist = new Object();
       for (var i in contents) {
         if(contents[i].error){
           console.error("Reset parameter #" + i + ": error " + contents[i].error);
@@ -1276,14 +1277,18 @@
             time: 5
           });
         } else {
-          console.log("Reset parameter #" + i + ": set value " + contents[i].value);
+          console.log("Default value of parameter #" + i + ": " + contents[i].value);
           note({
             content: UIStrings.EXTIF_FUNCNO_TEXT + i + ": " + contents[i].value,
             type: "info",
             time: 5
           });
+          resetlist.value = contents[i].value;
+          ListOfChanges[i] = gemById("func" + i + "control");
+          insertvalue(resetlist, i, "func");
         }
       }
+    ApplyChanges();
     }
 
     function DownloadConfig(stage, variant) {
