@@ -919,6 +919,7 @@
     var listOfUnsupportedParams = [];
     var MonitorAndManagementValuesLoadingComplete = false; //set to true when monitor and management values fully loaded
     var programnrForReset = -1;
+    var controlIdForReset = ""; //Last selected control ID. Using for reset program value to default
 
     gemById("menurubberimage31").src = backImage;
     gemById("menurubberimage32").src = updateImage;
@@ -1104,7 +1105,7 @@
     }
 
     function ApplyChanges() {
-      selprogramnrForReset(-1);
+      selprogramnrForReset(null, -1);
       var counter = 0;
       var data = "{";
       for (var k in ListOfChanges) {
@@ -1135,7 +1136,7 @@
     }
 
     function CancelChanges(prefix) {
-      selprogramnrForReset(-1);
+      selprogramnrForReset(null, -1);
       for (var i = 0; i < document.getElementsByClassName('okCancelIcons').length; i++)
         document.getElementsByClassName('okCancelIcons')[i].style.opacity = 0.33;
       if (prefix == "func")
@@ -1146,7 +1147,7 @@
     }
 
     function ReloadParams() {
-      selprogramnrForReset(-1);
+      selprogramnrForReset(null, -1);
       LoadValuesInCategory(CurrentCategory, 2);
     }
 
@@ -1284,7 +1285,6 @@
             time: 5
           });
           resetlist.value = contents[i].value;
-          ListOfChanges[i] = gemById("func" + i + "control");
           insertvalue(resetlist, i, "func");
         }
       }
@@ -1488,19 +1488,19 @@
           if (jsonObject.precision !== undefined){
             precision = jsonObject.precision;
           }
-          outtext += `<input id="${prefix}${func}control" type="number" step="${precision}" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+          outtext += `<input id="${prefix}${func}control" type="number" step="${precision}" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
           break;
         case 1: // enum
           multiple = "";
         case 2: // multiple choices enum (bitwise flags)
-          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});" ${multiple}>`;
+          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});" ${multiple}>`;
           for (var j in jsonObject.possibleValues) {
             outtext += `<option value="${jsonObject.possibleValues[j].enumValue}"></option>`;
           }
           outtext += `</select>`;
           break;
         case 3: // weekday
-          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});">`;
           for (var j = 1; j <= 7; j++) {
             var temp = translateString("STR_" + (499 + j) + "_TEXT");
             outtext += `<option value="${j}">${temp}</option>`;
@@ -1508,23 +1508,23 @@
           outtext += `</select>`;
           break;
         case 4: //time
-          outtext += `<input type="time" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
+          outtext += `<input type="time" id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});">`;
           break;
         case 5: //date and time
           if (func >= 500 && func <= 620) {
             outtext +=
-              `1. <input type="time" id="${prefix}${func}control-0" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func})">`;
+              `1. <input type="time" id="${prefix}${func}control-0" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func})">`;
           } else
             outtext += `<output id="${prefix}${func}control"></output>`;
           break;
         case 6: //day and month
-          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});">`;
           outtext += `<option value="0">--</option>`;
           for (var j = 1; j <= 31; j++) {
             outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
           }
           outtext += `</select>.`;
-          outtext += `<select id="${prefix}${func}control-m" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});">`;
+          outtext += `<select id="${prefix}${func}control-m" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});">`;
           outtext += `<option value="0">--</option>`;
           for (var j = 1; j <= 12; j++) {
             outtext += `<option value="${j}">${(j<10)?("0"+j):(j)}</option>`;
@@ -1532,10 +1532,10 @@
           outtext += `</select>`;
           break;
         case 7: //string
-          outtext += `<input type="text" id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, '${func}');">`;
+          outtext += `<input type="text" id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, '${func}');">`;
           break;
         case 8: // weekday, time hh:mm
-          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, '${func}');">`;
+          outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, '${func}');">`;
           for (var j = 1; j <= 7; j++) {
             var temp;
             if (typeof UIStrings["STR_" + (499 + j) + "_TEXT"] === 'string')
@@ -1545,10 +1545,10 @@
             outtext += `<option value="${j}">${temp}</option>`;
           }
           outtext += `</select>`;
-          outtext += `<input type="time" id="${prefix}${func}control-t" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, '${func}');">`;
+          outtext += `<input type="time" id="${prefix}${func}control-t" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, '${func}');">`;
           break;
         case 99: // string with unit name. Hack.
-          outtext += `<input id="${prefix}${func}control" onfocus="selprogramnrForReset(${func});" onblur="selprogramnrForReset(-2);"onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
+          outtext += `<input id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
           break;
         default:
           break;
@@ -1789,7 +1789,9 @@
                 // HTML do not allow "24:00" for time input
                 if (matchresult[n] == "24:00") {
                   gemById(prefix + func + "control" + "-" + n).value = "23:59";
-                } else if (matchresult[n] == "--:--") {} else
+                } else if (matchresult[n] == "--:--") {
+                  gemById(prefix + func + "control" + "-" + n).value = "";
+                } else
                   gemById(prefix + func + "control" + "-" + n).value = matchresult[n];
                 gemById(prefix + func + "control" + "-" + n).readOnly = jsonObject.readonly;
               }
@@ -1802,7 +1804,7 @@
         case 6:
           var matchresult = currentValueObject.value.match(/(\d+|---)/g);
           if (matchresult != null) {
-            if (matchresult[0] == "---" || matchresult.length < 2) {
+            if (matchresult[0] == "---" || matchresult.length < 2 || parseInt(matchresult[1], 10) > 12 || parseInt(matchresult[0], 10) > 31) {
               gemById(prefix + func + "control" + "-d").options[0].selected = true;
               gemById(prefix + func + "control" + "-m").options[0].selected = true;
             } else {
@@ -1973,7 +1975,8 @@
               // HTML do not allow "24:00" for time input
               if (val[n] == "23:59") {
                 val[n] = "24:00";
-              }
+              } else if(val[n] == "")
+                val[n] = "--:--";
             }
             setvalue = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
             desc = "1. " + val[0] + "-" + val[1] + ", 2. " + val[2] + "-" + val[3] + " 3. " + val[4] + "-" + val[5];
@@ -1984,31 +1987,22 @@
         case 6:
           var elemd = gemById(elem.id.substring(0, elem.id.length - 1) + "d");
           var elemm = gemById(elem.id.substring(0, elem.id.length - 1) + "m");
-          var temp = null;
+          var temp_d = "00";
+          var temp_m = "00";
           for (var i = 0; i < elemd.options.length; i++) {
             if (elemd.options[i].selected == true) {
-              if (elemd.options[i].value == 0)
-                temp = "---";
-              else {
-                temp = (elemd.options[i].value < 10 ? "0" : "") + elemd.options[i].value + ".";
-                for (var j = 0; j < elemm.options.length; j++) {
-                  if (elemm.options[j].selected == true) {
-                    if (elemm.options[j].value == 0)
-                      temp = "---";
-                    else {
-                      temp += (elemm.options[j].value < 10 ? "0" : "") + elemm.options[j].value;
-                      setvalue = temp;
-                    }
-                    break;
-                  }
-                }
-                break;
-              }
+              temp_d = (elemd.options[i].value < 10 ? "0" : "") + elemd.options[i].value;
               break;
             }
           }
-          setvalue = temp;
-          desc = temp;
+          for (var j = 0; j < elemm.options.length; j++) {
+            if (elemm.options[j].selected == true) {
+              temp_m = (elemm.options[j].value < 10 ? "0" : "") + elemm.options[j].value;
+              break;
+            }
+          }
+          setvalue = temp_d + "." + temp_m;
+          desc = setvalue;
           break;
         case 7:
           setvalue = elem.value;
@@ -2183,15 +2177,16 @@
       }
     }
 
-    function selprogramnrForReset(prognr){
+    function selprogramnrForReset(control, prognr){
       if(prognr == -2){
         clearTimeout(resetTimerID);
         resetTimerID = setTimeout(function ticktak() {
-          selprogramnrForReset(-1);
+          selprogramnrForReset(null, -1);
         }, 5000); //5 sec
         return;
       }
       programnrForReset = prognr;
+      controlIdForReset = control;
       if(prognr == -1){
         for (var i = 0; i < document.getElementsByClassName('ResetIcons').length; i++)
           document.getElementsByClassName('ResetIcons')[i].style.opacity = 0.33;
@@ -2205,10 +2200,11 @@
 
     function ResetProgrammValue(){
       if(programnrForReset == -1) return;
+      ListOfChanges[programnrForReset] = controlIdForReset;
       var data = "{{\"parameter\":\"" + programnrForReset + "\"}}";
       console.log("Trying to reset parameter #" + programnrForReset);
       loadAjax(baseURL, 'JR', data, resetParamNotifyJSON, null, false);
-      selprogramnrForReset(-1);
+      selprogramnrForReset(null, -1);
     }
 
     function loadAjax(urlvar, cmdvar, payloadvar, showvar, paramforshowvar, isajaxvar) {
@@ -2366,7 +2362,7 @@
     }
 
     function ShowSelectedMode(id) {
-      selprogramnrForReset(-1); //reset number of selected program
+      selprogramnrForReset(null, -1); //reset number of selected program
       //warnings about unsaved changes.
       if (!CheckForUnsavedChanges()) return false;
 
@@ -2560,7 +2556,7 @@
 
 
     function HashWasChanged() {
-      selprogramnrForReset(-1); //reset number of selected program
+      selprogramnrForReset(null, -1); //reset number of selected program
       params = location.hash.substr(1).split("-");
       noparams = false;
       if (params[0] == location.hash.substr(1))
