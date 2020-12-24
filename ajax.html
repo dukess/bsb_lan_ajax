@@ -2350,6 +2350,74 @@
         rootlistshow(null, null);
     }
 
+    //Config page
+    function ApplyJSONConfig(form)
+      {
+      	var tmp = [], el;
+        var data = "{\r\n";
+        var isFirst = true;
+        var id_name = "configOptionValue-";
+      	for(i=0; el = form.elements[i]; i++){
+          if(el.id.indexOf(id_name) >=0){
+            if(isFirst)
+              isFirst = false;
+            else
+              data += ",\r\n";
+            data += "{\"parameter\": " + el.id.substring(id_name.length) + ", \"value\": \"" + el.value + "\"}";
+           }
+        }
+        data +="\r\n}"
+//      	alert(data);
+        loadAjax(baseURL, 'JW', data, uploadParamNotifyJSON, null, false);
+      }
+
+    function JSONconfigpageshow(jsontext, command) {
+      var contents = JSON.parse(jsontext);
+      var outtext = "";
+      gemById("OtherPageTab").innerHTML = "";
+      outtext = `<br><h2>${translateString("ENUM_CAT_24_TEXT")}</h2><br>`;
+      outtext += `<form name = "ConfigOptions"><div class="funcTable">`;
+      for (var i in contents) {
+        outtext += `<div class="divTableFuncListRow" id="configOptionDescription-${contents[i].id}">`;
+        outtext += `<div class="funcCell">${translateString(contents[i].category)}</div><div class="funcCell">&nbsp;${translateString(contents[i].name)}&nbsp;</div><div class="funcCell">`;
+        switch (Number(contents[i].format)) {
+          case 0: break;
+          case 1:
+            outtext += `<input id="configOptionValue-${contents[i].id}" type="text"`;
+            switch(Number(contents[i].type)){
+              case 5: outtext += ` pattern='^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$' `; break;
+              case 6: outtext += ` pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}' `; break;
+              case 7: outtext += ` pattern='(((^|,)((\\d){1,5})))*' `; break;
+              default: break;
+            }
+            outtext += ` value="${contents[i].value}">`;
+            break;
+          case 2:
+          case 3:
+          outtext += `<select id="configOptionValue-${contents[i].id}">`;
+          for (var j in contents[i].possibleValues) {
+            outtext += `<option value="${contents[i].possibleValues[j].enumValue}"`
+            if(contents[i].possibleValues[j].enumValue == contents[i].value){
+              outtext += " selected";
+            }
+            outtext += `>${translateString(contents[i].possibleValues[j].desc)}</option>`;
+          }
+          outtext += `</select>`;
+          break;
+          default: break;
+
+        }
+        outtext += "</div></div>";
+      }
+      outtext += "</div><p><input onclick='ApplyJSONConfig(this.form)' type=\"submit\"></p></form>";
+      gemById("OtherPageTab").innerHTML = outtext;
+
+    }
+
+    function LoadConfigPage() {
+      loadAjax(baseURL, 'JL', "", JSONconfigpageshow, null, false);
+    }
+
     //Scrolling
     var timeOut;
 
@@ -2578,13 +2646,9 @@
       } else if (params[0] == "chart") { //display chart and datalog
         DisplayChart();
       } else if (params[0] == "config") { //show config
-// HTML config with WEB Config
-        if(externaldevelop){
-          //Can display but can't set new values
-          LoadElement('OtherPageTab', 'C');
-        } else {
-          LoadElement('OtherPageTab', 'WC');
-        }
+// HTML config through JSONCONFIG module
+        ShowSelectedMode(6);
+        LoadConfigPage();
 // JSON config
 //        if (ShowSelectedMode(6));
 //        DisplayConfig();

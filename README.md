@@ -27,7 +27,7 @@ All above was included in BSB_lan project, so you do not need do anything.
 
 - (For BSB-LAN version 2.x since 06.12.2020) You can enable #define I_WILL_USE_EXTERNAL_INTERFACE in config file if you want save some flash memory (~7 kB). /D command is equal /datalog.txt and /DG included into ajax.html.
 - Edit BSB_lan_config.h:
-1. add or uncomment #define WEBSERVER
+1. add or uncomment #define WEBSERVER and #define JSONCONFIG (JSONCONFIG is available in BSB-LAN since 24.12.2020)
 2. change LANG from DE to C
 - Build sketch and flash it into Arduino.
 - Copy ajax.html, settings.js to root of SD card.
