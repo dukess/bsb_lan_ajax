@@ -1112,7 +1112,7 @@
         var setvalue = gameIsChanged(k);
         if (setvalue != null) {
           if (counter) data += ",\n";
-          data += "{\"parameter\":\"" + k + "\", \"value\":\"" + setvalue + "\", \"type\":\"1\"}";
+          data += "{\"parameter\":" + k + ", \"value\":\"" + setvalue + "\", \"type\":1}";
           console.log("Trying to set parameter #" + k + " with value " + setvalue);
           counter++;
 
@@ -1183,9 +1183,6 @@
               }
               if (value != null) {
                 gemById("SaveLoadConfigLogFunc").textContent = UIStrings.EXTIF_FUNCNO_TEXT + k;
-                // do not forget delete uploadParamNotify function after deleting line below
-                //                loadAjax(baseURL, 'WS' + k + '=' + value, "", uploadParamNotify, null, false);
-                //                loadAjax(baseURL, 'JS', "{\"parameter\":\"" + k + ""\", \"value\":\"" + value +""\", \"type\":\"1\"}", uploadParamNotifyJSON, null, false);
                 if (counter) data += ",\n";
                 data += "{\"parameter\":\"" + k + "\", \"value\":\"" + value + "\", \"type\":\"1\"}";
                 console.log("Trying to set parameter #" + k + " with value " + value);
@@ -1216,15 +1213,6 @@
       }
     }
 
-    function uploadParamNotify(jsontext, command) {
-      var res = command.split("=");
-      note({
-        content: UIStrings.EXTIF_CHANGEPARAM1_TEXT + " " + res[0].slice(1) + " " + UIStrings.EXTIF_CHANGEPARAM2_TEXT + " " + res[1] + " " + UIStrings.EXTIF_CHANGEPARAM3_TEXT,
-        type: "info",
-        time: 3
-      });
-    }
-
     function uploadParamNotifyJSON(jsontext, command) {
       var contents = JSON.parse(jsontext);
       for (var i in contents) {
@@ -1239,12 +1227,11 @@
             break;
           case 1:
             console.log("Parameter #" + i + ": set OK!");
-            /*          note({
-                        content: UIStrings.EXTIF_FUNCNO_TEXT  + i + ": OK!",
-                        type: "info",
-                        time: 1
-                      });
-            */
+/*            note({
+              content: UIStrings.EXTIF_FUNCNO_TEXT  + i + ": OK!",
+              type: "info",
+              time: 1
+            });*/
             break;
           case 2:
             console.warn("Parameter #" + i + ": read only");
@@ -1259,7 +1246,7 @@
             note({
               content: UIStrings.EXTIF_FUNCNO_TEXT + " " + i + " " + UIStrings.EXTIF_JSONERROR_TEXT,
               type: "warn",
-              time: 3
+              time: 5
             });
             break;
         }
@@ -2037,7 +2024,9 @@
       var datetimeNow = new Date();
       var formatted_date = ((datetimeNow.getDate() > 9) ? "" : "0") + datetimeNow.getDate() + "." + ((datetimeNow.getMonth() > 8) ? "" : "0") + (datetimeNow.getMonth() + 1) + "." + datetimeNow.getFullYear() + "_" + ((datetimeNow.getHours() > 9) ?
         "" : "0") + datetimeNow.getHours() + ":" + ((datetimeNow.getMinutes() > 9) ? "" : "0") + datetimeNow.getMinutes() + ":" + ((datetimeNow.getSeconds() > 9) ? "" : "0") + datetimeNow.getSeconds();
-      loadAjax(baseURL, 'WS0=' + formatted_date, "", function() {
+      var data = "{\"parameter\":0, \"value\":\"" + formatted_date + "\", \"type\":1}";
+
+      loadAjax(baseURL, 'JS', data, function() {
         note({
           content: UIStrings.EXTIF_SETTIME_TEXT + " :" + formatted_date,
           type: "info",
