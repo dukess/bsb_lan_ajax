@@ -2365,7 +2365,7 @@
       var outtext = "";
       gemById("OtherPageTab").innerHTML = "";
       outtext = `<br><h2>${translateString("ENUM_CAT_24_TEXT")}</h2><br>`;
-      outtext += `<form name = "ConfigOptions"><div class="funcTable">`;
+      outtext += `<form name = 'ConfigOptions' method='post'><div class='funcTable'>`;
       for (var i in contents) {
         outtext += `<div class="divTableFuncListRow" id="configOptionDescription-${contents[i].id}">`;
         outtext += `<div class="funcCell">${translateString(contents[i].category)}</div><div class="funcCell">&nbsp;${translateString(contents[i].name)}&nbsp;</div><div class="funcCell">`;
@@ -2398,7 +2398,7 @@
         }
         outtext += "</div></div>";
       }
-      outtext += "</div><p><input onclick='ApplyJSONConfig(this.form)' type=\"submit\"></p></form>";
+      outtext += "</div><p><input onclick='ApplyJSONConfig(this.form)' type='button' value='" + UIStrings.STR6204_TEXT + "'></p></form>";
       gemById("OtherPageTab").innerHTML = outtext;
 
     }
