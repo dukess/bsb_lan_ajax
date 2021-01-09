@@ -2367,12 +2367,12 @@
       outtext = `<br><h2>${translateString("ENUM_CAT_24_TEXT")}</h2><br>`;
       outtext += `<form name = 'ConfigOptions' method='post'><div class='funcTable'>`;
       for (var i in contents) {
-        outtext += `<div class="divTableFuncListRow" id="configOptionDescription-${contents[i].id}">`;
+        outtext += `<div class="divTableFuncListRow" id="configOptionDescription-${contents[i].parameter}">`;
         outtext += `<div class="funcCell">${translateString(contents[i].category)}</div><div class="funcCell">&nbsp;${translateString(contents[i].name)}&nbsp;</div><div class="funcCell">`;
         switch (Number(contents[i].format)) {
           case 0: break;
           case 1:
-            outtext += `<input id="configOptionValue-${contents[i].id}" type="text"`;
+            outtext += `<input id="configOptionValue-${contents[i].parameter}" type="text"`;
             switch(Number(contents[i].type)){
               case 5: outtext += ` pattern='^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$' `; break;
               case 6: outtext += ` pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}' `; break;
@@ -2383,7 +2383,7 @@
             break;
           case 2:
           case 3:
-          outtext += `<select id="configOptionValue-${contents[i].id}">`;
+          outtext += `<select id="configOptionValue-${contents[i].parameter}">`;
           for (var j in contents[i].possibleValues) {
             outtext += `<option value="${contents[i].possibleValues[j].enumValue}"`
             if(contents[i].possibleValues[j].enumValue == contents[i].value){
