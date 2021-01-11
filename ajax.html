@@ -2561,12 +2561,38 @@
         }, null, true);
     }
 
-    function DisplayChart() {
+    function printDateToPicker(shift) {
+        var temp = new Date();
+        temp.setDate(temp.getDate() - shift);
+        return (temp.toISOString().split('T')[0]);
+    }
+
+    function DisplayChart(mode) {
       if (!ShowSelectedMode(6)) return;
       var displaychartclassname = "displaychart";
-      var outtext = `<A HREF='${DatalogURL}'>${UIStrings.MENU_TEXT_DTD}</A><div class="${displaychartclassname}" align="center"></div>`;
-      gemById('OtherPageTab').innerHTML = outtext;
-      drawGraph("div." + displaychartclassname, DatalogURL, gemById('OtherPageTab').offsetWidth);
+      switch(mode){
+        case 1:
+          var outtext = `<A HREF='${DatalogURL}'>${UIStrings.MENU_TEXT_DTD}</A><br><br>${UIStrings.EXTIF_STARTDATE_TEXT}: <input type="date" id="startd3date" value="` + printDateToPicker(90) +
+            `"max=` + printDateToPicker(0) + `" onChange="DisplayChart(2);"> ${UIStrings.EXTIF_ENDDATE_TEXT}:<input type="date" id="endd3date" value="` + printDateToPicker(0) +
+            `"max=` + printDateToPicker(0) + `" onChange="DisplayChart(2);"><br><div class="${displaychartclassname}"  id="${displaychartclassname}_id" align="center"></div>`;
+          gemById('OtherPageTab').innerHTML = outtext;
+          DisplayChart(2);
+          break;
+        case 2:
+          var cutoffDateS = new Date(gemById('startd3date').value);
+          var cutoffDateE = new Date(gemById('endd3date').value);
+          if(isNaN(cutoffDateS.getTime())){
+            gemById('startd3date').value = printDateToPicker(90);
+            return;
+          }
+          if(isNaN(cutoffDateE.getTime())){
+            gemById('endd3date').value = printDateToPicker(0);
+            return;
+          }
+          gemById(displaychartclassname + '_id').textContent = "";
+          drawGraph("div." + displaychartclassname, DatalogURL, gemById('OtherPageTab').offsetWidth);
+          break;
+        }
     }
 
     function StartMonitorTimer() {
@@ -2633,7 +2659,7 @@
       } else if (params[0] == "about") { //About page
         if (ShowSelectedMode(4));
       } else if (params[0] == "chart") { //display chart and datalog
-        DisplayChart();
+        DisplayChart(1);
       } else if (params[0] == "config") { //show config
 // HTML config through JSONCONFIG module
         ShowSelectedMode(6);
@@ -2846,6 +2872,9 @@
           return y(d.Value);
         });
 
+      var cutoffDateS = new Date(gemById('startd3date').value);
+      var cutoffDateE = new Date(gemById('endd3date').value);
+
       // Get the data
       var dsv = d3.dsv(";", "text/plain");
       dsv(datasource, function(data) {
@@ -2853,6 +2882,10 @@
         data.forEach(function(d) {
           d.Date = parseDate(d.Date);
           d.Value = +d.Value;
+        });
+
+        data = data.filter(function(d) {
+          return (d.Date >= cutoffDateS && d.Date <= cutoffDateE);
         });
 
         // Scale the range of the data
