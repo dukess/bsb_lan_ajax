@@ -2563,7 +2563,7 @@
 
     function printDateToPicker(shift) {
         var temp = new Date();
-        temp.setDate(temp.getDate() - shift);
+        temp.setDate(temp.getDate() - shift + 1);
         return (temp.toISOString().split('T')[0]);
     }
 
@@ -2572,7 +2572,7 @@
       var displaychartclassname = "displaychart";
       switch(mode){
         case 1:
-          var outtext = `<A HREF='${DatalogURL}'>${UIStrings.MENU_TEXT_DTD}</A><br><br>${UIStrings.EXTIF_STARTDATE_TEXT}: <input type="date" id="startd3date" value="` + printDateToPicker(90) +
+          var outtext = `<A HREF='${DatalogURL}'>${UIStrings.MENU_TEXT_DTD}</A><br><br>${UIStrings.EXTIF_STARTDATE_TEXT}: <input type="date" id="startd3date" value="` + printDateToPicker(91) +
             `"max=` + printDateToPicker(0) + `" onChange="DisplayChart(2);"> ${UIStrings.EXTIF_ENDDATE_TEXT}:<input type="date" id="endd3date" value="` + printDateToPicker(0) +
             `"max=` + printDateToPicker(0) + `" onChange="DisplayChart(2);"><br><div class="${displaychartclassname}"  id="${displaychartclassname}_id" align="center"></div>`;
           gemById('OtherPageTab').innerHTML = outtext;
@@ -2582,7 +2582,7 @@
           var cutoffDateS = new Date(gemById('startd3date').value);
           var cutoffDateE = new Date(gemById('endd3date').value);
           if(isNaN(cutoffDateS.getTime())){
-            gemById('startd3date').value = printDateToPicker(90);
+            gemById('startd3date').value = printDateToPicker(91);
             return;
           }
           if(isNaN(cutoffDateE.getTime())){
