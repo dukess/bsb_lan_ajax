@@ -2563,7 +2563,7 @@
 
     function printDateToPicker(shift) {
         var temp = new Date();
-        temp.setDate(temp.getDate() - shift + 1);
+        temp.setDate(temp.getDate() - shift);
         return (temp.toISOString().split('T')[0]);
     }
 
@@ -2583,10 +2583,22 @@
           var cutoffDateE = new Date(gemById('endd3date').value);
           if(isNaN(cutoffDateS.getTime())){
             gemById('startd3date').value = printDateToPicker(91);
+            DisplayChart(2);
             return;
           }
           if(isNaN(cutoffDateE.getTime())){
             gemById('endd3date').value = printDateToPicker(0);
+            DisplayChart(2);
+            return;
+          }
+          if(cutoffDateE > new Date()){
+            gemById('endd3date').value = printDateToPicker(0);
+            DisplayChart(2);
+            return;
+          }
+          if(cutoffDateS > cutoffDateE){
+            gemById('startd3date').value = gemById('endd3date').value;
+            DisplayChart(2);
             return;
           }
           gemById(displaychartclassname + '_id').textContent = "";
@@ -2872,8 +2884,8 @@
           return y(d.Value);
         });
 
-      var cutoffDateS = new Date(gemById('startd3date').value);
-      var cutoffDateE = new Date(gemById('endd3date').value);
+      var cutoffDateS = new Date(gemById('startd3date').value + "T00:00:00");
+      var cutoffDateE = new Date(gemById('endd3date').value + "T23:59:59");
 
       // Get the data
       var dsv = d3.dsv(";", "text/plain");
