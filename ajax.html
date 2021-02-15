@@ -2652,8 +2652,8 @@
 
     function HashWasChanged() {
       selprogramnrForReset(null, -1); //reset number of selected program
-      params = location.hash.substr(1).split("-");
-      noparams = false;
+      var params = location.hash.substr(1).split("-");
+      var noparams = false;
       if (params[0] == location.hash.substr(1))
         noparams = true;
 
