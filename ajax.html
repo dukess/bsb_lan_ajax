@@ -2913,7 +2913,7 @@
         // Nest the entries by symbol
         var dataNest = d3.nest()
           .key(function(d) {
-            return d.Description;
+            return d.Parameter + ' - ' + d.Description;
           })
           .entries(data);
 
