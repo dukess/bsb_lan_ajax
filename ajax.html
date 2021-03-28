@@ -1170,13 +1170,13 @@
                 case 2:
                   value = null;
                 case 5:
-                  if (k >= 500 && k <= 620) {
-                    var val = contents[k].value.match(/(\w+|--):(\w+|--)/g);
-                    if (val != null)
-                      value = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
-                  } else
-                    value = null;
+                  value = null;
                   //value = value.replace(/\s/g,"_");
+                  break;
+                case 9:
+                  var val = contents[k].value.match(/(\w+|--):(\w+|--)/g);
+                  if (val != null)
+                    value = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
                   break;
                 default:
                   break;
@@ -1498,11 +1498,7 @@
           outtext += `<input type="time" id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});">`;
           break;
         case 5: //date and time
-          if (func >= 500 && func <= 620) {
-            outtext +=
-              `1. <input type="time" id="${prefix}${func}control-0" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func})">`;
-          } else
-            outtext += `<output id="${prefix}${func}control"></output>`;
+          outtext += `<output id="${prefix}${func}control"></output>`;
           break;
         case 6: //day and month
           outtext += `<select id="${prefix}${func}control-d" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});">`;
@@ -1533,6 +1529,10 @@
           }
           outtext += `</select>`;
           outtext += `<input type="time" id="${prefix}${func}control-t" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, '${func}');">`;
+          break;
+        case 9: //time program
+          outtext +=
+            `1. <input type="time" id="${prefix}${func}control-0" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-1" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"><br>2. <input type="time" id="${prefix}${func}control-2" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-3" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"><br>3. <input type="time" id="${prefix}${func}control-4" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});"> - <input type="time" id="${prefix}${func}control-5" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func})">`;
           break;
         case 99: // string with unit name. Hack.
           outtext += `<input id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});" value="">&nbsp;<output id="${prefix}${func}unit"></output>`;
@@ -1769,24 +1769,8 @@
           sel.readOnly = jsonObject.readonly;
           break;
         case 5:
-          if (func >= 500 && func <= 620) {
-            var matchresult = currentValueObject.value.match(/(\w+|--):(\w+|--)/g);
-            if (matchresult != null) {
-              for (var n in matchresult) {
-                // HTML do not allow "24:00" for time input
-                if (matchresult[n] == "24:00") {
-                  gemById(prefix + func + "control" + "-" + n).value = "23:59";
-                } else if (matchresult[n] == "--:--") {
-                  gemById(prefix + func + "control" + "-" + n).value = "";
-                } else
-                  gemById(prefix + func + "control" + "-" + n).value = matchresult[n];
-                gemById(prefix + func + "control" + "-" + n).readOnly = jsonObject.readonly;
-              }
-            }
-          } else {
-            sel.innerHTML = currentValueObject.value;
-            sel.readOnly = jsonObject.readonly;
-          }
+          sel.innerHTML = currentValueObject.value;
+          sel.readOnly = jsonObject.readonly;
           break;
         case 6:
           var matchresult = currentValueObject.value.match(/(\d+|---)/g);
@@ -1805,6 +1789,21 @@
         case 7:
           sel.value = currentValueObject.value;
           sel.readOnly = jsonObject.readonly;
+          break;
+        case 9:
+          var matchresult = currentValueObject.value.match(/(\w+|--):(\w+|--)/g);
+          if (matchresult != null) {
+            for (var n in matchresult) {
+              // HTML do not allow "24:00" for time input
+              if (matchresult[n] == "24:00") {
+                gemById(prefix + func + "control" + "-" + n).value = "23:59";
+              } else if (matchresult[n] == "--:--") {
+                gemById(prefix + func + "control" + "-" + n).value = "";
+              } else
+                gemById(prefix + func + "control" + "-" + n).value = matchresult[n];
+              gemById(prefix + func + "control" + "-" + n).readOnly = jsonObject.readonly;
+            }
+          }
           break;
         default:
           break;
@@ -1955,20 +1954,6 @@
           desc = elem.value;
           break;
         case 5:
-          if (funkid >= 500 && funkid <= 620) {
-            var val = [];
-            for (var n = 0; n < 6; n++) {
-              val[n] = gemById(elem.id.substring(0, elem.id.length - 1) + n).value;
-              // HTML do not allow "24:00" for time input
-              if (val[n] == "23:59") {
-                val[n] = "24:00";
-              } else if(val[n] == "")
-                val[n] = "--:--";
-            }
-            setvalue = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
-            desc = "1. " + val[0] + "-" + val[1] + ", 2. " + val[2] + "-" + val[3] + " 3. " + val[4] + "-" + val[5];
-          }
-          //else
           //  sel.innerHTML = jsontext[k].value;
           break;
         case 6:
@@ -1994,6 +1979,19 @@
         case 7:
           setvalue = elem.value;
           desc = elem.value;
+          break;
+        case 9:
+          var val = [];
+          for (var n = 0; n < 6; n++) {
+            val[n] = gemById(elem.id.substring(0, elem.id.length - 1) + n).value;
+            // HTML do not allow "24:00" for time input
+            if (val[n] == "23:59") {
+              val[n] = "24:00";
+            } else if(val[n] == "")
+              val[n] = "--:--";
+          }
+          setvalue = val[0] + "-" + val[1] + "_" + val[2] + "-" + val[3] + "_" + val[4] + "-" + val[5];
+          desc = "1. " + val[0] + "-" + val[1] + ", 2. " + val[2] + "-" + val[3] + " 3. " + val[4] + "-" + val[5];
           break;
         case 99:
           setvalue = elem.value;
@@ -2028,7 +2026,7 @@
 
       loadAjax(baseURL, 'JS', data, function() {
         note({
-          content: UIStrings.EXTIF_SETTIME_TEXT + " :" + formatted_date,
+          content: UIStrings.EXTIF_SETTIME_TEXT + ":<br>" + formatted_date.replace("_", " "),
           type: "info",
           time: 3
         });
