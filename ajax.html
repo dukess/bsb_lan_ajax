@@ -897,6 +897,7 @@
     var quickManageFunctionsList = []; // Array of integers: list of functions for managing on home page
     var displayWelcomeText = true; // Display short review about program functions on start page
     var hideUnsupportedParams = true; //hide unsupported params. true - hide, false - show. You can show it for debug purposes or other reason
+    var enableDisplayMCUState = true; //show system info on home page
 
     // internal variables
     var monitorTimerID = 0;
@@ -2621,6 +2622,7 @@
 <br><b>${UIStrings.MENU_TEXT_CFG}:</b> ${UIStrings.MENU_DESC_CFG}
 <br><b>${UIStrings.MENU_TEXT_URL}:</b> ${UIStrings.MENU_DESC_URL}<br>
 ` : ``;
+      if(enableDisplayMCUState) outtext += `<div id="MCUState" style="display: block; text-align: left;"></div><br>`
       outtext += `<br><div style="display:block; width:100%; text-align: center;">`;
       if (functionsListOnFrontPage.length > 0) {
         outtext +=
@@ -2645,8 +2647,38 @@
       loadManagementValues(0);
       MonitorAndManagementValuesLoadingComplete = true;
       StartMonitorTimer();
+      if(enableDisplayMCUState) DisplayMCUState();
     }
 
+    function DisplayMCUState(){
+      var temp = "";
+      loadAjax(baseURL, 'JI', "",
+        function(jsontext, command) {
+          if (jsontext != null) {
+            var outtext = "<br>";
+            //if(jsontext["name"] === 'string') outtext += "<p><b>" + translateString(RootCategoryEnum[i].name) + ":</b>&nbsp;" + jsontext["name"] + "<br>";
+            if(typeof jsontext["version"] === 'string') outtext += "<b>" + UIStrings.MENU_TEXT_VER + ":</b>&nbsp;" + jsontext["version"] + "<br>";
+            if(typeof jsontext["hardware"] === 'string') outtext += "<b>" + UIStrings.MENU_TEXT_MCU + ":</b>&nbsp;" + jsontext["hardware"] + "<br>";
+            if(typeof jsontext["uptime"] === 'number') outtext += "<b>" + UIStrings.MENU_TEXT_UPT + ":</b>&nbsp;" + (Number(jsontext["uptime"])/1000) +  "&nbsp;" + UIStrings.MENU_TEXT_SEC + "<br>";
+            if(typeof jsontext["freeram"] === 'number') outtext += "<b>" + UIStrings.MENU_TEXT_RAM + ":</b>&nbsp;" + jsontext["freeram"] + "&nbsp;" + UIStrings.MENU_TEXT_BYT + "<br>";
+            if(typeof jsontext["freespace"] === 'number'){
+              var size = 0;
+              if(typeof jsontext["hardware"] === 'string'){
+                if(jsontext["hardware"] == "Mega 2560" || jsontext["hardware"] == "Due")
+                  size = Number(jsontext["freespace"]);
+                else
+                  size = Number(jsontext["freespace"])/(1024*1024);
+              } else {
+                size = Number(jsontext["freespace"]);
+              }
+              outtext += "<b>" + UIStrings.MENU_TEXT_FSP + ":</b>&nbsp;" + size + "&nbsp;MB<br>";
+            }
+            if(gemById('MCUState')){
+              gemById('MCUState').innerHTML = outtext;
+            }
+          }
+        }, null, true);
+    }
 
     function HashWasChanged() {
       selprogramnrForReset(null, -1); //reset number of selected program
