@@ -62,5 +62,3 @@ At this point time interface looks highly similar original bsb_lan.
 <img src="https://github.com/dukess/bsb_lan_ajax/blob/master/blobs/categories.png" size="50%">
 
 <img src="https://github.com/dukess/bsb_lan_ajax/blob/master/blobs/functions.png" size="50%">
-
-<img src="https://github.com/dukess/bsb_lan_ajax/blob/master/blobs/homepagemanagement.png" size="50%">
