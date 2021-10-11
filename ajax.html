@@ -2943,7 +2943,7 @@
         // Nest the entries by symbol
         var dataNest = d3.nest()
           .key(function(d) {
-            return d.Parameter + ' - ' + d.Description;
+            return d.Parameter;
           })
           .entries(data);
 
@@ -3021,7 +3021,7 @@
               d.active = active;
             })
             //                      .text(d.key);
-            .text(translateString(d.key));
+            .text(d.key + ' - ' + translateString(data[i].Description));
         });
 
 
