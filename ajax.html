@@ -1303,8 +1303,8 @@
             if (gemById("catrootcheckbox" + k).checked) {
               for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
                 if (FunctionsEnum[i] != null && !('value' in FunctionsEnum[i])) {
-//                  if (variant == 1 && (FunctionsEnum[i].readonly == 1 || FunctionsEnum[i].error == 7)) continue;
-                  if (variant == 1 && (FunctionsEnum[i].error == 7)) continue;
+                  if (variant == 1 && (FunctionsEnum[i].readwrite || FunctionsEnum[i].error == 7)) continue;
+//                  if (variant == 1 && (FunctionsEnum[i].error == 7)) continue;
                   j++;
                   cmdlist += i;
                   configBuildStage = i;
@@ -1339,7 +1339,7 @@
       var currentcat = 0;
       var text = "{\n";
       for (var k in FunctionsEnum) {
-//        if (FunctionsEnum[k].readonly) continue; //do not save read-only parameters
+        if (FunctionsEnum[k].readwrite) continue; //do not save read-only and write-only parameters
         if (FunctionsEnum[k].error == 7) continue; //do not save unsupported parameters
         var allowtonext = false;
         do {
@@ -1687,7 +1687,6 @@
         gemById(prefix + func + "space").classList.add("MarkErrors");
         gemById(prefix + func + "space").title = UIStrings.EXTIF_ERROR_TEXT + ": " + error;
         gemById(prefix + func + "value").style.opacity = 0.33;
-        readonly = true;
       } else {
         gemById(prefix + func + "text").style.opacity = 1;
         gemById(prefix + func + "space").classList.remove("MarkErrors");
@@ -1710,10 +1709,10 @@
         if (typeof currentValueObject.precision === 'number') {
           FunctionsEnum[func].precision = currentValueObject.precision;
         }
-        if (typeof currentValueObject.readonly === 'number') {
-          FunctionsEnum[func].readonly = currentValueObject.readonly;
+        if (typeof currentValueObject.readwrite === 'number') {
+          FunctionsEnum[func].readwrite = currentValueObject.readwrite;
         } else {
-          FunctionsEnum[func].readonly = 0;
+          FunctionsEnum[func].readwrite = 0;
         }
       }
       var jsonObject = FunctionsEnum[func];
@@ -1737,7 +1736,7 @@
         case 0:
           if (currentValueObject.value.length > 0 && isNaN(currentValueObject.value)) sel.type = "text";
           sel.value = currentValueObject.value;
-          sel.readOnly = jsonObject.readonly;
+          sel.readOnly = jsonObject.readwrite & 1;
           gemById(prefix + func + "unit").innerHTML = translateString(currentValueObject.unit);
           break;
         case 1:
@@ -1747,7 +1746,7 @@
               sel.options[i].selected = true;
             } else {
               sel.options[i].selected = false;
-              sel.options[i].disabled = jsonObject.readonly;
+              sel.options[i].disabled = jsonObject.readwrite & 1;
             }
           }
           break;
@@ -1762,16 +1761,16 @@
             if((bitvalue & bitmask) == (val & bitmask)){
               sel.options[i].selected = true;
             }
-            sel.options[i].disabled = jsonObject.readonly;
+            sel.options[i].disabled = jsonObject.readwrite & 1;
           }
           break;
         case 4:
           sel.value = currentValueObject.value;
-          sel.readOnly = jsonObject.readonly;
+          sel.readOnly = jsonObject.readwrite & 1;
           break;
         case 5:
           sel.innerHTML = currentValueObject.value;
-          sel.readOnly = jsonObject.readonly;
+          sel.readOnly = jsonObject.readwrite & 1;
           break;
         case 6:
           var matchresult = currentValueObject.value.match(/(\d+|---)/g);
@@ -1783,13 +1782,13 @@
               gemById(prefix + func + "control" + "-d").options[parseInt(matchresult[0], 10)].selected = true;
               gemById(prefix + func + "control" + "-m").options[parseInt(matchresult[1], 10)].selected = true;
             }
-            gemById(prefix + func + "control" + "-d").readOnly = jsonObject.readonly;
-            gemById(prefix + func + "control" + "-m").readOnly = jsonObject.readonly;
+            gemById(prefix + func + "control" + "-d").readOnly = jsonObject.readwrite & 1;
+            gemById(prefix + func + "control" + "-m").readOnly = jsonObject.readwrite & 1;
           }
           break;
         case 7:
           sel.value = currentValueObject.value;
-          sel.readOnly = jsonObject.readonly;
+          sel.readOnly = jsonObject.readwrite & 1;
           break;
         case 9:
           var matchresult = currentValueObject.value.match(/(\w+|--):(\w+|--)/g);
@@ -1802,7 +1801,7 @@
                 gemById(prefix + func + "control" + "-" + n).value = "";
               } else
                 gemById(prefix + func + "control" + "-" + n).value = matchresult[n];
-              gemById(prefix + func + "control" + "-" + n).readOnly = jsonObject.readonly;
+              gemById(prefix + func + "control" + "-" + n).readOnly = jsonObject.readwrite & 1;
             }
           }
           break;
@@ -2099,7 +2098,7 @@
 
     function setFunctionsEnum(index, jsonObject) {
       if (FunctionsEnum[index] == undefined) FunctionsEnum[index] = new Object();
-      FunctionsEnum[index].readonly = jsonObject.readonly;
+      FunctionsEnum[index].readwrite = jsonObject.readwrite;
       FunctionsEnum[index].dataType = jsonObject.dataType;
       FunctionsEnum[index].name = jsonObject.name;
       FunctionsEnum[index].unit = jsonObject.unit;
