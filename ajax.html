@@ -2915,7 +2915,7 @@
 
       var cutoffDateS = new Date(gemById('startd3date').value + "T00:00:00");
       var cutoffDateE = new Date(gemById('endd3date').value + "T23:59:59");
-
+      var legendDescriptions = {};
       // Get the data
       var dsv = d3.dsv(";", "text/plain");
       dsv(datasource, function(data) {
@@ -2923,11 +2923,21 @@
         data.forEach(function(d) {
           d.Date = parseDate(d.Date);
           d.Value = +d.Value;
+          legendDescriptions[d.Parameter] = d.Description;
         });
 
         data = data.filter(function(d) {
           return (d.Date >= cutoffDateS && d.Date <= cutoffDateE);
         });
+
+        //translate "descriptions" for legend
+        for (var iter in legendDescriptions) {
+          var extrStr = legendDescriptions[iter].split("#");
+          var str = translateString(extrStr[0]);
+          if(extrStr.length > 1)
+            str += "#" + extrStr[1];
+          legendDescriptions[iter] = str;
+        }
 
         // Scale the range of the data
         x.domain(d3.extent(data, function(d) {
@@ -3019,8 +3029,7 @@
               // Update whether or not the elements are active
               d.active = active;
             })
-            //                      .text(d.key);
-            .text(d.key + ' - ' + translateString("STR" + d.key + "_TEXT"));
+            .text(d.key + ' - ' + legendDescriptions[d.key]);
         });
 
 
