@@ -1,14 +1,14 @@
 # AJAX web interface for <A HREF="https://github.com/fredlcore/bsb_lan/">BSB_lan</A> project
 
 ## Benefits:
-- Saving flash memory for future features and functions (more than 39kB for German language and more than 150kB for multi-byte alphabets). You can still use Arduino Mega with interface board v.2 (deprecated, last official release with v.2 support is <A HREF="https://github.com/fredlcore/bsb_lan/releases/tag/v0.44">0.44</A> but it works with 2.x). You do not need Arduino Due, but it certainly supported too.
+- Saving flash memory for future features and functions (more than 39kB for German language and more than 150kB for multi-byte alphabets). You can still use Arduino Mega with interface board v.2 (deprecated, last official release with v.2 support is <A HREF="https://github.com/fredlcore/bsb_lan/releases/tag/v0.44">0.44</A> but it works with 2.x). You do not need Arduino Due or ESP32 boards, but it certainly supported too.
 - Modern interface (Oh, yeah)
 - More comfort experience on mobile device.
 - Easy for customization and expansion.
 
 ## Disadvantages:
 - *First* run will be slower because SD card and network interface throughput is low (50~70kB/s for Mega and LAN 5100).
-- Need more browser RAM (up to ~20MB per interface instance). But category caching can be disabled.
+- Need more browser RAM (up to ~20MB per interface instance). Category caching can be disabled for decreasing memory consumption.
 
 ## Requirements
 - Hardware: same as for BSB_lan project. SD card needed.
@@ -46,7 +46,7 @@ All above was included in BSB_lan project, so you do not need do anything.
 - Switching between categories without page reloading.
 - Configuration save/restore (very slow due BSB protocol limitation).
 - D3 library can be placed on SD card for standalone installations (without connection to Internet).
-- You can build list of unsupported params and save it to SD card with name 'notsupported.js'. Parameters in the list are never requested, except for the exception list building function.
+- You can build list of unsupported parameters and save it to SD card with name 'notsupported.js'. Parameters in the list are never requested, except for the exception list building function.
 - Icons with links to external resources are hidden on small screens.
 
 At this point time interface looks highly similar original bsb_lan.
