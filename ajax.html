@@ -958,6 +958,7 @@
     }
 
     function translateString(instring) {
+      if (typeof instring === 'undefined') return "";
       var matchresult = instring.match(textRegexp);
       if (matchresult != null) {
         for (var k in matchresult) {
