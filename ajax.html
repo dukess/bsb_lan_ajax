@@ -1497,6 +1497,7 @@
           outtext += `</select>`;
           break;
         case 4: //time
+        case 10: //time hh:mm:ss
           outtext += `<input type="time" id="${prefix}${func}control" onfocus="selprogramnrForReset(this, ${func});" onblur="selprogramnrForReset(null, -2);"onChange="StackChanges(this, ${func});">`;
           break;
         case 5: //date and time
@@ -1571,6 +1572,7 @@
 
           break;
         case 4:
+        case 10:
           break;
         case 5:
           break;
@@ -1766,6 +1768,7 @@
           }
           break;
         case 4:
+        case 10:
           sel.value = currentValueObject.value;
           sel.readOnly = jsonObject.readwrite & 1;
           break;
@@ -1950,7 +1953,8 @@
           break;
         case 2:
           break;
-        case 4:
+        case 4: //time
+        case 10: //time hh:mm:ss
           setvalue = elem.value;
           desc = elem.value;
           break;
