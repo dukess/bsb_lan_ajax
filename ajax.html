@@ -2363,6 +2363,9 @@
         loadAjax(baseURL, 'JW', data, uploadParamNotifyJSON, null, false);
       }
 
+//This script will used for CPI_CHECKBOXES values calculation. It depended from HTML page structure: <div><input>...</input><label>...</label><label>...</label>...</div>
+    function bvc(e,v){o=e.closest('div').querySelector('input');n=Number(o.value);n&v?p=n-v:p=n+v;o.value=p}
+
     function JSONconfigpageshow(jsontext, command) {
       var contents = JSON.parse(jsontext);
       var outtext = "";
@@ -2373,8 +2376,8 @@
         outtext += `<div class="divTableFuncListRow" id="configOptionDescription-${contents[i].parameter}">`;
         outtext += `<div class="funcCell">${translateString(contents[i].category)}</div><div class="funcCell">&nbsp;${translateString(contents[i].name)}&nbsp;</div><div class="funcCell">`;
         switch (Number(contents[i].format)) {
-          case 0: break;
-          case 1:
+          case 0: break; //CPI_NOTHING
+          case 1://CPI_TEXT
             outtext += `<input id="configOptionValue-${contents[i].parameter}" type="text"`;
             switch(Number(contents[i].type)){
               case 5: outtext += ` pattern='^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$' `; break;
@@ -2384,8 +2387,8 @@
             }
             outtext += ` value="${contents[i].value}">`;
             break;
-          case 2:
-          case 3:
+          case 2://CPI_SWITCH
+          case 3://CPI_DROPDOWN
           outtext += `<select id="configOptionValue-${contents[i].parameter}">`;
           for (var j in contents[i].possibleValues) {
             outtext += `<option value="${contents[i].possibleValues[j].enumValue}"`
@@ -2395,6 +2398,17 @@
             outtext += `>${translateString(contents[i].possibleValues[j].desc)}</option>`;
           }
           outtext += `</select>`;
+          break;
+          case 4: //CPI_CHECKBOXES
+          outtext += `<div><input type=hidden id="configOptionValue-${contents[i].parameter}" value="${contents[i].value}">`;
+          for (var j in contents[i].possibleValues) {
+            outtext += `<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick="bvc(this, ${contents[i].possibleValues[j].enumValue})"`
+            if(contents[i].possibleValues[j].enumValue & contents[i].value){
+              outtext += " selected";
+            }
+            outtext += `>${translateString(contents[i].possibleValues[j].desc)}</label>`;
+          }
+          outtext += `</div>`;
           break;
           default: break;
 
