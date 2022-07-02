@@ -2403,7 +2403,7 @@
           outtext += `<div><input type=hidden id="configOptionValue-${contents[i].parameter}" value="${contents[i].value}">`;
           for (var j in contents[i].possibleValues) {
             outtext += `<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick="bvc(this, ${contents[i].possibleValues[j].enumValue})"`
-            if(contents[i].possibleValues[j].enumValue & contents[i].value){
+            if(parseInt(contents[i].possibleValues[j].enumValue) & parseInt(contents[i].value)){
               outtext += " selected";
             }
             outtext += `>${translateString(contents[i].possibleValues[j].desc)}</label>`;
