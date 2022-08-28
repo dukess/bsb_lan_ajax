@@ -1302,7 +1302,10 @@
           var j = 0;
           for (var k = 0; k < RootCategoryEnum.length; k++) {
             if (gemById("catrootcheckbox" + k).checked) {
-              for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
+              //for (var i = RootCategoryEnum[k].min; i <= RootCategoryEnum[k].max; i++) {
+              for (var i in FunctionsEnum) {
+                if(i < RootCategoryEnum[k].min) continue;
+                if(i > RootCategoryEnum[k].max) break;
                 if (FunctionsEnum[i] != null && !('value' in FunctionsEnum[i])) {
                   if (variant == 1 && (FunctionsEnum[i].readwrite || FunctionsEnum[i].error == 7)) continue;
 //                  if (variant == 1 && (FunctionsEnum[i].error == 7)) continue;
@@ -1633,7 +1636,11 @@
       outtext = `<br><h2 id='categorytitle${res[1]}'></h2><br>`;
       gemById("FunctionsMenuTable").innerHTML = "";
       outtext += `<div class="funcTable">`;
-      for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
+//      for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
+      for (var k in FunctionsEnum) {
+        if(k < RootCategoryEnum[res[1]].min) continue;
+        if(k > RootCategoryEnum[res[1]].max) break;
+
         if (FunctionsEnum[k] == null) continue;
         outtext += `<div class="divTableFuncListRow" id="func${k}">`;
         outtext += insertinterfaceelement(k, "func");
@@ -1641,7 +1648,10 @@
       }
       outtext += "</div>";
       gemById("FunctionsMenuTable").innerHTML = outtext;
-      for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
+//      for (var k = RootCategoryEnum[res[1]].min; k <= RootCategoryEnum[res[1]].max; k++) {
+      for (var k in FunctionsEnum) {
+        if(k < RootCategoryEnum[res[1]].min) continue;
+        if(k > RootCategoryEnum[res[1]].max) break;
         if (FunctionsEnum[k] == null) continue;
         if (FunctionsEnum[k].error == 7) {
           if (hideUnsupportedParams)
@@ -1877,7 +1887,10 @@
       switch (type) {
         case 0:
           //full update
-          for (var i = RootCategoryEnum[catnum].min; i <= RootCategoryEnum[catnum].max; i++) {
+//          for (var i = RootCategoryEnum[catnum].min; i <= RootCategoryEnum[catnum].max; i++) {
+          for (var i in FunctionsEnum) {
+            if(i < RootCategoryEnum[catnum].min) continue;
+            if(i > RootCategoryEnum[catnum].max) break;
             if (FunctionsEnum[i] != null) {
               if (FunctionsEnum[i].error == 7) continue;
               j++;
@@ -1912,7 +1925,10 @@
           break;
         case 2:
           //exclude changes
-          for (var i = RootCategoryEnum[catnum].min; i <= RootCategoryEnum[catnum].max; i++) {
+//          for (var i = RootCategoryEnum[catnum].min; i <= RootCategoryEnum[catnum].max; i++) {
+          for (var i in FunctionsEnum) {
+            if(i < RootCategoryEnum[catnum].min) continue;
+            if(i > RootCategoryEnum[catnum].max) break;
             if (FunctionsEnum[i] != null) {
               if (FunctionsEnum[i].error == 7) continue;
               if (typeof ListOfChanges[i] === 'undefined') {
@@ -2462,7 +2478,10 @@
         gemById("FunctionsMenuTable").style.display = "none";
         //Freeing RAM
         if (!CacheCategoriesInRAM && id != 3) {
-          for (var k = RootCategoryEnum[CurrentCategory].min; k <= RootCategoryEnum[CurrentCategory].max; k++) {
+//          for (var k = RootCategoryEnum[CurrentCategory].min; k <= RootCategoryEnum[CurrentCategory].max; k++) {
+          for (var k in FunctionsEnum) {
+            if(k < RootCategoryEnum[CurrentCategory].min) continue;
+            if(k > RootCategoryEnum[CurrentCategory].max) break;
             if (!FunctionsEnum[k].protect)
               FunctionsEnum[k] = null;
           }
